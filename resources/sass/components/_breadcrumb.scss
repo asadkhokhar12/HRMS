@@ -1,0 +1,29 @@
+.ot-breadcrumb{
+  margin-bottom: 0;
+}
+
+.ot-breadcrumb-basic {
+  .breadcrumb-item a {
+    color: #0f6aff;
+    &.active {
+      color: #6f767e;
+    }
+  }
+}
+
+.ot-breadcrumb-secondary {
+  .breadcrumb-item a {
+    color: #0f6aff;
+    &.active a {
+      color: #6f767e;
+    }
+  }
+  & > .breadcrumb-item {
+    & + .breadcrumb-item {
+      &:before {
+        color: #b2bec3;
+        content: "> ";
+      }
+    }
+  }
+}

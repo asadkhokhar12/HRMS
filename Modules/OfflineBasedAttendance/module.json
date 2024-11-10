@@ -1,0 +1,11 @@
+{
+    "name": "OfflineBasedAttendance",
+    "alias": "offlinebasedattendance",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\OfflineBasedAttendance\\Providers\\OfflineBasedAttendanceServiceProvider"
+    ],
+    "files": []
+}

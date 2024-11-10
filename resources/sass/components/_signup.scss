@@ -1,0 +1,163 @@
+// text gradient Mixin
+@mixin text-gradient {
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+// form content size width
+@mixin form-content-size($width) {
+  width: $width;
+  gap: 20px;
+}
+
+// column height
+.col-custom-height {
+  min-height: 100vh;
+}
+
+.left-box {
+  // left image box
+  .left-box-image {
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  // left box head style
+  .title {
+    font-family: "Lexend";
+    font-weight: 700;
+    font-size: 30px;
+    @include text-gradient;
+  }
+  // left box text style
+  .text {
+    @include font;
+    font-size: 16px;
+  }
+}
+.form-wrapper {
+  .form-content {
+    @include form-content-size(360px);
+    .form-heading-text {
+      // form head text
+      .title {
+        @include font;
+        font-weight: 700;
+        font-size: 38px;
+        line-height: 54px;
+        color: #1a1d1f;
+      }
+      // form basic text
+      .text {
+        @include font;
+        line-height: 21px;
+      }
+    }
+    .form {
+      gap: 20px; //gap between form items
+      //input lebel text style
+      label {
+        @include font;
+        font-weight: 500;
+        color: #1a1d1f;
+      }
+    }
+    // Basic Text style
+    .text-font {
+      @include font;
+    }
+    // link text gradient style
+    .link-text {
+      @include text-gradient;
+    }
+    //  privacy policy Text style
+    .text-privacy-policy {
+      @include font;
+      font-size: 12px;
+    }
+  }
+}
+// submit button style
+.submit-button {
+  width: 100%;
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  border-radius: 5px;
+  color: white;
+  @include font;
+  font-weight: 600;
+}
+
+// responsive style medium devices start
+@include devices(md) {
+  .frame {
+    display: none !important;
+  }
+  .form-wrapper {
+    .form-content {
+      @include form-content-size(340px);
+      padding: 20px;
+      .form-heading-text {
+        .title {
+          font-size: 30px;
+        }
+      }
+      .form {
+        width: 100%;
+        gap: 10px;
+        .input-field-focus {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .error-content {
+    width: 410px !important;
+    padding: 20px !important;
+    h1 {
+      font-size: 28px !important;
+    }
+  }
+}
+// responsive style medium devices end
+//
+//responsive style small devices start
+@include devices(sm) {
+  .form-wrapper {
+    .form-content {
+      @include form-content-size(320px);
+      gap: 10px;
+      .form-heading-text {
+        .title {
+          font-size: 28px;
+        }
+        .text {
+          @include font;
+          font-size: 13px;
+        }
+      }
+      .form {
+        .input-field-focus input {
+          height: 40px;
+          padding: 10px;
+        }
+        label {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  .social-media-content {
+    label {
+      font-size: 13px;
+    }
+  }
+  .error-content {
+    width: 320px !important;
+    padding: 20px !important;
+    h1 {
+      font-size: 24px !important;
+    }
+  }
+}
+// responsive style small devices end

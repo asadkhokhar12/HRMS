@@ -1,0 +1,89 @@
+@mixin font {
+    font-family: 'Lexend';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+
+.alert-section{
+    background: #fff;
+    padding: 80px;
+    background: #FCFCFC;
+    margin-top: 8px;
+    h1{
+        font-weight: 700;
+        font-size: 32px;
+        text-transform: uppercase;
+        color: #120D26;
+    }
+    p{
+        @include font;
+        color: #4B4B4B;
+    }
+}
+.close-icon{
+    float: right;
+}
+.basic-success-alert{
+    padding: 15px;
+    background-color: $success-tint-light;
+    color: $success-primary;
+    @include font;
+    .success-icon{
+        color: $success-primary;
+    }
+
+
+}
+.basic-secondary-alert{
+    padding: 15px;
+    background-color: $blue-tint-light;
+    color: $blue-primary;
+    @include font;
+    .secondary-icon{
+        color: $blue-primary;
+    }
+}
+.basic-warning-alert{
+    padding: 15px;
+    background-color: $warning-tint-light;
+    color: $warning-primary;
+    @include font;
+    .warning-icon{
+        color: $warning-primary;
+    }
+}
+.basic-danger-alert{
+    padding: 15px;
+    background-color: $danger-tint-light;
+    color: $danger-primary;
+    @include font;
+    .danger-icon{
+        color: $danger-primary;
+    }
+}
+.alert-success-describe{
+    h4,p{
+        color: $success-primary;
+    }
+    
+}
+.alert-secondary-describe{
+    h4,p{
+        color: $blue-primary;
+    }
+    
+}
+.alert-warning-describe{
+    h4,p{
+        color: $warning-primary;
+    }
+    
+}
+.alert-danger-describe{
+    h4,p{
+        color: $danger-primary;
+    }
+    
+}

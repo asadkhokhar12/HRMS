@@ -1,0 +1,320 @@
+// Badge basic font style
+@mixin badge-basic {
+  font-family: "Lexend";
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 50px;
+  padding: 4px 10px;
+}
+
+// badge basic text and background color start
+.badge-basic-success-text {
+  @include badge-basic;
+  background: var(--ot-bg-badge-light-success);
+  color: var(--ot-text-badge-deep-success);
+}
+.badge-basic-danger-text {
+  @include badge-basic;
+  background: var(--ot-bg-badge-light-danger);
+  color: var(--ot-text-badge-deep-danger);
+}
+.badge-basic-warning-text {
+  @include badge-basic;
+  background: var(--ot-bg-badge-light-warning);
+  color: var(--ot-text-badge-deep-warning);
+}
+.badge-basic-info-text {
+  @include badge-basic;
+  background: #e5feff;
+  color: #00dfe5;
+}
+.badge-basic-primary-text {
+  @include badge-basic;
+  background: #eef0ff;
+  color: #5669ff;
+}
+// Badge basic text and background color end
+//
+// Style for heading
+.page-heading {
+  h1 {
+    font-size: 30px;
+    line-height: 38px;
+    color: #1a1d1f;
+  }
+}
+.component-page-heading {
+  h1 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+  }
+}
+//
+// Style for basic table start
+.basic-table {
+  width: 100%;
+  thead {
+    th {
+      height: 56px;
+      border-bottom: 1px solid #e9e9ef;
+      padding-left: 16px;
+      color: #1a1d1f;
+    }
+    th:first-child {
+      border-radius: 10px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 10px 0 0;
+    }
+  }
+  tbody {
+    td {
+      font-weight: 400;
+      padding-left: 16px;
+      height: 56px;
+      color: #6f767e;
+    }
+  }
+}
+// Style for basic table end
+//
+// style for table row color
+.ot-table-bg {
+  @extend .basic-table;
+  th,
+  tr:nth-child(even) {
+    background-color: #f7f7f7;
+  }
+}
+// style for table row color end
+//
+// style for table column color start
+.table-color-col {
+  @extend .basic-table;
+  th:nth-child(odd),
+  td:nth-child(odd) {
+    background-color: #f7f7f7;
+  }
+  td {
+    border-bottom: 1px solid #f5f5f5;
+  }
+  tr:last-child td {
+    border: none;
+  }
+}
+// style for table column color end
+//
+// Style for progress bar star
+.progress-size {
+  width: 100%;
+  height: 8px;
+}
+
+.progress-darkblue {
+  @extend .progress-size;
+  background-color: #dde1ff;
+  .progress-bar-darkblue {
+    border-radius: 5px;
+    background-color: #0010f7;
+  }
+}
+.progress-green {
+  @extend .progress-size;
+  background-color: #e9faf4;
+  .progress-bar-green {
+    border-radius: 5px;
+    background-color: #29d697;
+  }
+}
+.progress-violet {
+  @extend .progress-size;
+  background-color: #ebe7ff;
+  .progress-bar-violet {
+    border-radius: 5px;
+    background-color: #c8bbfb;
+  }
+}
+.progress-skyblue {
+  @extend .progress-size;
+  background-color: #d5e8fe;
+  .progress-bar-skyblue {
+    border-radius: 5px;
+    background-color: #4797ff;
+  }
+}
+.progress-darkviolet {
+  @extend .progress-size;
+  background-color: #e8defe;
+  .progress-bar-darkviolet {
+    border-radius: 5px;
+    background-color: #9d6fff;
+  }
+}
+// progress end
+//
+.ot-badge {
+  &.primary {
+    background-color: #e9faf4;
+    color: #7ab668;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    padding: 4px 10px;
+    border-radius: 50px;
+  }
+}
+//
+// select button style start
+.btn-select-content {
+  width: 305px;
+  height: 50px;
+  .btn-select {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    @include font;
+    background-color: white;
+    color: #b2bec3;
+    &:hover {
+      box-shadow: 0px 0px 10px rgba(10, 175, 255, 0.35);
+      border: 1px solid #0010f7;
+      outline: none;
+    }
+  }
+  ul {
+    width: 305px;
+    padding: 20px;
+  }
+  .sub-menu {
+    position: relative !important;
+    width: 100% !important;
+    transform: translate(0px, 0px) !important;
+  }
+}
+// select button style end
+//
+// input date rang field style start
+.input-Range-date {
+  height: 50px;
+  flex-direction: row;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  padding: 0px 10px;
+  gap: 25px;
+  input {
+    border: none;
+    outline: none;
+  }
+  &:hover {
+    box-shadow: 0px 0px 10px rgba(10, 175, 255, 0.35);
+    border: 1px solid #0010f7;
+    outline: none;
+  }
+}
+// input date rang field style end
+//
+// primary button custom style
+.btn-primary-custom {
+  font-weight: 600;
+  height: 50px;
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  border: none;
+}
+//
+// input search field style start
+.input-search-with-icon {
+  position: relative;
+  width: 320px;
+  height: 40px;
+  input {
+    @include width-height(100%, 100%);
+    padding: 10px 45px 10px 16px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    outline: none;
+  }
+  input:focus-visible {
+    box-shadow: 0px 0px 10px rgba(10, 175, 255, 0.35);
+    border: 1px solid #0010f7;
+    outline: none;
+  }
+  ::placeholder {
+    @include font;
+    color: #B2BEC3;
+  }
+  i {
+    position: absolute;
+    top: 12px;
+    color: #6f767e;
+
+    &.fa-search {
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+// input search field style end
+//
+// button group start
+.button-group {
+  border-color: #eaeaea !important;
+}
+.button-group:hover {
+  background-color: #a1a9ff34 !important;
+  border-color: #5669ff !important;
+}
+// button group end
+//
+// pagination button group style start
+.basic-table.pagination-content {
+  .pagination {
+    width: 368px;
+    li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3px;
+      width: 32px;
+      border: 1px solid #eaeaea;
+      border-radius: 7px;
+      a {
+        color: #1a1d1f;
+        i {
+          color: #6f767e;
+        }
+      }
+      &:hover a {
+        color: #5669ff;
+      }
+      &:hover {
+        border-color: #5669ff;
+      }
+    }
+  }
+}
+// pagination button group style end
+//
+// button selected style
+.selected {
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  & > a {
+    color: white !important;
+  }
+}
+
+.table-top-componet {
+  .right-component {
+    a {
+      float: right;
+
+      @include devices(md) {
+        float: left;
+        margin-top: 20px;
+      }
+    }
+  }
+}

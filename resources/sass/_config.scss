@@ -1,0 +1,46 @@
+// theme switch
+@import "themes";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// html roles
+html {
+  // animation smooth scrolling
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+// body roles
+body {
+  margin: 0;
+  font-family: $font-family-body;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+body.dark-theme {
+  background: none;
+  background-color: $ot-bg-primary;
+}
+
+/* Heading Text */
+h6,
+h5,
+h4,
+h3,
+h2,
+h1 {
+  color: $ot-text-title;
+}
+
+/* Heading Text */
+p,
+a,
+label {
+  color: $ot-text-subtitle;
+}

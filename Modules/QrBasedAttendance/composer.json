@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/qrbasedattendance",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\QrBasedAttendance\\": "",
+            "Modules\\QrBasedAttendance\\App\\": "app/",
+            "Modules\\QrBasedAttendance\\Database\\Factories\\": "database/factories/",
+            "Modules\\QrBasedAttendance\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\QrBasedAttendance\\Tests\\": "tests/"
+        }
+    }
+}

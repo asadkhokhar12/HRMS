@@ -1,0 +1,49 @@
+.ot-dropdown-btn {
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  border-radius: 5px;
+  padding: 8px 14px;
+  border: 0;
+  outline: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  &::after {
+    content: none;
+  }
+}
+
+.ot-btn-primary {
+  color: #ffffff !important;
+  border: 1px solid #21c6fb;
+  background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+  border-radius: 5px;
+}
+
+.ot-btn-success {
+  @extend .ot-btn-primary;
+  color: #ffffff !important;
+  border: 1px solid #00ffa2;
+  background: linear-gradient(90deg, #29d697 0%, #00ffa2 100%);
+}
+
+.ot-btn-danger {
+  @extend .ot-btn-primary;
+  color: #ffffff !important;
+  border: 1px solid #fd2201;
+  background: linear-gradient(90deg, #ff6a54 0%, #fd2201 100%);
+}
+
+.ot-btn-warning {
+  @extend .ot-btn-primary;
+  color: #ffffff !important;
+  border: 1px solid #fec403;
+  background: linear-gradient(90deg, #fdc400 0%, #fec403 100%);
+}
+
+.ot-btn-info {
+  @extend .ot-btn-primary;
+  color: #ffffff !important;
+  border: 1px solid #00ddff;
+  background: linear-gradient(90deg, #138496 0%, #00ddff 100%);
+}

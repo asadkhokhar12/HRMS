@@ -1,0 +1,39 @@
+/*
+    Main scss for the application.
+
+    Index
+    -----
+
+    1. Variables
+    2. Mixins
+    3. Functions
+    4. Fonts
+    5. Config
+    6. Components
+        1) Scrollbar
+        2) Topbar
+        3) Notification
+        4) Profile Expand
+        5) Sidebar
+        6) Theme Switch
+
+*/
+
+// Variables
+@import "./variables";
+
+//Mixins
+@import "./mixins";
+
+//Functions
+@import "./functions";
+
+//Fonts
+@import "./fonts";
+
+//Config
+@import "./config";
+
+//Components
+@import "./components";
+

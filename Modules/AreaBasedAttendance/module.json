@@ -1,0 +1,11 @@
+{
+    "name": "AreaBasedAttendance",
+    "alias": "areabasedattendance",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AreaBasedAttendance\\Providers\\AreaBasedAttendanceServiceProvider"
+    ],
+    "files": []
+}

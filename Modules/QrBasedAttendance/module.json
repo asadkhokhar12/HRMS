@@ -1,0 +1,11 @@
+{
+    "name": "QrBasedAttendance",
+    "alias": "qrbasedattendance",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\QrBasedAttendance\\Providers\\QrBasedAttendanceServiceProvider"
+    ],
+    "files": []
+}

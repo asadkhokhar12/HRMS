@@ -1,0 +1,13 @@
+{
+    "AreaBasedAttendance": true,
+    "EmployeeDocuments": true,
+    "IpBasedAttendance": true,
+    "LiveTracking": true,
+    "MultiBranch": true,
+    "MultiTheme": true,
+    "OfflineBasedAttendance": true,
+    "QrBasedAttendance": true,
+    "SelfieBasedAttendance": true,
+    "SingleDeviceLogin": true,
+    "VideoConference": true
+}

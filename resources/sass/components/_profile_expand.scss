@@ -1,0 +1,46 @@
+// Header Profile Expand
+
+.profile-expand-dropdown {
+  width: 265px;
+  max-width: 265px;
+
+  .profile-expand-container {
+    .profile-expand-list {
+      gap: 20px;
+      padding: 20px;
+
+      .profile-expand-item {
+        position: relative;
+        text-decoration: none;
+
+        &.divider {
+          margin-bottom: 20px;
+
+          &::after {
+            @include psudo-divider;
+            left: 4px;
+            right: 4px;
+            height: 2px;
+            top: 50px;
+          }
+        }
+        span {
+          font-weight: 500;
+          font-size: 15px;
+          line-height: 28px;
+          color: $ot-text-primary;
+        }
+
+        &:hover span {
+          color: $ot-text-title;
+        }
+
+        img {
+          width: 22px;
+          height: 22px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

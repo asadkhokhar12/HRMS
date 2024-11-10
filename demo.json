@@ -1,0 +1,74 @@
+[
+    {
+        "slug": "HR-slug",
+        "name": "HR",
+        "id": 1,
+        "parent_id": 0,
+        "children": [
+            {
+                "slug": "Designations-slug",
+                "name": "Designations",
+                "id": 2,
+                "parent_id": 1,
+                "children": [
+                    {
+                        "slug": "Departments-slug",
+                        "name": "Departments",
+                        "id": 3,
+                        "parent_id": 2,
+                        "children": [
+                            {
+                                "slug": "Roles-slug",
+                                "name": "Roles",
+                                "id": 4,
+                                "parent_id": 3
+                            },
+                            {
+                                "slug": "Employees-slug",
+                                "name": "Employees",
+                                "id": 5,
+                                "parent_id": 4
+                            },
+                            {
+                                "slug": "Services-slug",
+                                "name": "Services",
+                                "id": 6,
+                                "parent_id": 5
+                            },
+                            {
+                                "slug": "Model-slug",
+                                "name": "Model",
+                                "id": 7,
+                                "parent_id": 6,
+                                "children": [
+                                    {
+                                        "slug": "Brand-slug",
+                                        "name": "Brand",
+                                        "id": 8,
+                                        "parent_id": 7,
+                                        "children": [
+                                            {
+                                                "slug": "Machine-slug",
+                                                "name": "Machine",
+                                                "id": 9,
+                                                "parent_id": 8,
+                                                "children": [
+                                                    {
+                                                        "slug": "Package-slug",
+                                                        "name": "Package",
+                                                        "id": 10,
+                                                        "parent_id": 9
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

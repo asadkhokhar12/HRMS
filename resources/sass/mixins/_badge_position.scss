@@ -1,0 +1,33 @@
+// badge position
+@mixin badge_position(
+  $top: 0,
+  $right: 0,
+  $bottom: 0,
+  $left: 0,
+  $width: none,
+  $height: none,
+  $font-size: none,
+  $line-height: none,
+  $border: none,
+  $border-radius: none,
+  $background-color: none,
+  $color: none,
+  $box-shadow: none,
+  $text-align: none
+) {
+  position: absolute;
+  top: $top; //unset
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+  width: $width;
+  height: $height;
+  font-size: $font-size;
+  line-height: $line-height;
+  border: $border;
+  border-radius: $border-radius;
+  background-color: $background-color;
+  color: $color;
+  box-shadow: $box-shadow;
+  text-align: $text-align;
+}

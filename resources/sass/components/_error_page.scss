@@ -1,0 +1,23 @@
+// Error content height-width 
+.error-wrapper{
+    width: 100%;
+    height: 100vh;
+    // Error content items width 
+    .error-content{
+        width: 486px;
+        h1{
+            font-weight: 600;
+            font-size: 42px;
+        }
+        // Error content image width 
+        img{
+            width: 100%;
+        } 
+    }
+}
+// Back to homepage button 
+.btn-back-to-homepage{
+    width: 215px;
+}  
+
+

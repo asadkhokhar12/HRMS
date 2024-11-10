@@ -1,0 +1,11 @@
+{
+    "name": "MultiTheme",
+    "alias": "multitheme",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\MultiTheme\\Providers\\MultiThemeServiceProvider"
+    ],
+    "files": []
+}

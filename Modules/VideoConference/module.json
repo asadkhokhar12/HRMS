@@ -1,0 +1,13 @@
+{
+    "name": "VideoConference",
+    "alias": "videoconference",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\VideoConference\\Providers\\VideoConferenceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
