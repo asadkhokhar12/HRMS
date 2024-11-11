@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/selfiebasedattendance",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\SelfieBasedAttendance\\": "",
+            "Modules\\SelfieBasedAttendance\\App\\": "app/",
+            "Modules\\SelfieBasedAttendance\\Database\\Factories\\": "database/factories/",
+            "Modules\\SelfieBasedAttendance\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\SelfieBasedAttendance\\Tests\\": "tests/"
+        }
+    }
+}

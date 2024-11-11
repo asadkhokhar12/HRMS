@@ -1,0 +1,230 @@
+@font-face {
+    font-family: 'GTWalsheimPro Black';
+    src: url('./fonts/GTWalsheimPro-Black.ttf');
+  }
+
+:root{
+    --primary-color: #7F58FE;
+}
+
+h6, h5, h4, h3, h2, h1{
+    color: #00124E;
+    padding: 0 !important;
+    font-family: 'GTWalsheimPro Black', sans-serif;
+}
+
+
+p{
+    color: #687083;
+}
+
+button, .btn{
+    background-color: var(--primary-color) !important;
+    padding-top: 0.85rem!important;
+    padding-bottom: 0.85rem!important;
+}
+
+input{
+    padding-right: 1rem!important;
+    padding-left: 1rem!important;
+    padding-top: 0.85rem!important;
+    padding-bottom: 0.85rem!important;
+}
+
+.form-check-input{
+    width: 20px;
+    max-width: 20px;
+    min-width: 20px;
+    height: 20px;
+    max-height: 20px;
+    min-height: 20px;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    border: 1px solid rgb(199 199 199) !important;
+}
+
+.form-check-input:checked{
+    background-color: var(--primary-color) !important;
+}
+
+.installer-container .form-control:focus{
+    border-width: 1px !important;
+}
+
+hr{
+   margin-top: 14px !important;
+    margin-bottom: 22px !important;
+}
+
+
+.installer-container{
+    margin: auto;
+    height: 100vh;
+}
+
+
+.from-section{
+    background-color: rgb(241, 243, 243);
+}
+
+.follow-next-step-side .initial, .follow-next-step-side .completed, .text-title{
+    background-color: var(--primary-color);
+}
+
+.text-title{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.text-title h3{
+    color: #fff !important;
+    font-size: 24px  !important;
+}
+
+.content-body{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
+.follow-next-step-side .initial{
+    transition: all 1s ease;
+}
+
+.section1-m{
+    margin-left: 200px;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 0rem;
+}
+.illustration img{
+    margin-left: 180px;
+
+}
+.image-icon{
+    max-width: 55px;
+    max-height: 55px;
+    min-width: 55px;
+    min-height: 55px;
+    width: 55px;
+    height: 55px;
+}
+/* step2 page*/
+.all-the{
+    color: #7f58fe;
+}
+
+.btn-with-opacity {
+    background-color: rgb(127 88 254 / 10%);
+}
+
+.star{
+    color: red;
+    margin-left: 6px;
+}
+.next-step-status-line {
+    display: block;
+    width: 0px;
+    height: 63px;
+    background: #E3E6EF;
+    border: 0.5px dotted #E3E6EF;
+    margin-left: 26px;
+}
+
+.next-step-status-line.completed{
+    background: #5138EE;
+    border: 0.5px solid #5138EE;
+}
+
+.padding-left-top{
+    padding-left: 4rem;
+    padding-top: 4rem;
+}
+
+.tab-section{
+    display: none;
+}
+
+.show-section{
+    display: block !important;
+}
+
+.step-with-border img{
+    width: 24px;
+    height: 24px;
+}
+
+.step-with-border h5{
+    color: #00124E;
+    font-size: 24px;
+}
+
+.step-with-border p{
+    color: #687083;
+    font-size: 16px;
+}
+
+.list-item{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #687083;
+}
+
+/* Laravel Developer Start  */
+.system_req_err{
+    background-color: #FFF5F7 !important;
+}
+.system_req_err_msg{
+    color: #EE3862 !important;
+}
+.parsley-errors-list{
+    color: #EE3862 !important;
+    text-decoration: none !important;
+}
+.parsley-required{
+        text-decoration: none;
+        list-style: none !important;
+        margin-left: -30px;
+        font-size: 12px;
+        /* letter-spacing: 1px; */
+        /* text-transform: capitalize; */
+        font-family: monospace;
+        font-weight: 700;
+        padding-top: 5px;
+}
+.preloader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    z-index: 100001;
+    justify-content: center;
+    backface-visibility: hidden;
+    background: #ffffffba;
+}
+.loader_img{
+    text-align: center;
+}
+.loader_img {
+    background-position: center;
+    margin: -25px 0 0 -25px;
+    text-align: center
+}
+.text-title h3{
+    font-weight: 600;
+    font-size: 22px !important;
+    margin-bottom: 0;
+    padding: 12px 0 !important;
+}
+/* element.style {
+    font-weight: 600;
+    font-size: 22px !important;
+    margin-bottom: 0;
+    padding: 14px 0 !important;
+} */

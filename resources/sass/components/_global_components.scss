@@ -1,0 +1,29 @@
+/* Reborting Default Bootstrap carousel */
+
+.ot-carousel{
+
+    .carousel-control-prev-icon{
+        // we will work letter 
+        background-image: url(../../../assets/images/icons/slider-left-arrow.svg);
+
+    }
+    .carousel-control-next-icon{
+        // we will work letter 
+        background-image: url(../../../assets/images/icons/slider-right-arrow.svg);
+
+    }
+
+
+    .carousel-indicators{
+        button{
+            background-color: #0f6aff;
+        }
+    }
+
+}
+
+/* custom tooltip */
+
+.custom-tooltip {
+    --bs-tooltip-bg: #0f6aff;
+  }

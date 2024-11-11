@@ -1,0 +1,246 @@
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  width: 45px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+/* input:checked + .slider {
+    border-color: #4466f2 !important;
+    background-color: #4466f2 !important;
+} */
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4466f2;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 30px;
+  height: 25px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.btn_odd_row {
+  background-color: #f5f5f5;
+  padding-top: 10px;
+}
+.btn_even_row {
+  /* background-color: #f5f5f5; */
+  padding-top: 10px;
+}
+.mt-30 {
+  margin-top: 30px;
+}
+.staff-profile-image-small {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+.font-size-13 {
+  font-size: 13px;
+}
+.font-size-14 {
+  font-size: 14px;
+}
+.font-size-16 {
+  font-size: 16px !important;
+}
+.c-none {
+  display: none;
+}
+table.dataTable tbody th,
+table.dataTable tbody td {
+  font-size: 13px !important;
+  line-height: 1;
+}
+
+/* /// project notes */
+
+.sticky-note {
+  margin-bottom: 30px;
+  background: #ff8;
+  padding: 20px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  -webkit-transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: transform 150ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1;
+  -webkit-backface-visibility: hidden;
+  text-align: justify;
+}
+.sticky-note:hover {
+  cursor: move;
+  transform: rotate(0deg);
+}
+.sticky-note > * {
+  z-index: 1;
+}
+.sticky-note::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.sticky-note:hover::after {
+  opacity: 1;
+}
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* table design  */
+
+.page-btn {
+  background: #ddd;
+  color: #2c303a;
+  height: 35px;
+  border-radius: 2px;
+  padding: 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: background 0.3s ease;
+  margin: 0 2px;
+  border: 0;
+  outline: none !important;
+}
+
+.page-btn:first-of-type {
+  margin-left: 0;
+}
+
+.page-btn:last-of-type {
+  margin-right: 0;
+}
+
+.page-btn:not([class$="-page"]) {
+  width: 35px;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.page-btn[class*="-page"] {
+  background: #ccc;
+  font-size: 0.6em;
+  font-weight: 700;
+}
+
+.page-btn.active {
+  background: linear-gradient(90deg, #7f58fe 0%, #7f58fe 100%);
+  color: #fff;
+}
+
+.page-btn:hover {
+  background: linear-gradient(90deg, #7f58fe 0%, #7f58fe 100%);
+  color: #fff;
+}
+
+.page-btn[disabled],
+.page-btn[disabled]:hover {
+  opacity: 0.3;
+  color: #000;
+  background: #ccc;
+  cursor: not-allowed;
+}
+.custom-action-right {
+  float: right;
+  right: 0 !important;
+  left: auto !important;
+}
+
+/****** Style Star Rating Widget *****/
+
+.rating {
+  border: none;
+  float: left;
+}
+
+.rating > input {
+  display: none;
+}
+.rating > label:before {
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: 'Font Awesome\ 5 Free';
+  display: inline-block;
+  content: "\f005";
+}
+
+.rating > .half:before {
+  content: "\f089";
+  position: absolute;
+}
+
+.rating > label {
+  color: #ddd;
+  float: right;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label,i.fa-star,i.fa-star-half-alt {
+  color: #ffd700;
+} /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label {
+  color: #ffed85;
+}

@@ -1,0 +1,11 @@
+{
+    "name": "SelfieBasedAttendance",
+    "alias": "selfiebasedattendance",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SelfieBasedAttendance\\Providers\\SelfieBasedAttendanceServiceProvider"
+    ],
+    "files": []
+}

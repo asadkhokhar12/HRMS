@@ -1,0 +1,11 @@
+{
+    "name": "SingleDeviceLogin",
+    "alias": "singledevicelogin",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SingleDeviceLogin\\Providers\\SingleDeviceLoginServiceProvider"
+    ],
+    "files": []
+}

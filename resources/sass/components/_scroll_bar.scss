@@ -1,0 +1,22 @@
+// Scroll bar global design variables
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 5px;
+  }
+  
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(35, 180, 220, 0.1) !important;
+    border-radius: 8px;
+    background-clip: padding-box;  
+  }
+  
+  

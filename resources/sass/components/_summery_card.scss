@@ -1,0 +1,226 @@
+/* Summery Card */
+
+.summery-card {
+  .card-heading {
+    .card-icon {
+      min-width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      &.icon-circle-1 {
+        background-color: rgba(172, 224, 195, 0.1);
+      }
+      &.icon-circle-2 {
+        background-color: rgba(194, 183, 252, 0.1);
+      }
+      &.icon-circle-3 {
+        background-color: rgba(254, 179, 145, 0.1);
+      }
+      &.icon-circle-4 {
+        background-color: rgba(168, 225, 249, 0.1);
+      }
+    }
+
+    .card-content {
+      margin-left: 16px;
+
+      /* rtl */
+      .rtl & {
+        margin-left: 0;
+        margin-right: 16px;
+      }
+
+      h4 {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        margin-bottom: 0px;
+        color: $ot-text-subtitle;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 42px;
+        margin-top: 0px;
+        color: $ot-text-title;
+      }
+    }
+  }
+
+  .card-bottom {
+    .card-states {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+
+      .card-badge {
+        border-radius: 50px;
+        padding: 4px 10px;
+        gap: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: $ot-text-title;
+
+        &:first-child {
+          background-color: $success-tint-light;
+
+          .dark-theme & {
+            background-color: rgba(233, 250, 244, 0.1);;
+          }
+
+          .count {
+            color: #7ab668;
+          }
+        }
+
+        &:last-child {
+          background-color: $danger-tint-light;
+          .dark-theme & {
+            background-color: rgba(255, 240, 237, 0.1);
+          }
+          .count {
+            color: #ff6a54;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.chart-custom-content {
+  p {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 21px;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #1a1d1f;
+  }
+
+  .percentage-spike {
+    img {
+      width: 12px;
+      height: 12px;
+    }
+
+    .primary-blue {
+      color: #5669ff;
+    }
+    .secondary-blue {
+      color: #55b1f3;
+    }
+
+    .primary-red {
+      color: #ff4f75;
+    }
+    .primary-yellow {
+      color: #ff991a;
+    }
+  }
+
+  .percentage-spike:nth-child(1) {
+    background-color: #feb391;
+  }
+}
+
+.chart-header {
+  p {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+
+    color: $ot-text-primary;
+  }
+}
+
+.statistics-card .card .card-bottom .card-states .btn.active-state-btn {
+  background-color: $success-tint-light;
+}
+
+.statistics-card .card .card-bottom .card-states .btn.active-state-btn .count {
+  color: $success-dark;
+}
+
+.statistics-card .card .card-bottom .card-states .btn.active-state-btn .status {
+  color: $ot-text-primary;
+}
+
+.statistics-card .card .card-bottom .card-states .btn.inactive-state-btn {
+  background-color: $danger-tint-light;
+}
+.statistics-card
+  .card
+  .card-bottom
+  .card-states
+  .btn.inactive-state-btn
+  .count {
+  color: var($danger-dark);
+}
+.statistics-card
+  .card
+  .card-bottom
+  .card-states
+  .btn.inactive-state-btn
+  .status {
+  color: $ot-text-primary;
+}
+
+/* statistics-charts  */
+.statistics-chart .visited-customer .card .card-top .title h4 {
+  color: $ot-text-title;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.statistics-chart .visited-customer .card .card-top {
+  margin-bottom: 15px;
+}
+
+.statistics-chart .visited-customer .card .card-top .card-content .stats {
+  font-weight: 600;
+}
+
+.statistics-chart
+  .visited-customer
+  .card
+  .card-top
+  .card-content
+  .stats
+  span.vs {
+  margin-left: 12px;
+}
+
+.statistics-chart
+  .visited-customer
+  .card
+  .card-top
+  .card-content
+  .btn.active-state-btn {
+  background-color: $success-tint-light;
+}
+
+.statistics-chart
+  .visited-customer
+  .card
+  .card-top
+  .card-content
+  .btn.active-state-btn
+  .count {
+  color: var(--success-dark);
+}
+
+/* .statistics-chart #visited_customer_chart{
+    width: 400px;
+    height: 200px;
+} */

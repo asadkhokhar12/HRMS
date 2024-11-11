@@ -1,0 +1,50 @@
+/* Custom Input field */
+.ot-input {
+  background-color: $ot-bg-secondary !important;
+  border: 1px solid $ot-border-primary !important;
+  outline: none !important;
+  color: $ot-text-title !important;
+  font-size: 14px;
+  padding-left: 16px;
+
+  &:focus-visible {
+    box-shadow: 0px 0px 10px rgba(10, 175, 255, 0.35);
+    border: 1px solid $blue-dark !important;
+    outline: none;
+  }
+
+  &::placeholder {
+    font-weight: 400;
+    font-size: 14px;
+    color: #b2bec3;
+  }
+}
+.input-check-radio {
+  padding: 8px 0;
+  .form-check {
+    display: flex;
+    align-items: self-end;
+
+    .form-check-input {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      border: 1px solid $ot-border-table-checkbox;
+      
+      background-color: $ot-bg-table-checkbox;
+      margin-right: 4px;
+      &:focus {
+        box-shadow: none;
+      }
+      &:checked {
+        //   linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+        background-repeat: no-repeat;
+        background-position: center;
+        border: none; 
+      }
+    }
+    .form-check-label{
+      margin-left: 8px;
+    }
+  }
+}

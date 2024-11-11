@@ -1,0 +1,46 @@
+/*Changes while RTL Start*/
+
+body.rtl {
+  .main-content {
+    margin-right: 256px;
+    margin-left: 0;
+    transition: -webkit-right 0.3s;
+    transition: margin-right 0.3s;
+    transition: margin-right 0.3s, -webkit-margin-right 0.3s;
+
+    @include devices(md) {
+      width: 100%;
+      margin-right: 0;
+      transition: -webkit-left 0.3s;
+      transition: margin-right 0.3s;
+      transition: margin-right 0.3s, -webkit-margin-right 0.3s;
+    }
+  }
+}
+
+/*Changes while RTL Start*/
+
+
+
+.main-content {
+  margin-left: 256px;
+  transition: -webkit-left 0.3s;
+  transition: margin-left 0.3s;
+  transition: margin-left 0.3s, -webkit-margin-left 0.3s;
+
+  @include devices(lg) {
+    width: 100%;
+    margin-left: 0;
+    transition: -webkit-left 0.3s;
+    transition: margin-left 0.3s;
+    transition: margin-left 0.3s, -webkit-margin-left 0.3s;
+  }
+
+  .dashboard-heading {
+    .title {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 34px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.information-modal {
+  .fa {
+    font-size: 28px;
+  }
+  .modal-footer {
+    border-top: none;
+  }
+}
+.confirmation-modal {
+  .fa {
+    font-size: 28px;
+  }
+  .modal-footer {
+    border-top: none;
+  }
+}
+
+.modal-header-image {
+    background-size: cover;
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+.modal-content{
+  border: none;
+}
+.btn-close{
+    background: #ffffff52;
+    border-radius: 50%;
+}
+.btn-gradian{
+    color: white;
+    border: none;
+    font-weight: 500;
+    background: linear-gradient(90deg, #0f6aff 0%, #21c6fb 100%);
+}
+.btn-gradian:hover {
+    color:white;
+    background: linear-gradient(90deg, #004fcd 0%, #2796f7 100%);
+}

@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/ipbasedattendance",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\IpBasedAttendance\\": "",
+            "Modules\\IpBasedAttendance\\App\\": "app/",
+            "Modules\\IpBasedAttendance\\Database\\Factories\\": "database/factories/",
+            "Modules\\IpBasedAttendance\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\IpBasedAttendance\\Tests\\": "tests/"
+        }
+    }
+}

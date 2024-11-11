@@ -1,0 +1,297 @@
+<?php
+
+namespace Database\Seeders;
+
+use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use App\Models\Track\LocationLog;
+
+class LocationLogsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $now = Carbon::now();
+        $users = User::all();
+        foreach ($users as $user) {
+
+            $locations = [
+                [
+                    'latitude' => 23.745873078476464,
+                    'longitude' => 90.41195551961286,
+                    'address' => 'Mouchak Market',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(1 * 5),
+                ],
+                [
+                    'latitude' => 23.749672763706688,
+                    'longitude' => 90.41254999415074,
+                    'address' => 'Malibagh Railgate',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(2 * 5),
+                ],
+                [
+                    'latitude' => 23.754717457573552,
+                    'longitude' => 90.41195551961286,
+                    'address' => 'Abul Hotel',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(3 * 5),
+                ],
+                [
+                    'latitude' => 23.757355822101527,
+                    'longitude' => 90.41720724731655,
+                    'address' => 'Hazipara CNG Filling Station',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(4 * 5),
+                ],
+                [
+                    'latitude' => 23.759271507911013,
+                    'longitude' => 90.41830791183013,
+                    'address' => 'Better Life Hospital',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(5 * 5),
+                ],
+                [
+                    'latitude' => 23.763217417111054,
+                    'longitude' => 90.42023992757133,
+                    'address' => 'Delta Health Care',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(6 * 5),
+                ],
+                [
+                    'latitude' => 23.764851708347255,
+                    'longitude' => 90.42122998740953,
+                    'address' => 'Salam Dairy Farm',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(7 * 5),
+                ],
+                [
+                    'latitude' => 23.76539103642052,
+                    'longitude' => 90.42156171645009,
+                    'address' => 'Korean & Japanese Language',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(8 * 5),
+                ],
+                [
+                    'latitude' => 23.766234689908597,
+                    'longitude' => 90.42209758636301,
+                    'address' => 'Hatirjheel South U Loop',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(9 * 5),
+                ],
+                [
+                    'latitude' => 23.77211480190161,
+                    'longitude' => 90.42526789751476,
+                    'address' => 'Dominos Pizza Badda',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(10 * 5),
+                ],
+                [
+                    'latitude' => 23.77469085994277,
+                    'longitude' => 90.4259441143552,
+                    'address' => 'Fiza Electronics',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(11 * 5),
+                ],
+                [
+                    'latitude' => 23.781516809914827,
+                    'longitude' => 90.42548684680646,
+                    'address' => 'Pran Center',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(12 * 5),
+                ],
+                [
+                    'latitude' => 23.78356476262729,
+                    'longitude' => 90.42604065638074,
+                    'address' => 'Hossen Market',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(13 * 5),
+                ],
+                [
+                    'latitude' => 23.789458521030365,
+                    'longitude' => 90.42478130867714,
+                    'address' => 'Waterfall Garden Cafe',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(14 * 5),
+                ],
+                [
+                    'latitude' => 23.792353237387722,
+                    'longitude' => 90.42428819054238,
+                    'address' => 'Confidence Shopping Mall',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(15 * 5),
+                ],
+                [
+                    'latitude' => 23.798142476641196,
+                    'longitude' => 90.42321850343193,
+                    'address' => 'NotunBazar Bus Stop',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(16 * 5),
+                ],
+                [
+                    'latitude' => 23.798142476641196,
+                    'longitude' => 90.42321850343193,
+                    'address' => 'NotunBazar Bus Stop',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(17 * 5),
+                ],
+                [
+                    'latitude' => 23.81051836619854,
+                    'longitude' => 90.41981978169581,
+                    'address' => 'Morol Bazar Nodda',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(18 * 5),
+                ],
+                [
+                    'latitude' => 23.81928419686653,
+                    'longitude' => 90.4165045104347,
+                    'address' => 'Parves Bike Service Center',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(19 * 5),
+                ],
+                [
+                    'latitude' => 23.825155514854718,
+                    'longitude' => 90.42084394988736,
+                    'address' => 'BRTC Double Decker Bus Stop',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                ],
+                [
+                    'latitude' => 23.836283524845964,
+                    'longitude' => 90.41822586712553,
+                    'address' => 'Le Meridien Dhaka',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(20 * 5),
+                ],
+                [
+                    'latitude' => 23.846025722666436,
+                    'longitude' => 90.41234575064222,
+                    'address' => 'Kawral Foot Over Bridge',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(21 * 5),
+                ],
+                [
+                    'latitude' => 23.85027914858193,
+                    'longitude' => 90.40929600481816,
+                    'address' => 'Airport Rail Station',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(22 * 5),
+                ],
+                [
+                    'latitude' => 23.850910558789632,
+                    'longitude' => 90.41094226056435,
+                    'address' => 'Airport Police Station',
+                    'city' => 'Dhaka',
+                    'user_id' => $user->id,
+                    'company_id' => $user->company_id,
+                    'countryCode' => 'BD',
+                    'date' => now(),
+                    'created_at' => $now->copy()->addMinutes(23 * 5),
+                ],
+            ];
+
+            // You can add more data as needed
+            foreach ($locations as $location) {
+                LocationLog::create($location);
+            }
+
+        }
+
+    }
+}

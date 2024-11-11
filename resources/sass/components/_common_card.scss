@@ -1,0 +1,20 @@
+/* Common card for layout for dashboard */
+
+.ot-card{
+    background-color: $ot-bg-secondary;
+    filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.05));
+    border-radius: 5px;
+    padding: 28px;
+    border: none;
+
+    .card-header, .card-body, .card-footer{
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border: none;
+    }
+
+    .card-body{
+        padding-top: 20px;
+    }
+}

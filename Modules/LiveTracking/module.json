@@ -1,0 +1,11 @@
+{
+    "name": "LiveTracking",
+    "alias": "livetracking",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\LiveTracking\\Providers\\LiveTrackingServiceProvider"
+    ],
+    "files": []
+}

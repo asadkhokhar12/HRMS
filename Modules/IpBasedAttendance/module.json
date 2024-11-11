@@ -1,0 +1,11 @@
+{
+    "name": "IpBasedAttendance",
+    "alias": "ipbasedattendance",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\IpBasedAttendance\\Providers\\IpBasedAttendanceServiceProvider"
+    ],
+    "files": []
+}

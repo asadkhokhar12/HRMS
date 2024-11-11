@@ -1,0 +1,55 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.2",
+        "alpinejs": "^3.4.2",
+        "autoprefixer": "^10.4.2",
+        "axios": "^0.21.4",
+        "bootstrap": "^5.1.3",
+        "jquery": "^3.6",
+        "laravel-mix": "^6.0.49",
+        "laravel-vite": "^0.0.24",
+        "laravel-vite-plugin": "^0.7.4",
+        "lodash": "^4.17.19",
+        "popper.js": "^1.16.1",
+        "postcss": "^8.4.6",
+        "resolve-url-loader": "^3.1.2",
+        "sass": "^1.38.0",
+        "sass-loader": "^11.0.1",
+        "tailwindcss": "^3.1.0",
+        "vite": "^4.3.3",
+        "vue": "^2.6.12",
+        "vue-loader": "^15.9.8",
+        "vue-template-compiler": "^2.6.12",
+        "webpack": "^5.49.0"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.10.2",
+        "animate.css": "^4.1.1",
+        "chart.js": "^3.5.0",
+        "framer-motion": "^4.1.17",
+        "mix": "0.0.1",
+        "react-intersection-observer": "^8.32.3"
+    },
+    "name": "adgari",
+    "description": "<p align=\"center\"><a href=\"https://www.adgari.com\" target=\"_blank\"><img src=\"https://www.adgari.com/public/frontend/img/icons/header/logo.svg\" width=\"400\"></a></p>",
+    "version": "1.0.0",
+    "main": "webpack.mix.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@gitlab.com/ImpexDevs/adgari.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://gitlab.com/ImpexDevs/adgari/issues"
+    },
+    "homepage": "https://gitlab.com/ImpexDevs/adgari#readme"
+}

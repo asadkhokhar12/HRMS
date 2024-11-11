@@ -1,0 +1,16 @@
+//
+//  --------------------------------------------------
+//  Mixins for the base stylesheet.
+//  Here will import all the mixins from the mixins file.
+//  --------------------------------------------------
+//
+
+@import "./mixins/global_mixins";
+@import "./mixins/media_queries";
+
+// text
+@import "./mixins/text";
+@import "./mixins/common_mixins";
+
+// badge position
+@import "./mixins/badge_position";

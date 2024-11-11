@@ -1,0 +1,127 @@
+/*
+    Base components are imported from the base folder.
+
+    Index
+    -----
+
+    1) Scrollbar
+    2) Topbar
+    3) Topbar Dropdown Menu
+    4) Profile Expand
+    5) Sidebar
+    6) Theme Switch
+    7) Main Content
+    8) Common Card
+    9) Summery Card
+    10) Charts
+    11) Common Buttons
+    11) Tables
+    12) Accordion
+    13) Signup, Signin
+    14) Error Page
+    15) Card
+    16) Modal
+    17) Alert
+    18) Color Template
+    19) Dropdown
+    20) Badges
+    21) Global Components
+    22) Paginations
+    23) Inputs
+    24) Breadcrumb
+*/
+
+/* Scrollbar */
+@import "./components/scroll_bar";
+
+/* Topbar */
+@import "./components/topbar";
+
+/* Topbar Dropdown Menu */
+@import "./components/topbar_dropdown_menu";
+
+/* Profile Expand */
+@import "./components/profile_expand";
+
+/* Sidebar */
+@import "./components/sidebar";
+
+/* Theme Switch */
+@import "./components/theme_switch";
+
+/* Main Content */
+
+@import "./components/main_content";
+
+/* Common Card */
+
+@import "./components/common_card";
+
+/* Summery Card */
+
+@import "./components/summery_card";
+
+/* Datatable */
+@import "./components/datatable";
+
+/* Charts */
+
+@import "./components/charts";
+
+/* Common Buttons */
+
+@import "./components/common_buttons";
+
+/* Tables */
+
+@import "./components/tables";
+
+/* Accordion */
+
+@import "./components/accordion";
+
+/* Signup, Signin */
+
+@import "./components/signup";
+@import "./components/signin";
+
+/* Error Page */
+@import "./components/error_page";
+
+/* Card */
+@import "./components/card";
+
+/* Modal */
+@import "./components/modal";
+
+/* Alert */
+@import "./components/alert";
+
+/* Color Template */
+@import "./components/color_template";
+
+/* Dropdown */
+@import "./components/dropdown";
+
+/* Badges */
+@import "./components/badge";
+
+/* Global Components */
+@import "./components/global_components";
+
+/* Components */
+@import "./components/pagination";
+
+/* profile */
+@import "./components/profile";
+
+@import "./components/profile_attendance";
+
+/* Inputs */
+@import "./components/inputs";
+
+/* Breadcrumbs */
+@import "./components/breadcrumb";
+
+/* Email Template */
+@import "./components/email_template";

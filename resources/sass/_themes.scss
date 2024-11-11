@@ -1,0 +1,307 @@
+.default-theme {
+  /* text color */
+  --ot-text-primary: #6f767e;
+  --ot-text-title: #1a1d1f;
+  --ot-text-subtitle: #33383f;
+
+  /* background color */
+  --ot-bg-primary: #f0f3f5;
+  --ot-bg-secondary: #ffffff;
+  --ot-bg-secondary-opacity: rgba(255, 255, 255, 0.35);
+  --ot-bg-tertiary: #ffffff;
+  --ot-bg-progress: #e6e6e6;
+
+  /* border color */
+  --ot-border-primary: #eaeaea;
+
+  /* badge background color */
+  --ot-bg-badge-success: #29d697;
+  --ot-bg-badge-danger: #ff6a54;
+  --ot-bg-badge-warning: #fdc400;
+  --ot-bg-badge-primary: #1890ff;
+
+  /* badge text color */
+  --ot-text-badge-success: #ffffff;
+  --ot-text-badge-danger: #ffffff;
+  --ot-text-badge-warning: #ffffff;
+  --ot-text-badge-primary: #ffffff;
+
+  /* badge light background color */
+  --ot-bg-badge-light-success: #e9faf4;
+  --ot-bg-badge-light-danger: #fff0ed;
+  --ot-bg-badge-light-warning: #fef9e5;
+  --ot-bg-badge-light-primary: #e6f2fd;
+
+  /* badge light text color */
+  --ot-text-badge-light-success: #29d697;
+  --ot-text-badge-light-danger: #ff6a54;
+  --ot-text-badge-light-warning: #fdc400;
+  --ot-text-badge-light-primary: #1890ff;
+
+    /* badge deep text color */
+    --ot-text-badge-deep-success: #29d697;
+    --ot-text-badge-deep-danger: #ff6a54;
+    --ot-text-badge-deep-warning: #fdc400;
+    --ot-text-badge-deep-primary: #1890ff;
+
+  /* table color */
+  // table card
+  --ot-bg-table-card: #ffffff;
+  --ot-border-table-card: #ffffff;
+  --ot-bg-table-card-header: #ffffff;
+  --ot-border-table-card-header: #eaeaea;
+  // table
+  --ot-border-table: #eaeaea;
+  --ot-bg-table-thead: #f7fafc;
+  --ot-border-table-thead: #eaeaea;
+  --ot-bg-table-tbody: #f7fafc;
+  // table checkbox
+  --ot-bg-table-checkbox: #ffffff;
+  --ot-border-table-checkbox: #eaeaea;
+  // table sorting icon
+  --ot-color-table-icon-sorting-asc-up: #1a1d1f;
+  --ot-color-table-icon-sorting-asc-down: #bebfc0;
+  --ot-color-table-icon-sorting-desc-up: #bebfc0;
+  --ot-color-table-icon-sorting-desc-down: #1a1d1f;
+  // table toolbar
+  --ot-bg-table-toolbar-per-page: #ffffff;
+  --ot-border-table-toolbar-per-page: #eaeaea;
+  --ot-bg-table-toolbar-btn-outline-primary: #ffffff;
+  // search
+  --ot-bg-table-toolbar-search: #ffffff;
+  --ot-border-table-toolbar-search: #eaeaea;
+  // btn action
+  --ot-bg-table-toolbar-btn-action: #fcfcfc;
+  --ot-border-table-toolbar-btn-action: #fcfcfc;
+
+  /* table pagination */
+  --ot-bg-table-pagination: #ffffff;
+  --ot-text-table-pagination: #1a1d1f;
+  --ot-border-table-pagination: #eaeaea;
+
+  /* profile */
+  --ot-bg-profile-menu: #fcfcfc;
+  --ot-bg-profile-body: #fcfcfc;
+  --ot-bg-profile-mobile-menu: #fcfcfc;
+
+// datepicker disable date 
+--ot-disable-date:#B2BEC3;
+--ot-bg-hover-datepicker: #F7F7F7;
+--ot-text-hover-datepicker:#000;
+
+
+// slider input
+--ot-bg-slider: #ccc;
+--ot-bg-before: #fff;
+
+// scrollbar
+
+--ot-bg-scrollbar: rgb(0 0 0 / 5%);
+--ot-scrollbar:#afd9ec ;
+}
+
+.dark-theme {
+  /* text color */
+  --ot-text-primary: #6f767e;
+  --ot-text-title: #ffffff;
+  --ot-text-subtitle: #6f767e;
+
+  /* background color */
+  --ot-bg-primary: #111415;
+  --ot-bg-secondary: #1a1d20;
+  --ot-bg-secondary-opacity: #1a1d20;
+  --ot-bg-tertiary: #1f2124;
+  --ot-bg-progress: #373737;
+
+  /* border color */
+  --ot-border-primary: #272b30;
+
+  /* badge background color */
+  --ot-bg-badge-success: rgba(41, 214, 151, 0.1);
+  --ot-bg-badge-danger: rgba(255, 106, 84, 0.1);
+  --ot-bg-badge-warning: rgba(253, 196, 0, 0.1);
+  --ot-bg-badge-primary: rgba(24, 144, 255, 0.1);
+
+  /* badge text color */
+  --ot-text-badge-success: #29d697;
+  --ot-text-badge-danger: #ff6a54;
+  --ot-text-badge-warning: #fdc400;
+  --ot-text-badge-primary: #1890ff;
+
+    /* badge deep color */
+    --ot-text-badge-deep-success: #29d697;
+    --ot-text-badge-deep-danger: #ff6a54;
+    --ot-text-badge-deep-warning: #fdc400;
+    --ot-text-badge-deep-primary: #1890ff;
+
+  /* badge light background color */
+  --ot-bg-badge-light-success: rgba(233, 250, 244, 0.1);
+  --ot-bg-badge-light-danger: rgba(255, 240, 237, 0.1);
+  --ot-bg-badge-light-warning: rgba(254, 249, 229, 0.1);
+  --ot-bg-badge-light-primary: rgba(230, 242, 253, 0.1);
+
+  /* badge light text color */
+  --ot-text-badge-light-success: #29d697;
+  --ot-text-badge-light-danger: #ff6a54;
+  --ot-text-badge-light-warning: #fdc400;
+  --ot-text-badge-light-primary: #1890ff;
+
+  /* table color */
+  // table card
+  --ot-bg-table-card: #1a1d20;
+  --ot-border-table-card: #ffffff;
+  --ot-bg-table-card-header: #1a1d20;
+  --ot-border-table-card-header: transparent;
+  // table
+  --ot-border-table: transparent;
+  --ot-bg-table-thead: #1f2124;
+  --ot-border-table-thead: #1f2124;
+  --ot-bg-table-tbody: #1f2124;
+  // table checkbox
+  --ot-bg-table-checkbox: #1a1d20;
+  --ot-border-table-checkbox: #272b30;
+  // table sorting icon
+  --ot-color-table-icon-sorting-asc-up: rgba(190, 191, 192, 0.1);
+  --ot-color-table-icon-sorting-asc-down: #bebfc0;
+  --ot-color-table-icon-sorting-desc-up: #bebfc0;
+  --ot-color-table-icon-sorting-desc-down: rgba(190, 191, 192, 0.1);
+  // table toolbar
+  --ot-bg-table-toolbar-per-page: #1f2124;
+  --ot-border-table-toolbar-per-page: #272b30;
+  --ot-bg-table-toolbar-btn-outline-primary: #1a1d20;
+  // search
+  --ot-bg-table-toolbar-search: #1f2124;
+  --ot-border-table-toolbar-search: #272b30;
+  // btn action
+  --ot-bg-table-toolbar-btn-action: #1f2124;
+  --ot-border-table-toolbar-btn-action: #272b30;
+
+  /* table pagination */
+  --ot-bg-table-pagination: #1a1d20;
+  --ot-text-table-pagination: #ffffff;
+  --ot-border-table-pagination: #272b30;
+
+  /* profile */
+  --ot-bg-profile-menu: var(--ot-bg-secondary);
+  --ot-bg-profile-body: var(--ot-bg-secondary);
+  --ot-bg-profile-mobile-menu: var(--ot-bg-secondary);
+
+  // datepicker disable date 
+  --ot-disable-date:#424f5570;
+  --ot-bg-hover-datepicker:#363636ae;
+  --ot-text-hover-datepicker:rgb(255, 255, 255);
+
+  // slider input
+--ot-bg-slider: #474747a8;
+--ot-bg-before: #000;
+
+// scrollbar
+--ot-bg-scrollbar: #272b30;
+--ot-scrollbar:#1c1f24;
+
+
+}
+
+/* Global text color */
+
+$ot-text-primary: var(--ot-text-primary);
+$ot-text-title: var(--ot-text-title);
+$ot-text-subtitle: var(--ot-text-subtitle);
+
+/* Global bg color */
+
+$ot-bg-primary: var(--ot-bg-primary);
+$ot-bg-secondary: var(--ot-bg-secondary);
+$ot-bg-secondary-opacity: var(--ot-bg-secondary-opacity);
+$ot-bg-tertiary: var(--ot-bg-tertiary);
+
+/* border color */
+$ot-border-primary: var(--ot-border-primary);
+
+/* Global badge background color */
+
+$ot-bg-badge-success: var(--ot-bg-badge-success);
+$ot-bg-badge-danger: var(--ot-bg-badge-danger);
+$ot-bg-badge-warning: var(--ot-bg-badge-warning);
+$ot-bg-badge-primary: var(--ot-bg-badge-primary);
+
+/* Global badge text color */
+
+$ot-text-badge-success: var(--ot-text-badge-success);
+$ot-text-badge-danger: var(--ot-text-badge-danger);
+$ot-text-badge-warning: var(--ot-text-badge-warning);
+$ot-text-badge-primary: var(--ot-text-badge-primary);
+
+/* Global badge light background color */
+
+$ot-bg-badge-light-success: var(--ot-bg-badge-light-success);
+$ot-bg-badge-light-danger: var(--ot-bg-badge-light-danger);
+$ot-bg-badge-light-warning: var(--ot-bg-badge-light-warning);
+$ot-bg-badge-light-primary: var(--ot-bg-badge-light-primary);
+
+/* Global badge light text color */
+
+$ot-text-badge-light-success: var(--ot-text-badge-light-success);
+$ot-text-badge-light-danger: var(--ot-text-badge-light-danger);
+$ot-text-badge-light-warning: var(--ot-text-badge-light-warning);
+$ot-text-badge-light-primary: var(--ot-text-badge-light-primary);
+
+/* Global table color */
+// table card
+$ot-bg-table-card: var(--ot-bg-table-card);
+$ot-bg-table-card-header: var(--ot-bg-table-card-header);
+$ot-border-table-card-header: var(--ot-border-table-card-header);
+// table
+$ot-border-table: var(--ot-border-table);
+$ot-bg-table-thead: var(--ot-bg-table-thead);
+$ot-border-table-thead: var(--ot-border-table-thead);
+$ot-bg-table-tbody: var(--ot-bg-table-tbody);
+// table sorting icon
+$ot-color-table-icon-sorting-asc-up: var(--ot-color-table-icon-sorting-asc-up);
+$ot-color-table-icon-sorting-asc-down: var(
+  --ot-color-table-icon-sorting-asc-down
+);
+$ot-color-table-icon-sorting-desc-up: var(
+  --ot-color-table-icon-sorting-desc-up
+);
+$ot-color-table-icon-sorting-desc-down: var(
+  --ot-color-table-icon-sorting-desc-down
+);
+// table checkbox
+$ot-bg-table-checkbox: var(--ot-bg-table-checkbox);
+$ot-border-table-checkbox: var(--ot-border-table-checkbox);
+
+// table toolbar
+$ot-bg-table-toolbar-per-page: var(--ot-bg-table-toolbar-per-page);
+$ot-border-table-toolbar-per-page: var(--ot-border-table-toolbar-per-page);
+$ot-bg-table-toolbar-btn-outline-primary: var(
+  --ot-bg-table-toolbar-btn-outline-primary
+);
+// search
+$ot-bg-table-toolbar-search: var(--ot-bg-table-toolbar-search);
+$ot-border-table-toolbar-search: var(--ot-border-table-toolbar-search);
+// btn action
+$ot-bg-table-toolbar-btn-action: var(--ot-bg-table-toolbar-btn-action);
+$ot-border-table-toolbar-btn-action: var(--ot-border-table-toolbar-btn-action);
+
+/* Global table pagination */
+$ot-bg-table-pagination: var(--ot-bg-table-pagination);
+$ot-text-table-pagination: var(--ot-text-table-pagination);
+$ot-border-table-pagination: var(--ot-border-table-pagination);
+
+/* profile */
+$ot-bg-profile-menu: var(--ot-bg-profile-menu);
+$ot-bg-profile-body: var(--ot-bg-profile-body);
+$ot-bg-profile-mobile-menu: var(--ot-bg-profile-mobile-menu);
+
+// datepicker disable date 
+$ot-disable-date:var(--ot-disable-date);
+$ot-bg-hover-datepicker:var( --ot-bg-hover-datepicker);
+$ot-text-hover-datepicker:var(--ot-text-hover-datepicker);
+
+  // slider input
+  $ot-bg-slider:var(--ot-bg-slider);
+  $ot-bg-before:var(--ot-bg-before);
+// scrollbar
+$ot-bg-scrollbar:var(--ot-bg-scrollbar);
+$ot-scrollbar:var(--ot-scrollbar);

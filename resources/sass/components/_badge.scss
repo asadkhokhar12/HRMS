@@ -1,0 +1,64 @@
+.badge-success {
+  padding: 4px 10px;
+  background: $ot-bg-badge-success;
+  border-radius: 5px;
+  @include text(
+    $font-family: $font-family-primary,
+    $font-style: normal,
+    $font-size: 12px,
+    $font-weight: 600,
+    $line-height: 15px,
+    $text-color: $ot-text-badge-success
+  );
+
+  &.ot-badge-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.badge-danger {
+  @extend .badge-success;
+  background: $ot-bg-badge-danger;
+  color: $ot-text-badge-danger;
+}
+
+.badge-warning {
+  @extend .badge-success;
+  background: $ot-bg-badge-warning;
+  color: $ot-text-badge-warning;
+}
+
+.badge-primary {
+  @extend .badge-success;
+  background: $ot-bg-badge-primary;
+  color: $ot-text-badge-primary;
+}
+
+.badge-light-success {
+  @extend .badge-success;
+  background: $ot-bg-badge-light-success;
+  color: $ot-text-badge-light-success;
+}
+
+.badge-light-danger {
+  @extend .badge-danger;
+  background: $ot-bg-badge-light-danger;
+  color: $ot-text-badge-light-danger;
+}
+
+.badge-light-warning {
+  @extend .badge-warning;
+  background: $ot-bg-badge-light-warning;
+  color: $ot-text-badge-light-warning;
+}
+
+.badge-light-primary {
+  @extend .badge-primary;
+  background: $ot-bg-badge-light-primary;
+  color: $ot-text-badge-light-primary;
+}
