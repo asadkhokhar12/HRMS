@@ -43,7 +43,7 @@ class CheckInController extends Controller
             $data['button']   = _trans('common.Check In');
             $data['type']     = 'checkin';
             $data['reason']   = $this->attendance_repo->checkInStatus(auth()->user()->id, date('H:i'));
-            $data['shifts']   = UserShiftAssign::where('user_id', Auth::id())->with('shift.dutySchedule')->get(); 
+            $data['shifts']   = UserShiftAssign::where('user_id', Auth::id())->with('shift.dutySchedule')->get();
 
             return view('backend.attendance.attendance.check_in_modal', compact('data'));
         } catch (\Throwable $th) {
@@ -54,6 +54,22 @@ class CheckInController extends Controller
     public function dashboardAjaxCheckin(Request $request)
     {
         try {
+            // Check location validation before proceeding
+            if ($request->remote_mode_in == 1) { // Only check location if not in remote mode
+                $distance = $this->calculateDistance(
+                    $request->latitude,
+                    $request->longitude,
+                    config('attendance.office_latitude', '0'),
+                    config('attendance.office_longitude', '0')
+                );
+
+                $allowedRadius = config('attendance.allowed_radius', 100);
+
+                if ($distance > $allowedRadius) {
+                    return $this->responseWithError(_trans('messages.You must be within office premises to check in'));
+                }
+            }
+
             $request['user_id'] = auth()->user()->id;
             $request['check_in'] = date('H:i');
             $request['date'] = date('Y-m-d');
@@ -83,7 +99,7 @@ class CheckInController extends Controller
     public function ajaxDashboardCheckOutModal(Request $request)
     {
         try {
-            $data['attendance'] = Attendance::where('user_id', auth()->user()->id)->where('date', '>=', date('Y-m-d',strtotime("-1 days")))->where('check_in', '!=', null)->where('check_out', '=', null)->first();
+            $data['attendance'] = Attendance::where('user_id', auth()->user()->id)->where('date', '>=', date('Y-m-d', strtotime("-1 days")))->where('check_in', '!=', null)->where('check_out', '=', null)->first();
             if (!$data['attendance']) {
                 return response()->json('fail');
             }
@@ -100,17 +116,41 @@ class CheckInController extends Controller
 
     public function ajaxDashboardCheckOut(Request $request)
     {
-       
         try {
-            $last_checkIn = Attendance::where('user_id', auth()->id())->latest('id')->where('check_out', '=', null)->first();
+            $last_checkIn = Attendance::where('user_id', auth()->id())
+                ->latest('id')
+                ->where('check_out', '=', null)
+                ->first();
+
+            // Check location validation before proceeding
+            if ($last_checkIn ) { // Only check location if not in remote mode
+                $distance = $this->calculateDistance(
+                    $request->latitude,
+                    $request->longitude,
+                    config('attendance.office_latitude', '0'),
+                    config('attendance.office_longitude', '0')
+                );
+
+                $allowedRadius = config('attendance.allowed_radius', 100); // Distance in meters
+
+                if ($distance > $allowedRadius) {
+                    return $this->responseWithError(_trans('messages.You must be within office premises to check out'));
+                }
+            }
+
             $request['user_id'] = auth()->user()->id;
             $request['check_out'] = date('H:i');
             $request['check_out_latitude'] = $request->latitude;
             $request['check_out_longitude'] = $request->longitude;
             $request['remote_mode_out'] = 0;
 
-        
-            $attendance = Attendance::where('user_id', auth()->id())->where('shift_id',$last_checkIn->shift_id)->where('date', '>=', date('Y-m-d',strtotime("-1 days")))->where('check_in', '!=', null)->where('check_out', '=', null)->first();
+            $attendance = Attendance::where('user_id', auth()->id())
+                ->where('shift_id', $last_checkIn->shift_id)
+                ->where('date', '>=', date('Y-m-d', strtotime("-1 days")))
+                ->where('check_in', '!=', null)
+                ->where('check_out', '=', null)
+                ->first();
+
             Log::info('Attendance 1');
             Log::info($attendance);
 
@@ -120,19 +160,19 @@ class CheckInController extends Controller
             if (!$attendance) {
                 return $this->responseWithError('Attendance Data Not Found', false);
             }
+
             $time1 = strtotime($attendance->check_in);
             $request['check_in'] = date('h:i', $time1);
             $request['user_id'] = $attendance->user_id;
 
             $checkout = $this->attendance_repo->webCheckOut($request, $attendance->id);
-        
+
             if ($checkout->original['result']) {
                 return $this->responseWithSuccess($checkout->original['message'], route('admin.dashboard'), 200);
             } else {
                 return $this->responseWithError($checkout->original['message'], false);
             }
         } catch (\Throwable $th) {
-        
             return $this->responseWithError($th->getMessage());
         }
     }
@@ -159,7 +199,7 @@ class CheckInController extends Controller
             $break = $this->breakBackService->breakStartEnd($request, 'start');
             if ($break->original['result']) {
                 $route = [route('admin.ajaxDashboardBreakModal_Back'), route('admin.ajaxDashboardBreakModal')];
-                return $this->responseWithSuccess($break->original['message'] ,$route, 200);
+                return $this->responseWithSuccess($break->original['message'], $route, 200);
             } else {
                 return $this->responseWithError($break->original['message'], false);
             }
@@ -168,20 +208,45 @@ class CheckInController extends Controller
         }
     }
 
-    public function ajaxDashboardBreakModalBack(Request $request,$slug='back')
+    public function ajaxDashboardBreakModalBack(Request $request, $slug = 'back')
     {
 
         try {
-            $request['time']=date('H:i:s');
+            $request['time'] = date('H:i:s');
             $data['title']  = _trans('common.Back Break time');
-            $data = $this->breakBackService->breakStartEndWeb($request, $slug);  
+            $data = $this->breakBackService->breakStartEndWeb($request, $slug);
             if (!$data) {
                 return response()->json('fail');
-            }else {
-                return view('backend.modal.break_back',compact('data'));
-            }     
+            } else {
+                return view('backend.modal.break_back', compact('data'));
+            }
         } catch (\Throwable $th) {
             return response()->json('fail');
         }
+    }
+
+
+    /**
+     * Calculate distance between two coordinates in meters
+     */
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371000; // Earth's radius in meters
+
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        $latDelta = $lat2 - $lat1;
+        $lonDelta = $lon2 - $lon1;
+
+        $a = sin($latDelta / 2) * sin($latDelta / 2) +
+            cos($lat1) * cos($lat2) *
+            sin($lonDelta / 2) * sin($lonDelta / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c; // Distance in meters
     }
 }
