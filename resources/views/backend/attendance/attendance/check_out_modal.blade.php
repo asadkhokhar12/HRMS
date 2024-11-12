@@ -14,13 +14,13 @@
                             <p id="interim"></p>
                             <p id="final"></p>
                             <p class="text-center mb-0">
-                                {{ _trans('common.Choose your option') }}
+                                {{ _trans('common.Attendance') }}
                             </p>
                             <div class="place-switch">
                                 <div class="switch-field">
 
                                     <input type="radio" id="place_office" name="place_mode" value="1"
-                                        checked="">
+                                        checked>
                                     <label for="place_office">
                                         <i class="fas fa-building"></i>
                                         <p class="on-half-expanded">{{ _trans('attendance.Office') }}</p>

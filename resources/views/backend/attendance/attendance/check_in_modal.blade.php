@@ -14,7 +14,7 @@
                             <p id="interim"></p>
                             <p id="final"></p>
                             <p class="text-center mb-0">
-                                {{ _trans('common.Choose your option') }}
+                                {{ _trans('common.Attendance') }}
                             </p>
                             <div class="place-switch">
                                 <div class="switch-field">
