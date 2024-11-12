@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Notification;
