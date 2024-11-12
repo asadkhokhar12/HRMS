@@ -13,9 +13,9 @@
                         <div class="form-group">
                             <p id="interim"></p>
                             <p id="final"></p>
-                            <p class="text-center mb-0">
+                            {{-- <p class="text-center mb-0">
                                 {{ _trans('common.Attendance') }}
-                            </p>
+                            </p> --}}
                             <div class="place-switch">
                                 <div class="switch-field">
 
