@@ -26,11 +26,11 @@
                                         <p class="on-half-expanded">{{ _trans('common.Office') }}</p>
                                     </label>
 
-                                    <input type="radio" id="place_home" name="place_mode" value="0">
+                                    {{-- <input type="radio" id="place_home" name="place_mode" value="0">
                                     <label for="place_home">
                                         <i class="fas fa-home"></i>
                                         <p class="on-half-expanded">{{ _trans('common.Home') }}</p>
-                                    </label>
+                                    </label> --}}
 
                                 </div>
                             </div>
