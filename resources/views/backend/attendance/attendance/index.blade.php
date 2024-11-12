@@ -41,7 +41,7 @@
                                     <input type="hidden" id="daterange-input" onchange="attendanceDatatable()">
                                 </div>
                                 <!-- Designation -->
-                                <div class="align-self-center">
+                                {{-- <div class="align-self-center">
                                     <div class="dropdown dropdown-designation" data-bs-toggle="tooltip"
                                         data-bs-placement="right" data-bs-title="{{ _trans('common.Designation') }}">
                                         <button type="button" class="btn-designation" data-bs-toggle="dropdown"
@@ -62,7 +62,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- search -->
                                 <div class="align-self-center">
                                     <div class="search-box d-flex">
