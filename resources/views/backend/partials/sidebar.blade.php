@@ -214,7 +214,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (auth()->user()->userRole(['Staff']))
+                                {{-- @if (auth()->user()->userRole(['Staff']))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leave.balance.user', auth()->id()]) }}">
                                         <a href="{{ route('leave.balance.user', auth()->id()) }}"
@@ -222,7 +222,7 @@
                                             <span>{{ _trans('leave.Leave Balance') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
                                 @if (hasPermission('daily_leave_read'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['daily_leave.index', 'daily_leave.create']) }}">
