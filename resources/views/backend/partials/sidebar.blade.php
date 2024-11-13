@@ -175,7 +175,7 @@
                         @include('services::sidebar.service_sidebar')
                     @endif --}}
 
-                    @if (hasPermission('leave_menu') && hasFeature('leaves'))
+                    @if (hasPermission('leave_request_read') &&  hasFeature('leaves'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('leave.index'), route('assignLeave.index')]) }}">
                             <a href="javascript:void(0)"
@@ -202,7 +202,7 @@
                                         <a href="{{ route('assignLeave.index') }}"
                                             class=" {{ set_active(route('assignLeave.index')) }}">
                                             <span> {{ _trans('leave.Assign Leave') }}</span>
-                                        </a>
+                                        </a>    
                                     </li>
                                 @endif
                                 @if (hasPermission('leave_request_read'))
@@ -211,6 +211,15 @@
                                         <a href="{{ route('leaveRequest.index') }}"
                                             class=" {{ set_active(route('leaveRequest.index')) }}">
                                             <span>{{ _trans('leave.Leave Request') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (auth()->user()->userRole(['Staff']))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leave.balance.user', auth()->id()]) }}">
+                                        <a href="{{ route('leave.balance.user', auth()->id()) }}"
+                                            class=" {{ set_active(route('leave.balance.user', auth()->id())) }}">
+                                            <span>{{ _trans('leave.Leave Balance') }}</span>
                                         </a>
                                     </li>
                                 @endif
@@ -250,6 +259,16 @@
                                         <a href="{{ route('attendance.index') }}"
                                             class=" {{ set_active(route('attendance.index')) }}">
                                             <span>{{ _trans('attendance.Attendance') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if (hasPermission('attendance_read'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route('employeeAttendance', auth()->id()) }}">
+                                        <a href="{{ route('employeeAttendance', auth()->id()) }}"
+                                            class=" {{ set_active(route('employeeAttendance', auth()->id())) }}">
+                                            <span>{{ _trans('attendance.Attendance Summary') }}</span>
                                         </a>
                                     </li>
                                 @endif

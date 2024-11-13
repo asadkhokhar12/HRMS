@@ -446,23 +446,36 @@ class UserController extends Controller
         }
     }
 
-    public function leaveBalance(Request $request)
+
+
+    public function leaveBalance(Request $request, $userId = null)
     {
         try {
+            if ($userId) {
+                // Fetch data for a specific user
+                return $this->user->leaveBalanceForUser($userId);
+            }
+
             if ($request->ajax()) {
+                // Fetch data for all users
                 return $this->user->leaveBalanceTable($request);
             }
+
             $data['title'] = _trans('common.Leave Balance List');
             $data['designations'] = $this->designation->getActiveAll();
             $data['class'] = 'leave_balance_table';
             $data['fields'] = $this->user->leaveBalanceFields();
             $data['checkbox'] = true;
+
             return view('backend.user.leave-balance', compact('data'));
         } catch (\Exception $exception) {
             Toastr::error(_trans('response.Something went wrong!'), 'Error');
             return back();
         }
     }
+
+
+
 
     public function leaveBalanceEdit(User $user)
     {

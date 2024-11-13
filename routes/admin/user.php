@@ -45,8 +45,10 @@ Route::group(['middleware' => ['xss', 'TimeZone'], 'prefix' => 'dashboard'], fun
             Route::get('/leave-balance', [UserController::class, 'leaveBalance'])->name('leaveRequest.balance')->middleware('PermissionCheck:user_read');
             Route::get('/leave-balance/{user}', [UserController::class, 'leaveBalanceEdit'])->name('leaveRequest.balance.edit')->middleware('PermissionCheck:user_read');
             Route::post('/leave-balance/{id}', [UserController::class, 'leaveBalanceUpdate'])->name('leaveRequest.balance.update')->middleware('PermissionCheck:user_read');
+            Route::get('/leave-balance/user/{id}', [UserController::class, 'leaveBalance'])->name('leave.balance.user');
+
         });
-        // Route::get('data-table',                    [UserController::class, 'data_table'])->name('user.data_table')->middleware('PermissionCheck:user_read');
+        // Route::get('data-table',[UserController::class, 'data_table'])->name('user.data_table')->middleware('PermissionCheck:user_read');
 
 
         // passport::call - 1

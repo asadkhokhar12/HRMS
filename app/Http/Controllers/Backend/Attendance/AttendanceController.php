@@ -63,7 +63,7 @@ class AttendanceController extends Controller
         $data['table']     = route('attendance.index');
         $data['url_id']    = 'attendance_table_url';
         $data['checkbox'] = true;
-        $data['title'] = _trans('attendance.Attendance History');
+        $data['title'] = _trans('attendance.Attendance History ');
         $data['departments'] = $this->departmentRepository->getAll();
 
         return view('backend.attendance.attendance.index', compact('data'));

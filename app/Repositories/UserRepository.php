@@ -701,6 +701,73 @@ class UserRepository
         }
     }
 
+    public function leaveBalanceForUser($userId)
+    {
+        try {
+            // Fetch the specific user's data by their ID
+            $user = $this->model->query()
+                ->where('id', $userId)
+                ->where('company_id', $this->companyInformation()->id)
+                ->where('branch_id', userBranch())
+                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
+                ->first();
+
+            // If no user found, return an error message
+            if (!$user) {
+                return response()->json(['error' => _trans('response.User not found!')], 404);
+            }
+
+            // Build the data for the specific user in the same format as `leaveBalanceTable`
+            $location = $user->is_free_location == 1 ? '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]' : '';
+            $hr = $user->is_hr == 1 ? '<br>[<small class="text-success">' . _trans('common.Acting as HR') . '</small>]' : '';
+            $user_image = '<img data-toggle="tooltip" data-placement="top" title="' . $user->name . '" src="' . uploaded_asset($user->avatar_id) . '" class="staff-profile-image-small" >';
+            $contact = '<b>Email: </b>' . $user->email . '<br><b>Phone: </b>' . $user->phone;
+            $details = '<b>Department: </b>' . $user->department->title . '<br><b>Designation: </b>' . $user->designation->title . '<br><b>Role: </b>' . $user->role->name . '<br><b>Shift: </b>' . $user->shift->name . '<br><small class="mt-3 badge badge-' . $user->status->class . '">' . $user->status->name . '</small>';
+
+            // Fetch leave details using LeaveService
+            $leave_details = @resolve(LeaveService::class)->leaveCountingSummary($user)->original['data'] ?? '';
+            $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"]  . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
+
+            $available_leave = '';
+            foreach ($leave_details['available_leave'] as $availables) {
+                $available_leave .= '<div class="d-flex justify-content-between text-center">
+                <span><b>' . $availables['type'] . ':</b></span>
+                <span>&emsp;</span>
+                <span><b>Total: </b>' . $availables['total_leave'] . '&ensp;|&ensp;<b>Left: </b>' . $availables['left_days'] . '</b></span>
+            </div>';
+            }
+
+            // Action button if needed
+            $action_button = actionButton(_trans('common.Edit'), 'mainModalOpen(`' . route('leaveRequest.balance.edit', $user->id) . '`)', 'modal');
+            $button = '<div class="dropdown dropdown-action">
+                        <button type="button" class="btn-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            ' . $action_button . '
+                        </ul>
+                    </div>';
+
+            // Return formatted response for a single user
+            return [
+                'data' => [
+                    'name' => $user->name . $location . $hr,
+                    'avatar' => $user_image,
+                    'contact' => $contact,
+                    'details' => $details,
+                    'leave_summary' => $leave_summary,
+                    'available_leave' => $available_leave,
+                    'id' => $user->id,
+                    'action' => $button,
+                ],
+                'status' => 'success',
+            ];
+        } catch (\Exception $exception) {
+            return response()->json(['error' => _trans('response.Something went wrong!')], 500);
+        }
+    }
+
+
 
     function editLeaveBalanceAttributes($updateModel)
     {

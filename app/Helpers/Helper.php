@@ -622,36 +622,34 @@ function actionButton($string, $param, $type = null)
         </a>';
     } elseif ($type == 'approve') {
         return auth()->user() ?
-        '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
+            '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
         ' . $string . '
         </a>'
-        : '';
+            : '';
     } elseif ($type == 'reject') {
         return auth()->user() ?
-        '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
+            '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
         ' . $string . '
         </a>'
-        : '';
+            : '';
     } elseif ($type == 'modal') {
         return auth()->user() ?
-        '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
+            '<a href="javascript:;" class="dropdown-item" onclick="' . $param . '">
         ' . $string . '
         </a>'
-        : '';
-    } 
-    elseif ($type == 'new_page') {
+            : '';
+    } elseif ($type == 'new_page') {
         return auth()->user() ?
-        '<a target="_blank" class="dropdown-item" href="' . $param . '">
+            '<a target="_blank" class="dropdown-item" href="' . $param . '">
             ' . _translate($string, false) . '
             </a>'
-        : '';
-    }
-    else {
+            : '';
+    } else {
         return auth()->user() ?
-        '<a class="dropdown-item" href="' . $param . '">
+            '<a class="dropdown-item" href="' . $param . '">
             ' . _translate($string, false) . '
             </a>'
-        : '';
+            : '';
     }
 }
 
@@ -987,6 +985,14 @@ if (!function_exists('hasPermission')) {
         }
     }
 }
+
+// if (!function_exists('hasRole')) {
+
+//     function hasRole($role)
+//     {
+//         return auth()->user()->role();
+//     }
+// }
 
 //if function not exists
 if (!function_exists('sendDatabaseNotification')) {
@@ -1572,7 +1578,7 @@ function dummyStaffListExtended()
             "name" => "Staff" . $i + 1,
             "company_id" => 2,
             "country_id" => 17,
-            "phone" => "+8855412547"+$i,
+            "phone" => "+8855412547" + $i,
             "role_id" => 7,
             "department_id" => 18,
             "designation_id" => 44,
@@ -1727,8 +1733,7 @@ function isAttendee()
             'out_time' => null,
             'stay_time' => null,
         ];
-    }
-    ;
+    };
 }
 
 function RawTable($table)
@@ -2383,7 +2388,7 @@ if (!function_exists('hasFeature')) {
         if (config('app.mood') != 'Saas' || !isModuleActive('Saas')) {
             return true;
         }
-        if(isMainCompany() && config('app.mood') == 'Saas' && isModuleActive('Saas')) {
+        if (isMainCompany() && config('app.mood') == 'Saas' && isModuleActive('Saas')) {
             return true;
         }
         if (in_array($keyword, activeSubscriptionFeatures() ?? [])) {
@@ -2435,13 +2440,13 @@ if (!function_exists('checkSingleCompanyIsDeactivated')) {
     {
         if (Schema::hasTable('companies')) {
             $subdomainParts = getSubdomainName();
-        
+
             $company    = Company::where(function ($q) use ($subdomainParts) {
-                            $q->where('subdomain', @$subdomainParts[0])
-                                ->orWhere('subdomain', @$subdomainParts[1]);
-                        })
-                        ->first();
-    
+                $q->where('subdomain', @$subdomainParts[0])
+                    ->orWhere('subdomain', @$subdomainParts[1]);
+            })
+                ->first();
+
             if (@$company->status_id == 4) {
                 return true;
             }
@@ -2484,28 +2489,30 @@ if (!function_exists('fetchDataViaAPI')) {
 }
 
 if (!function_exists('emailTemplateShortCode')) {
-    function emailTemplateShortCode(){
+    function emailTemplateShortCode()
+    {
         return $list = [
-            [ "value" => "name" ],
-            [ "value" => "email" ],
-            [ "value" => "phone" ],
-            [ "value" => "address" ],
-            [ "value" => "url" ],
-            [ "value" => "email" ],
-            [ "value" => "password" ],
-            [ "value" => "company_name" ],
-            [ "value" => "company_business" ],
-            [ "value" => "business_type" ],
-            [ "value" => "trade_license_number" ],
-            [ "value" => "company_credentials_table" ],
-            [ "value" => "company_subscription_plan_table" ],
-            [ "value" => "saas_admin_company" ],
+            ["value" => "name"],
+            ["value" => "email"],
+            ["value" => "phone"],
+            ["value" => "address"],
+            ["value" => "url"],
+            ["value" => "email"],
+            ["value" => "password"],
+            ["value" => "company_name"],
+            ["value" => "company_business"],
+            ["value" => "business_type"],
+            ["value" => "trade_license_number"],
+            ["value" => "company_credentials_table"],
+            ["value" => "company_subscription_plan_table"],
+            ["value" => "saas_admin_company"],
         ];
     }
 }
 
 if (!function_exists('tenantMigrationPaths')) {
-    function tenantMigrationPaths() {
+    function tenantMigrationPaths()
+    {
         $filePath = base_path('modules_statuses.json');
         $migrationPaths = [
             database_path('migrations/tenant')
@@ -2515,7 +2522,7 @@ if (!function_exists('tenantMigrationPaths')) {
             $json_content = file_get_contents($filePath);
             $modules = json_decode($json_content, true);
 
-            foreach($modules as $module => $status) {
+            foreach ($modules as $module => $status) {
                 $migrationPaths[] = base_path("Modules/$module/Database/Migrations");
             }
         }
