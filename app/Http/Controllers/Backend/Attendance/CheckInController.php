@@ -59,11 +59,11 @@ class CheckInController extends Controller
                 $distance = $this->calculateDistance(
                     $request->latitude,
                     $request->longitude,
-                    config('attendance.office_latitude', '0'),
-                    config('attendance.office_longitude', '0')
+                    env('OFFICE_LATITUDE', '0'),
+                    env('OFFICE_LONGITUDE', '0')
                 );
 
-                $allowedRadius = config('attendance.allowed_radius', 100);
+                $allowedRadius = env('ALLOWED_RADIUS', 1000); // Distance in meters
 
                 if ($distance > $allowedRadius) {
                     return $this->responseWithError(_trans('messages.You must be within office premises to check in'));
@@ -92,7 +92,7 @@ class CheckInController extends Controller
                 return $this->responseWithError($store->original['message']);
             }
         } catch (\Throwable $th) {
-            // return $this->responseWithError($th->getMessage());
+            return $this->responseWithError($th->getMessage());
         }
     }
 
@@ -123,15 +123,15 @@ class CheckInController extends Controller
                 ->first();
 
             // Check location validation before proceeding
-            if ($last_checkIn ) { // Only check location if not in remote mode
+            if ($last_checkIn) { // Only check location if not in remote mode
                 $distance = $this->calculateDistance(
                     $request->latitude,
                     $request->longitude,
-                    config('attendance.office_latitude', '0'),
-                    config('attendance.office_longitude', '0')
+                    env('OFFICE_LATITUDE', '0'),
+                    env('OFFICE_LONGITUDE', '0')
                 );
 
-                $allowedRadius = config('attendance.allowed_radius', 100); // Distance in meters
+                $allowedRadius = env('ALLOWED_RADIUS', 1000); // Distance in meters
 
                 if ($distance > $allowedRadius) {
                     return $this->responseWithError(_trans('messages.You must be within office premises to check out'));
