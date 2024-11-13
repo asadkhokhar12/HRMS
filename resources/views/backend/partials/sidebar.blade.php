@@ -175,7 +175,7 @@
                         @include('services::sidebar.service_sidebar')
                     @endif --}}
 
-                    {{-- @if (hasPermission('leave_menu') && hasFeature('leaves'))
+                    @if (hasPermission('leave_menu') && hasFeature('leaves'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('leave.index'), route('assignLeave.index')]) }}">
                             <a href="javascript:void(0)"
@@ -233,7 +233,7 @@
                                 @endif
                             </ul>
                         </li>
-                    @endif --}}
+                    @endif
                     @if (hasPermission('attendance_menu') && hasFeature('attendance'))
                         <li class="sidebar-menu-item">
                             <a href="javascript:void(0)"
