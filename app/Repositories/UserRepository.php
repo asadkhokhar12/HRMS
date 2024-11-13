@@ -144,32 +144,32 @@ class UserRepository
             // Send the email with the plain password
              Mail::to($user->email)->send(new AutoGeneratePasswordMail('12345678'));
             } catch (\Throwable $th) {
+
                 Log::info("central user error::" .$th);
             }
+            
+            // try {
+            //     tenancy()->central(function ($tenant) use($user){
+            //         $tenantSubdomain = Str::slug($tenant->id);
+            //         $centralDomain = @base_settings('company_domain');
+            //         $tenantDomain = $tenantSubdomain . '.' . $centralDomain;
+            //         $company = Company::where('subdomain',$tenantDomain)->first();
+            //             UserTenantMapping::updateOrCreate(
+            //                 [
+            //                 'company_id' => $company->id,
+            //                     'tenant_id' => $tenant->id,
+            //                     'tenant_user_id' => $user->id,
+            //                     'domain' => $tenantDomain,
+            //                 ],
+            //                 [
+            //                     'email' => $user->email,
+            //                 ]
+            //             );
+            //     });
 
-
-            try {
-                tenancy()->central(function ($tenant) use($user){
-                    $tenantSubdomain = Str::slug($tenant->id);
-                    $centralDomain = @base_settings('company_domain');
-                    $tenantDomain = $tenantSubdomain . '.' . $centralDomain;
-                    $company = Company::where('subdomain',$tenantDomain)->first();
-                        UserTenantMapping::updateOrCreate(
-                            [
-                            'company_id' => $company->id,
-                                'tenant_id' => $tenant->id,
-                                'tenant_user_id' => $user->id,
-                                'domain' => $tenantDomain,
-                            ],
-                            [
-                                'email' => $user->email,
-                            ]
-                        );
-                });
-
-            } catch (\Throwable $th) {
-                Log::info("central user error::" .$th);
-            }
+            // } catch (\Throwable $th) {
+            //     Log::info("central user error::" .$th);
+            // }
             
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Employee successfully Created.'), $user);
