@@ -59,8 +59,10 @@ class LeaveRequestController extends Controller
     {
         try {
             $data['title'] = _trans('common.Leave Request');
-            $data['leaveTypes'] = $this->leaveRequest->getUserAssignLeave();
+            // $data['leaveTypes'] = $this->leaveRequest->getUserAssignLeave();
+            $data['leaveTypes'] = LeaveType::get()->all();
             $data['teamLeaders'] = User::where('status_id', 1)->select('id', 'name')->get();
+            // dd($data)
             return view('backend.leave.leaveRequest.create', compact('data'));
         } catch (\Exception $exception) {
             Toastr::error(_trans('response.Something went wrong!'), 'Error');

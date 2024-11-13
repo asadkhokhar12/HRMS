@@ -16,27 +16,33 @@ class ZKtecoController extends Controller
 {
     public function zkteco()
     {
-        date_default_timezone_set('Asia/Karachi');
+        try {
+            //code...
 
-        $zk = new ZKTeco('192.168.50.200');
-        $zk->connect();
-        $attendanceLog = $zk->getAttendance();
-        // dd($attendanceLog);
-        // Filter attendance records for today
-        $todayRecords = [];
-        foreach ($attendanceLog as $record) {
-            $todayRecords[] = [
-                'employee_id' => $record['id'],
-                'timestamp' => $record['timestamp'],
-                'state' => $record['state'],
-                'type' => $record['type'],
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ];
+            date_default_timezone_set('Asia/Karachi');
+
+            $zk = new ZKTeco('192.168.50.200');
+            $zk->connect();
+            $attendanceLog = $zk->getAttendance();
+            // dd($attendanceLog);
+            // Filter attendance records for today
+            $todayRecords = [];
+            foreach ($attendanceLog as $record) {
+                $todayRecords[] = [
+                    'employee_id' => $record['id'],
+                    'timestamp' => $record['timestamp'],
+                    'state' => $record['state'],
+                    'type' => $record['type'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+            }
+
+            DeviceLog::insert($todayRecords);
+            dd('Device log added successfully');
+        } catch (\Throwable $th) {
+            throw $th;
         }
-
-        DeviceLog::insert($todayRecords);
-        dd('Device log added successfully');
     }
 
     public function storeAttendance($employeeId)

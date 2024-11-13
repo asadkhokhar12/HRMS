@@ -124,8 +124,8 @@
                         </li>
                     @endif
 
-                    <!-- @if (isModuleActive('MenuPermission'))
-<li class="sidebar-menu-item">
+                    @if (isModuleActive('MenuPermission'))
+                        <li class="sidebar-menu-item">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['menu_manage.menu.index']) }}">
                                 <i class="las la-bars"></i>
@@ -144,7 +144,7 @@
                                 {{-- @endif --}}
                             </ul>
                         </li>
-@endif -->
+                    @endif
 
                     @if (hasPermission('user_menu'))
                         <li class="sidebar-menu-item ">
@@ -158,8 +158,8 @@
                         </li>
                     @endif
 
-                    <!-- @if (isModuleActive('SingleDeviceLogin') && hasPermission('user_device_list'))
-<li class="sidebar-menu-item ">
+                    @if (isModuleActive('SingleDeviceLogin') && hasPermission('user_device_list'))
+                        <li class="sidebar-menu-item ">
                             <a href="{{ route('users_device.index') }}"
                                 class="parent-item-content {{ menu_active_by_route(['users_device.index']) }}">
                                 <i class="las la-calendar-check"></i>
@@ -168,14 +168,14 @@
                                 </span>
                             </a>
                         </li>
-@endif -->
+                    @endif
 
 
-                    <!-- @if (isModuleActive('Services') && hasFeature('services') && hasPermission('service_menu'))
-@include('services::sidebar.service_sidebar')
-@endif -->
+                    {{-- @if (isModuleActive('Services') && hasFeature('services') && hasPermission('service_menu'))
+                        @include('services::sidebar.service_sidebar')
+                    @endif --}}
 
-                    <!-- @if (hasPermission('leave_menu') && hasFeature('leaves'))
+                    {{-- @if (hasPermission('leave_menu') && hasFeature('leaves'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('leave.index'), route('assignLeave.index')]) }}">
                             <a href="javascript:void(0)"
@@ -188,51 +188,52 @@
                             <ul
                                 class="child-menu-list {{ set_active(['hrm/leave*', 'hrm/leave/assign*', 'hrm/leave/request*', 'dashboard/user/leave-balance*', 'hrm/daily-leave*']) }}">
                                 @if (hasPermission('leave_type_read'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['leave.index', 'leave.create', 'leave.edit']) }}">
                                         <a href="{{ route('leave.index') }}"
                                             class=" {{ set_active(route('leave.index')) }}">
                                             <span>{{ _trans('common.Type') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('leave_assign_read'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['assignLeave.index', 'assignLeave.create', 'assignLeave.edit']) }}">
                                         <a href="{{ route('assignLeave.index') }}"
                                             class=" {{ set_active(route('assignLeave.index')) }}">
                                             <span> {{ _trans('leave.Assign Leave') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('leave_request_read'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leaveRequest.create']) }}">
                                         <a href="{{ route('leaveRequest.index') }}"
                                             class=" {{ set_active(route('leaveRequest.index')) }}">
                                             <span>{{ _trans('leave.Leave Request') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('daily_leave_read'))
-<li class="nav-item {{ menu_active_by_route(['daily_leave.index', 'daily_leave.create']) }}">
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['daily_leave.index', 'daily_leave.create']) }}">
                                         <a href="{{ route('daily_leave.index') }}"
                                             class=" {{ set_active(route('daily_leave.index')) }}">
                                             <span>{{ _trans('leave.Daily Leave') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('leave_type_read'))
-<li class="nav-item {{ menu_active_by_route(['leaveRequest.balance']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['leaveRequest.balance']) }}">
                                         <a href="{{ route('leaveRequest.balance') }}"
                                             class=" {{ set_active(route('leaveRequest.balance')) }}">
                                             <span>{{ _trans('common.Leave Balance') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                             </ul>
                         </li>
-                    @endif -->
+                    @endif --}}
                     @if (hasPermission('attendance_menu') && hasFeature('attendance'))
                         <li class="sidebar-menu-item">
                             <a href="javascript:void(0)"
@@ -277,8 +278,8 @@
                             </ul>
                         </li>
                     @endif
-                    <!-- @if (hasPermission('conference_read') && isModuleActive('VideoConference') && hasFeature('conference'))
-<li class="sidebar-menu-item ">
+                    {{-- @if (hasPermission('conference_read') && isModuleActive('VideoConference') && hasFeature('conference'))
+                        <li class="sidebar-menu-item ">
                             <a href="{{ route('conference.index') }}"
                                 class="parent-item-content {{ menu_active_by_route(['conference-index']) }}">
                                 <i class="las la-microphone"></i>
@@ -287,8 +288,8 @@
                                 </span>
                             </a>
                         </li>
-@endif -->
-                    <!-- @if (hasPermission('payroll_menu') && hasFeature('payroll'))
+                    @endif
+                    @if (hasPermission('payroll_menu') && hasFeature('payroll'))
                         <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
@@ -301,61 +302,61 @@
                             <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
 
                                 @if (hasPermission('payroll_item_menu'))
-<li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
                                         <a href="{{ route('hrm.payroll_items.index') }}" class="">
                                             <span> {{ _trans('payroll.Commissions') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('payroll_set_menu'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup']) }}">
                                         <a href="{{ route('hrm.payroll_setup.index') }}" class="">
                                             <span> {{ _trans('payroll.Setup') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('advance_type_list'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_type.index']) }}">
                                         <a href="{{ route('hrm.payroll_advance_type.index') }}" class="">
                                             <span> {{ _trans('payroll.Advance Type') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('advance_salaries_list'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show']) }}">
                                         <a href="{{ route('hrm.payroll_advance_salary.index') }}" class="">
                                             <span> {{ _trans('payroll.Advance') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('salary_list'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
                                         <a href="{{ route('hrm.payroll_salary.index') }}" class="">
                                             <span> {{ _trans('payroll.Salary Generate') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
-                                {{-- @if (hasPermission('payroll_set_menu'))
-                            <li
-                                class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                <a href="{{ route('hrm.monthly.salary.table') }}" class="">
-                                    <span> {{ _trans('payroll.Salary Sheet') }}</span>
-                                </a>
-                            </li>
-                            @endif --}}
+                                @if (hasPermission('payroll_set_menu'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                        <a href="{{ route('hrm.monthly.salary.table') }}" class="">
+                                            <span> {{ _trans('payroll.Salary Sheet') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
 
 
                             </ul>
                         </li>
-                    @endif -->
-                    <!-- @if (hasPermission('account_menu') && hasFeature('accounts'))
+                    @endif
+                    @if (hasPermission('account_menu') && hasFeature('accounts'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('hrm.accounts.index', 'hrm.accounts.create')]) }}">
                             <a href="javascript:void(0)"
@@ -371,39 +372,39 @@
 
 
                                 @if (hasPermission('account_menu'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.accounts.index', 'hrm.accounts.create', 'hrm.accounts.edit']) }}">
                                         <a href="{{ route('hrm.accounts.index') }}" class="">
                                             <span> {{ _trans('payroll.Account List') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('deposit_menu'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.deposits.index', 'hrm.deposits.create', 'hrm.deposits.edit']) }}">
                                         <a href="{{ route('hrm.deposits.index') }}" class="">
                                             <span> {{ _trans('payroll.Deposit') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('expense_menu'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['hrm.expenses.index', 'hrm.expenses.create', 'hrm.expenses.edit', 'hrm.expenses.show']) }}">
                                         <a href="{{ route('hrm.expenses.index') }}" class="">
                                             <span> {{ _trans('payroll.Expense') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('transaction_menu'))
-<li class="nav-item {{ menu_active_by_route(['hrm.transactions.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['hrm.transactions.index']) }}">
                                         <a href="{{ route('hrm.transactions.index') }}" class="">
                                             <span> {{ _trans('payroll.Transaction History') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('deposit_category_menu'))
                                     <li
                                         class="sidebar-menu-item {{ set_menu([route('hrm.deposit_category.expense')]) }}">
@@ -419,34 +420,34 @@
 
 
                                             @if (hasPermission('deposit_category_menu'))
-<li
+                                                <li
                                                     class="nav-item {{ menu_active_by_route(['hrm.deposit_category.deposit']) }}">
                                                     <a href="{{ route('hrm.deposit_category.deposit') }}"
                                                         class="">
                                                         <span> {{ _trans('payroll.Deposit Category') }}</span>
                                                     </a>
                                                 </li>
-@endif
+                                            @endif
 
                                             @if (hasPermission('deposit_category_menu'))
-<li
+                                                <li
                                                     class="nav-item {{ menu_active_by_route(['hrm.deposit_category.expense']) }}">
                                                     <a href="{{ route('hrm.deposit_category.expense') }}"
                                                         class="">
                                                         <span> {{ _trans('expense.Expense Category') }}</span>
                                                     </a>
                                                 </li>
-@endif
+                                            @endif
 
                                             @if (hasPermission('payment_method_menu'))
-<li
+                                                <li
                                                     class="nav-item {{ menu_active_by_route(['hrm.payment_method.index']) }}">
                                                     <a href="{{ route('hrm.payment_method.index') }}"
                                                         class="">
                                                         <span> {{ _trans('payment_method.Payment Method') }}</span>
                                                     </a>
                                                 </li>
-@endif
+                                            @endif
 
                                         </ul>
                                     </li>
@@ -454,9 +455,9 @@
 
                             </ul>
                         </li>
-                    @endif -->
+                    @endif --}}
                     {{-- Start Client Module --}}
-                    <!-- @include('backend.client.sidebar') -->
+                    {{-- @include('backend.client.sidebar') --}}
                     {{-- End Client Module --}}
 
                     {{-- task management start --}}
@@ -478,14 +479,14 @@
 
 
                     {{-- Start performance Routes --}}
-                    <!-- @include('backend.performance.sidebar') -->
+                    {{-- @include('backend.performance.sidebar') --}}
                     {{-- End performance Routes --}}
 
                     {{-- Start meeting Routes --}}
-                    <!-- @include('backend.meeting.sidebar') -->
+                    {{-- @include('backend.meeting.sidebar') --}}
                     {{-- End meeting Routes --}}
-                    <!-- @if (hasPermission('appointment_menu') && hasFeature('appointment'))
-<li
+                    {{-- @if (hasPermission('appointment_menu') && hasFeature('appointment'))
+                        <li
                             class="sidebar-menu-item {{ set_menu([route('appointment.index', 'appointment.create')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow  {{ menu_active_by_route(['appointment.index', 'appointment.create']) }}">
@@ -506,9 +507,9 @@
                                 </li>
                             </ul>
                         </li>
-@endif -->
+                    @endif
 
-                    <!-- @if (hasPermission('visit_menu') && hasFeature('visit'))
+                    @if (hasPermission('visit_menu') && hasFeature('visit'))
                         <li class="sidebar-menu-item {{ set_menu([route('visit.index')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['visit.index']) }}">
@@ -520,12 +521,12 @@
                             </a>
                             <ul class="child-menu-list {{ set_active(['hrm/visit*']) }}">
                                 @if (hasPermission('visit_read'))
-<li class="nav-item {{ menu_active_by_route(['visit.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['visit.index']) }}">
                                         <a href="{{ route('visit.index') }}" class="">
                                             <span>{{ _trans('common.Manage visit') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                             </ul>
                         </li>
                     @endif
@@ -543,12 +544,12 @@
                             </a>
                             <ul class="child-menu-list {{ set_active(['hrm/support/ticket*']) }}">
                                 @if (hasPermission('support_read') || hasPermission('support_read_all'))
-<li
+                                    <li
                                         class="nav-item {{ menu_active_by_route(['supportTicket.index', 'supportTicket.create', 'supportTicket.reply']) }}">
                                         <a href="{{ route('supportTicket.index') }}" class="">
                                             <span> {{ _trans('common.Tickets') }}</span> </a>
                                     </li>
-@endif
+                                @endif
                             </ul>
                         </li>
                     @endif
@@ -568,32 +569,32 @@
                                 class="child-menu-list  {{ set_active(['announcement/*', 'dashboard/announcement/*']) }}">
 
                                 @if (hasPermission('notice_menu'))
-<li
+                                    <li
                                         class="nav-item  {{ menu_active_by_route(['notice.index', 'notice.create', 'notice.edit']) }} ">
                                         <a href="{{ route('notice.index') }}"
                                             class="  {{ menu_active_by_route(['notice.index', 'notice.create', 'notice.edit']) }} ">
                                             <span>{{ _trans('common.Notice') }}</span> <span
                                                 class="badge badge-info d-none fs-6 p-s">5</span> </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('send_email_menu'))
-<li class="nav-item d-none">
+                                    <li class="nav-item d-none">
                                         <a href="#" class="">
                                             <span>{{ _trans('common.Send E-mail') }}</span> </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('send_notification_menu'))
-<li class="nav-item d-none">
+                                    <li class="nav-item d-none">
                                         <a href="#" class="">
                                             <span>{{ _trans('common.Send Notification') }}</span> </a>
                                     </li>
-@endif
+                                @endif
                             </ul>
                         </li>
                     @endif
                     @if (hasPermission('contact_menu') && hasFeature('contacts'))
-<li class="sidebar-menu-item">
+                        <li class="sidebar-menu-item">
                             <a href="{{ route('contact.index') }}"
                                 class="parent-item-content {{ menu_active_by_route(['contact.index']) }}">
                                 <i class="las la-address-book"></i>
@@ -602,7 +603,7 @@
                                 </span>
                             </a>
                         </li>
-@endif
+                    @endif
 
 
                     @if (hasPermission('report_menu') && hasFeature('report'))
@@ -619,7 +620,7 @@
                                 class="child-menu-list {{ set_active(['hrm/report/*', 'hrm/break/*', 'hrm/expense/payment']) }}">
 
                                 @if (hasPermission('live_tracking_read'))
-<li class="nav-item {{ menu_active_by_route(['live_trackingReport.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['live_trackingReport.index']) }}">
                                         <a href="{{ route('live_trackingReport.index') }}"
                                             class=" {{ set_active(route('live_trackingReport.index')) }}">
                                             <span>{{ _trans('common.Live Tracking') }}</span>
@@ -639,10 +640,10 @@
                                             <span>{{ _trans('common.Location Timeline') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('attendance_report_read'))
-<li class="nav-item {{ menu_active_by_route(['attendanceReport.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['attendanceReport.index']) }}">
                                         <a href="{{ route('attendanceReport.index') }}"
                                             class=" {{ set_active(route('attendanceReport.index')) }}">
                                             <span>{{ _trans('attendance.Attendance report') }}</span>
@@ -654,43 +655,41 @@
                                             <span>{{ _trans('common.Break report') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('daily_leave_read'))
-<li class="nav-item {{ menu_active_by_route(['leaveReport.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['leaveReport.index']) }}">
                                         <a href="{{ route('leaveReport.index') }}"
                                             class=" {{ set_active(route('leaveReport.index')) }}">
                                             <span>{{ _trans('leave.Leave Report') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                                 @if (hasPermission('payment_read'))
-<li class="nav-item {{ menu_active_by_route(['payment.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['payment.index']) }}">
                                         <a href="{{ route('payment.index') }}"
                                             class=" {{ set_active(route('payment.index')) }}">
                                             <span>{{ _trans('common.Payment Report') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
                                 @if (hasPermission('visit_read'))
-<li class="nav-item {{ menu_active_by_route(['report_visit.index']) }}">
+                                    <li class="nav-item {{ menu_active_by_route(['report_visit.index']) }}">
                                         <a href="{{ route('report_visit.index') }}" class="">
                                             <span>{{ _trans('common.Visit Reports') }}</span>
                                         </a>
                                     </li>
-@endif
+                                @endif
 
                             </ul>
                         </li>
-                    @endif
+                    @endif --}}
 
-                     -->
+                    @include('backend.partials.configurations-sidebar')
 
-                    <!--    @include('backend.partials.configurations-sidebar')
-                    @include('backend.partials.settings-sidebar')  -->
+                    @include('backend.partials.settings-sidebar')
 
-                  
                 @endif
             </ul>
             <!-- parent menu list end  -->

@@ -22,7 +22,7 @@
                                         <option value="" disabled selected>{{ _trans('common.Choose One') }}
                                         </option>
                                         @foreach ($data['leaveTypes'] as $type)
-                                            <option value="{{ $type->id }}">{{ $type->type->name }}</option>
+                                            <option value="{{ $type->id }}">{{ $type->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
