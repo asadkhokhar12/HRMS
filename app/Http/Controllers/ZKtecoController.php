@@ -17,7 +17,6 @@ class ZKtecoController extends Controller
     public function zkteco()
     {
         try {
-            //code...
 
             date_default_timezone_set('Asia/Karachi');
 

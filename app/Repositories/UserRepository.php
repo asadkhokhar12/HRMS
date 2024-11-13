@@ -55,12 +55,12 @@ class UserRepository
     public function getShift()
     {
         if (!isMainCompany())
-        return Shift::query()->where('company_id', $this->companyInformation()->id)->get();
+            return Shift::query()->where('company_id', $this->companyInformation()->id)->get();
     }
     public function getActiveShift()
     {
         if (!isMainCompany())
-        return Shift::query()->where('status_id', 1)->where('company_id', $this->companyInformation()->id)->get();
+            return Shift::query()->where('status_id', 1)->where('company_id', $this->companyInformation()->id)->get();
     }
 
     public function getById($id)
@@ -88,7 +88,7 @@ class UserRepository
 
     public function save($request)
     {
-        
+
         DB::beginTransaction();
         try {
             if (empty($request->joining_date)) {
@@ -122,14 +122,14 @@ class UserRepository
                 $request['avatar_id'] = $avatar_id;
             }
             $request['branch_id'] = userBranch();
-         
+
 
             // attendance method information
             $request['attendance_method'] = array_fill_keys($request->attendance_method ?? [], 1);
 
             $user = $this->model->query()->create($request->except('shift_id'));
-          
-            foreach($request->shift_id  as $shift){
+
+            foreach ($request->shift_id  as $shift) {
                 $new_shift = new $this->userShift;
                 $new_shift->user_id = $user->id;
                 $new_shift->shift_id = $shift;
@@ -141,13 +141,14 @@ class UserRepository
             ]);
 
             try {
-            // Send the email with the plain password
-             Mail::to($user->email)->send(new AutoGeneratePasswordMail($newPassword));
+                // Send the email with the plain password
+                //  Mail::to($user->email)->send(new AutoGeneratePasswordMail($newPassword));
+                $this->sendEmail($user, $newPassword);
             } catch (\Throwable $th) {
 
-                Log::info("central user error::" .$th);
+                Log::info("central user error::" . $th);
             }
-            
+
             // try {
             //     tenancy()->central(function ($tenant) use($user){
             //         $tenantSubdomain = Str::slug($tenant->id);
@@ -170,7 +171,7 @@ class UserRepository
             // } catch (\Throwable $th) {
             //     Log::info("central user error::" .$th);
             // }
-            
+
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Employee successfully Created.'), $user);
         } catch (\Throwable $th) {
@@ -188,10 +189,10 @@ class UserRepository
         DB::beginTransaction();
         try {
 
-            
+
             $user = $this->model->query()->find($id);
 
-          
+
             $user->name = $request->name;
             $user->email = $request->email;
             $user->gender = $request->gender;
@@ -202,25 +203,23 @@ class UserRepository
             $user->address = $request->address;
             $user->religion = $request->religion;
             $user->country_id = $request->country;
-            if($request->shift_id){
-                $this->userShift->where('user_id',$user->id)->delete();
-                foreach($request->shift_id as $shift){
+            if ($request->shift_id) {
+                $this->userShift->where('user_id', $user->id)->delete();
+                foreach ($request->shift_id as $shift) {
                     $new_shift = new $this->userShift;
                     $new_shift->user_id = $user->id;
                     $new_shift->shift_id = $shift;
                     $new_shift->save();
                 }
-                
-
             }
-          //  $user->shift_id = $request->shift_id;
+            //  $user->shift_id = $request->shift_id;
 
 
             $user->marital_status = $request->marital_status;
-            if($request->speak_language){
+            if ($request->speak_language) {
                 $user->speak_language = $request->speak_language;
             }
-            if($request->employee_id){
+            if ($request->employee_id) {
                 $user->employee_id = $request->employee_id;
             }
             $user->basic_salary = $request->basic_salary;
@@ -233,11 +232,11 @@ class UserRepository
             if ($request->password_type == 'default') {
                 $newPassword = 12345678;
                 $user->password = Hash::make($newPassword);
-            }else if ($request->password_type == 'custom') {
+            } else if ($request->password_type == 'custom') {
                 $newPassword = $request->password;
                 $user->password = Hash::make($newPassword);
             }
-        
+
 
             if ($request->avatar) {
                 $user->avatar_id = $this->uploadImage($request->avatar, 'uploads/user')->id;
@@ -247,9 +246,9 @@ class UserRepository
             //$defaultAttendanceMethods = [ 0 => 'normal_attendance'];
             //$attendanceMethods = array_merge($defaultAttendanceMethods, $request->attendance_method);
             $user->attendance_method = $request->attendance_method ? array_fill_keys($request->attendance_method, 1) : null;
-            
+
             //author info update here
-            $user->status_id = $request->status; 
+            $user->status_id = $request->status;
             $user->save();
             // $role = RoleUser::where('user_id', $user->id)->first();
             // $role->role_id = $user->role_id;
@@ -258,13 +257,13 @@ class UserRepository
 
             DB::commit();
 
-            try{
-                tenancy()->central(function ($tenant) use($user){
+            try {
+                tenancy()->central(function ($tenant) use ($user) {
                     $tenantSubdomain = Str::slug($tenant->id);
                     $centralDomain = @base_settings('company_domain');
                     $tenantDomain = $tenantSubdomain . '.' . $centralDomain;
-                    $company = Company::where('subdomain',$tenantDomain)->first();
-    
+                    $company = Company::where('subdomain', $tenantDomain)->first();
+
                     UserTenantMapping::updateOrCreate(
                         [
                             'company_id' => $company->id,
@@ -274,20 +273,18 @@ class UserRepository
                         ],
                         [
                             'email' => $user->email,
-                            
+
                         ]
                     );
-                    
                 });
+            } catch (\Throwable $th) {
+                Log::info('Central user updating error' . $th);
             }
-            catch (\Throwable $th) {
-                Log::info('Central user updating error' .$th);
-            }
-            
+
             return $this->responseWithSuccess(_trans('response.User update successfully.'), $user);
             return $user;
         } catch (\Throwable $th) {
-           
+
             return $this->responseWithError($th->getMessage(), [], 400);
         }
     }
@@ -474,7 +471,8 @@ class UserRepository
             ->make(true);
     }
 
-    function isWithinTimeLimit($givenDatetime) {
+    function isWithinTimeLimit($givenDatetime)
+    {
         $givenDatetime = strtotime($givenDatetime);
         $currentDatetime = time();
 
@@ -495,11 +493,13 @@ class UserRepository
                 ->where('datetime', '>=', $now)
                 ->orderBy('datetime')
                 ->documents();
-         
-            
+
+
             foreach ($firebase_data as $value) {
                 $dataNeeded = [
-                    'location_log', 'address', 'datetime'
+                    'location_log',
+                    'address',
+                    'datetime'
                 ];
                 $data = $value->data();
                 $data['location_log'] = ['latitude' => $data['latitude'], 'longitude' => $data['longitude']];
@@ -513,7 +513,6 @@ class UserRepository
         } catch (\Throwable $th) {
             return $location_list;
         }
-        
     }
 
 
@@ -533,13 +532,13 @@ class UserRepository
                 // Format the created_at timestamp
                 $formattedCreatedAt = date('j F Y, h:i a', strtotime($value->created_at));
                 $value->created_at = $formattedCreatedAt;
-                
+
                 array_push($data, $value);
             }
         }
         return $data;
     }
-    
+
 
     public function departmentWiseUser($request)
     {
@@ -622,54 +621,54 @@ class UserRepository
     }
 
     public function leaveBalanceTable($request)
-    {{
-        $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
-            ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
-            ->where('company_id', auth()->user()->company_id);
-        $where = array();
-        if ($request->search) {
-            $where[] = ['name', 'like', '%' . $request->search . '%'];
-        }
-        if (@$request->designation) {
-            $where[] = ['designation_id', $request->designation];
-        }
-        $data = $data
-            ->where($where)
-            ->paginate($request->limit ?? 2);
+    { {
+            $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
+                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
+                ->where('company_id', auth()->user()->company_id);
+            $where = array();
+            if ($request->search) {
+                $where[] = ['name', 'like', '%' . $request->search . '%'];
+            }
+            if (@$request->designation) {
+                $where[] = ['designation_id', $request->designation];
+            }
+            $data = $data
+                ->where($where)
+                ->paginate($request->limit ?? 2);
 
-        return [
-            'data' => $data->map(function ($data) {
-                if (@$data->is_free_location == 1) {
-                    $location = '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]';
-                }
+            return [
+                'data' => $data->map(function ($data) {
+                    if (@$data->is_free_location == 1) {
+                        $location = '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]';
+                    }
 
-                if (@$data->is_hr == 1) {
-                    $hr = '<br>[<small class="text-success">' . _trans('common.Acting as HR') . '</small>]';
-                }
-                $user_image = '';
-                $user_image .= '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->avatar_id) . '" class="staff-profile-image-small" >';
-                $contact = '<b>Email: </b>' . @$data->email . '<br><b>Phone: </b>' . @$data->phone;
-                $details = '<b>Department: </b>' . @$data->department->title . '<br><b>Designation: </b>' . @$data->designation->title . '<br><b>Role: </b>' . @$data->role->name . '<br><b>Shift: </b>' . @$data->shift->name . '<br><small class="mt-3 badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>';
-                $request = new stdClass();
-                $request->user_id = $data->user_id;
+                    if (@$data->is_hr == 1) {
+                        $hr = '<br>[<small class="text-success">' . _trans('common.Acting as HR') . '</small>]';
+                    }
+                    $user_image = '';
+                    $user_image .= '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->avatar_id) . '" class="staff-profile-image-small" >';
+                    $contact = '<b>Email: </b>' . @$data->email . '<br><b>Phone: </b>' . @$data->phone;
+                    $details = '<b>Department: </b>' . @$data->department->title . '<br><b>Designation: </b>' . @$data->designation->title . '<br><b>Role: </b>' . @$data->role->name . '<br><b>Shift: </b>' . @$data->shift->name . '<br><small class="mt-3 badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>';
+                    $request = new stdClass();
+                    $request->user_id = $data->user_id;
 
-                // $leave_details = @resolve(LeaveService::class)->leaveSummary($request)->original['data'] ?? '';
-                $leave_details = @resolve(LeaveService::class)->leaveCountingSummary($data)->original['data'] ?? '';
+                    // $leave_details = @resolve(LeaveService::class)->leaveSummary($request)->original['data'] ?? '';
+                    $leave_details = @resolve(LeaveService::class)->leaveCountingSummary($data)->original['data'] ?? '';
 
-                $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"]  . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
-                $available_leave = '';
-                foreach($leave_details['available_leave'] as $availables){
-                    $htm = '<div class="d-flex justify-content-between text-center">
+                    $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"]  . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
+                    $available_leave = '';
+                    foreach ($leave_details['available_leave'] as $availables) {
+                        $htm = '<div class="d-flex justify-content-between text-center">
                             <span><b>' . $availables['type'] . ':</b></span>
                             <span>&emsp;</span>
                             <span><b>Total: </b>' . $availables['total_leave'] . '&ensp;|&ensp;<b>Left: </b>' . $availables['left_days'] . '</b></span>
                     </div>';
-                    $available_leave .= $htm;
-                }
+                        $available_leave .= $htm;
+                    }
 
-                $action_button = '';
-                $action_button .= actionButton(_trans('common.Edit'), 'mainModalOpen(`' . route('leaveRequest.balance.edit', $data->id) . '`)', 'modal');
-                $button = ' <div class="dropdown dropdown-action">
+                    $action_button = '';
+                    $action_button .= actionButton(_trans('common.Edit'), 'mainModalOpen(`' . route('leaveRequest.balance.edit', $data->id) . '`)', 'modal');
+                    $button = ' <div class="dropdown dropdown-action">
                                     <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <i class="fa-solid fa-ellipsis"></i>
@@ -679,27 +678,27 @@ class UserRepository
                                     </ul>
                                 </div>';
 
-                return [
-                    'name' => $data->name . '' . @$location . '' . @$hr,
-                    'avatar' => $user_image,
-                    'contact' => $contact,
-                    'details' => $details,
-                    'leave_summary' => $leave_summary,
-                    'available_leave' => $available_leave,
-                    'id' => $data->id,
-                    'action'     => $button,
-                ];
-            }),
-            'pagination' => [
-                'total' => $data->total(),
-                'count' => $data->count(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'total_pages' => $data->lastPage(),
-                'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
-            ],
-        ];
-    }
+                    return [
+                        'name' => $data->name . '' . @$location . '' . @$hr,
+                        'avatar' => $user_image,
+                        'contact' => $contact,
+                        'details' => $details,
+                        'leave_summary' => $leave_summary,
+                        'available_leave' => $available_leave,
+                        'id' => $data->id,
+                        'action'     => $button,
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $data->total(),
+                    'count' => $data->count(),
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total_pages' => $data->lastPage(),
+                    'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+        }
     }
 
 
@@ -718,23 +717,23 @@ class UserRepository
                 'title' => $item->type->name,
                 'leave_type_id' => $item->id,
             ];
-        } );
+        });
     }
 
-    public function updateLeaveBalance($request){
+    public function updateLeaveBalance($request)
+    {
         try {
-            foreach ($request->leave as $key => $value){
+            foreach ($request->leave as $key => $value) {
                 $assignLeaveModel = AssignLeave::where('id', $key)->first();
                 if (!empty($assignLeaveModel)) {
                     $assign_leave = $assignLeaveModel;
                     $assign_leave->days = $value[0];
                     $assign_leave->save();
-                }else{
-                    return $this->responseWithError(_trans('message.Assign Leave not found'),[], 400);
+                } else {
+                    return $this->responseWithError(_trans('message.Assign Leave not found'), [], 400);
                 }
             }
             return $this->responseWithSuccess(_trans('message.Leave balance updated successfully.'), 200);
-            
         } catch (\Throwable $th) {
             return $this->responseWithError($th->getMessage(), [], 400);
         }
@@ -742,92 +741,92 @@ class UserRepository
 
 
     public function table($request)
-    {{
-        // Log::info($request->all());
-        $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
-            // ->where('status_id', 1)
-            ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'face_data', 'face_image', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
-            ->where('company_id', auth()->user()->company_id);
-        $where = array();
-        if ($request->search) {
-            $where[] = ['name', 'like', '%' . $request->search . '%'];
+    { {
+            // Log::info($request->all());
+            $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
+                // ->where('status_id', 1)
+                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'face_data', 'face_image', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
+                ->where('company_id', auth()->user()->company_id);
+            $where = array();
+            if ($request->search) {
+                $where[] = ['name', 'like', '%' . $request->search . '%'];
 
 
-            // $attendance->where(function ($query) use ($request) {
-            //     $query->whereHas('user', function ($query) use ($request) {
-            //         $query->where('name', 'like', '%' .  request()->get('search') . '%');
-            //     })
-            //     ->orWhereHas('user.department', function ($query) use ($request) {
-            //         $query->where('title', 'like', '%' . $request->search . '%');
-            //     });
-            // });
-            
-        }
-        if (@$request->designation) {
-            $where[] = ['designation_id', $request->designation];
-        }
-        if (@$request->userStatus) {      // active status filter
-            $where[] = ['status_id', $request->userStatus];
-        }
-        if (!@$request->userStatus) {     // default active status loading
-            $where[] = ['status_id', 1];  
-        }
-        $data = $data
-            ->where($where)
-            ->paginate($request->limit ?? 2);
+                // $attendance->where(function ($query) use ($request) {
+                //     $query->whereHas('user', function ($query) use ($request) {
+                //         $query->where('name', 'like', '%' .  request()->get('search') . '%');
+                //     })
+                //     ->orWhereHas('user.department', function ($query) use ($request) {
+                //         $query->where('title', 'like', '%' . $request->search . '%');
+                //     });
+                // });
 
-        return [
-            'data' => $data->map(function ($data) {
-              
-                $action_button = '';
-                $edit = _trans('common.Edit');
-                $delete = _trans('common.Delete');
-                $unBanned = _trans('common.Unbanned');
-                $banned = _trans('common.Banned');
-                $registerFace = _trans('common.Register Face');
-                // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
+            }
+            if (@$request->designation) {
+                $where[] = ['designation_id', $request->designation];
+            }
+            if (@$request->userStatus) {      // active status filter
+                $where[] = ['status_id', $request->userStatus];
+            }
+            if (!@$request->userStatus) {     // default active status loading
+                $where[] = ['status_id', 1];
+            }
+            $data = $data
+                ->where($where)
+                ->paginate($request->limit ?? 2);
 
-                if (hasPermission('profile_view')) {
-                    $action_button .= actionButton(_trans('common.Profile'), route('user.profile', [$data->id, 'personal']), 'profile');
-                }
-                if (hasPermission('user_edit')) {
-                    $action_button .= actionButton($edit, route('user.edit', $data->id), 'profile');
-                }
-                if ( hasPermission('registerFace') &&  isModuleActive('FaceAttendance') ) {
-                    $action_button .= actionButton($registerFace, route('user.registerFace', $data->id), 'new_page');
-                }
-                if (hasPermission('user_permission')) {
-                    $action_button .= actionButton(_trans('common.Permission'), route('user.permission_edit.profile', $data->id), 'profile');
-                }
-                if ($data->status_id == 3) {
-                    if (hasPermission('user_banned')) {
-                        $action_button .= actionButton($unBanned, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+            return [
+                'data' => $data->map(function ($data) {
+
+                    $action_button = '';
+                    $edit = _trans('common.Edit');
+                    $delete = _trans('common.Delete');
+                    $unBanned = _trans('common.Unbanned');
+                    $banned = _trans('common.Banned');
+                    $registerFace = _trans('common.Register Face');
+                    // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
+
+                    if (hasPermission('profile_view')) {
+                        $action_button .= actionButton(_trans('common.Profile'), route('user.profile', [$data->id, 'personal']), 'profile');
                     }
-                } else {
-                    if (hasPermission('user_unbanned') && !$data->is_admin) {
-                        $action_button .= actionButton($banned, 'ApproveOrReject(' . $data->id . ',' . "3" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+                    if (hasPermission('user_edit')) {
+                        $action_button .= actionButton($edit, route('user.edit', $data->id), 'profile');
                     }
-                }
-                if (hasPermission('user_delete') && !$data->is_admin) {
-                    $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`dashboard/user/delete/`)', 'delete');
-                }
-                if (hasPermission('user_edit')) {
-                    $icon = 'success';
-                    $action_button .= actionButton(_trans('common.Password Reset Mail'), 'GlobalSweetAlert(`' . _trans('common.Password Reset Mail') . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.sendResetMail', $data->id) . '`)', 'approve');
-                }
-                if (hasPermission('make_hr')) {
-
-                    if ($data->is_hr == "1") {
-                        $hr_btn = _trans('leave.Remove HR');
-                        $icon = 'warning';
+                    if (hasPermission('registerFace') &&  isModuleActive('FaceAttendance')) {
+                        $action_button .= actionButton($registerFace, route('user.registerFace', $data->id), 'new_page');
+                    }
+                    if (hasPermission('user_permission')) {
+                        $action_button .= actionButton(_trans('common.Permission'), route('user.permission_edit.profile', $data->id), 'profile');
+                    }
+                    if ($data->status_id == 3) {
+                        if (hasPermission('user_banned')) {
+                            $action_button .= actionButton($unBanned, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+                        }
                     } else {
-                        $hr_btn = _trans('leave.Make HR');
-                        $icon = 'success';
+                        if (hasPermission('user_unbanned') && !$data->is_admin) {
+                            $action_button .= actionButton($banned, 'ApproveOrReject(' . $data->id . ',' . "3" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+                        }
                     }
-                    $action_button .= actionButton($hr_btn, 'GlobalSweetAlert(`' . $hr_btn . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.make_hr', $data->id) . '`)', 'approve');
-                    // $action_button .= actionButton($hr_btn, 'MakeHrByAdmin(' . $data->id . ',`dashboard/user/make-hr/`,`HR`)', 'approve');
-                }
-                $button = ' <div class="dropdown dropdown-action">
+                    if (hasPermission('user_delete') && !$data->is_admin) {
+                        $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`dashboard/user/delete/`)', 'delete');
+                    }
+                    if (hasPermission('user_edit')) {
+                        $icon = 'success';
+                        $action_button .= actionButton(_trans('common.Password Reset Mail'), 'GlobalSweetAlert(`' . _trans('common.Password Reset Mail') . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.sendResetMail', $data->id) . '`)', 'approve');
+                    }
+                    if (hasPermission('make_hr')) {
+
+                        if ($data->is_hr == "1") {
+                            $hr_btn = _trans('leave.Remove HR');
+                            $icon = 'warning';
+                        } else {
+                            $hr_btn = _trans('leave.Make HR');
+                            $icon = 'success';
+                        }
+                        $action_button .= actionButton($hr_btn, 'GlobalSweetAlert(`' . $hr_btn . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.make_hr', $data->id) . '`)', 'approve');
+                        // $action_button .= actionButton($hr_btn, 'MakeHrByAdmin(' . $data->id . ',`dashboard/user/make-hr/`,`HR`)', 'approve');
+                    }
+                    $button = ' <div class="dropdown dropdown-action">
                                     <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <i class="fa-solid fa-ellipsis"></i>
@@ -836,75 +835,75 @@ class UserRepository
                                     ' . $action_button . '
                                     </ul>
                                 </div>';
-                if (@$data->is_free_location == 1) {
-                    $location = '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]';
-                }
+                    if (@$data->is_free_location == 1) {
+                        $location = '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]';
+                    }
 
-                if (@$data->is_hr == 1) {
-                    $hr = '<br>[<small class="text-success">' . _trans('common.Acting as HR') . '</small>]';
-                }
-                $user_image = '';
-                $user_image .= '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->avatar_id) . '" class="staff-profile-image-small" >';
-                $registered_face = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
-                return [
-                    'name' => $data->name . '' . @$location . '' . @$hr,
-                    'avatar' => $user_image,
-                    'registered_face' => $registered_face,
-                    'email' => $data->email,
-                    'phone' => $data->phone,
-                    'department' => @$data->department->title,
-                    'designation' => @$data->designation->title,
-                    'role' => @$data->role->name,
-                    'shift' => $data->shifts ? $data->all_shifts()->pluck('name')->implode(', ') : auth()->user()->shift->name,
-                    'id' => $data->id,
-                    'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                    'action' => $button,
-                ];
-            }),
-            'pagination' => [
-                'total' => $data->total(),
-                'count' => $data->count(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'total_pages' => $data->lastPage(),
-                'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
-            ],
-        ];
-    }
+                    if (@$data->is_hr == 1) {
+                        $hr = '<br>[<small class="text-success">' . _trans('common.Acting as HR') . '</small>]';
+                    }
+                    $user_image = '';
+                    $user_image .= '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->avatar_id) . '" class="staff-profile-image-small" >';
+                    $registered_face = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
+                    return [
+                        'name' => $data->name . '' . @$location . '' . @$hr,
+                        'avatar' => $user_image,
+                        'registered_face' => $registered_face,
+                        'email' => $data->email,
+                        'phone' => $data->phone,
+                        'department' => @$data->department->title,
+                        'designation' => @$data->designation->title,
+                        'role' => @$data->role->name,
+                        'shift' => $data->shifts ? $data->all_shifts()->pluck('name')->implode(', ') : auth()->user()->shift->name,
+                        'id' => $data->id,
+                        'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                        'action' => $button,
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $data->total(),
+                    'count' => $data->count(),
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total_pages' => $data->lastPage(),
+                    'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+        }
     }
     public function phoneBookTable($request)
-    {{
-        // Log::info($request->all());
-        $data = $this->model->query()->where('company_id', $this->companyInformation()->id)
-            ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'created_at');
-        if ($request->from && $request->to) {
-            $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
-        }
-        $data = $data->orderBy('name', 'asc')
-            ->paginate($request->limit ?? 2);
-        return [
-            'data' => $data->map(function ($data) {
+    { {
+            // Log::info($request->all());
+            $data = $this->model->query()->where('company_id', $this->companyInformation()->id)
+                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'created_at');
+            if ($request->from && $request->to) {
+                $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
+            }
+            $data = $data->orderBy('name', 'asc')
+                ->paginate($request->limit ?? 2);
+            return [
+                'data' => $data->map(function ($data) {
 
-                return [
-                    'name' => $data->name,
-                    'email' => $data->email,
-                    'phone' => $data->phone,
-                    'department' => $data->department->title,
-                    'designation' => $data->designation->title,
-                    'role' => $data->role->name,
-                    'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                ];
-            }),
-            'pagination' => [
-                'total' => $data->total(),
-                'count' => $data->count(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'total_pages' => $data->lastPage(),
-                'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
-            ],
-        ];
-    }
+                    return [
+                        'name' => $data->name,
+                        'email' => $data->email,
+                        'phone' => $data->phone,
+                        'department' => $data->department->title,
+                        'designation' => $data->designation->title,
+                        'role' => $data->role->name,
+                        'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $data->total(),
+                    'count' => $data->count(),
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total_pages' => $data->lastPage(),
+                    'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+        }
     }
 
     // statusUpdate
@@ -960,7 +959,7 @@ class UserRepository
             $password = getCode(8);
             $user->password = Hash::make($password);
             $user->update();
-            if (!$this->sendEmail($user, $password)) {
+            if (! Mail::to($user->email)->send(new AutoGeneratePasswordMail($password))) {
                 return $this->responseWithError(_trans('message.Mail not send.'), [], 400);
             } else {
                 return $this->responseWithSuccess(_trans('message.Mail send successfully.'), [], 200);
