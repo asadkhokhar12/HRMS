@@ -52,13 +52,14 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 config([
-                    'mail.mailers.smtp.host' => base_settings('mail_host'),
-                    'mail.mailers.smtp.port' => base_settings('mail_port'),
-                    'mail.mailers.smtp.encryption' => base_settings('mail_encryption'),
-                    'mail.mailers.smtp.username' => base_settings('mail_username'),
-                    'mail.mailers.smtp.password' => base_settings('mail_password'),
-                    'mail.from.address' => base_settings('mail_from_address'),
-                    'mail.from.name' => base_settings('mail_from_name'),
+                    'mail.mailers.smtp.mailer' => env('MAIL_MAILER'),
+                    'mail.mailers.smtp.host' => env('MAIL_HOST'),
+                    'mail.mailers.smtp.port' => env('MAIL_PORT'),
+                    'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION'),
+                    'mail.mailers.smtp.username' => env('MAIL_USERNAME'),
+                    'mail.mailers.smtp.password' => env('MAIL_PASSWORD'),
+                    'mail.from.address' => env('MAIL_FROM_ADDRESS'),
+                    'mail.from.name' => env('mail_from_name'),
                 ]);
             }
 

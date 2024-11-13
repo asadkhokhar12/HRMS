@@ -158,7 +158,7 @@
                         </li>
                     @endif
 
-                    @if (isModuleActive('SingleDeviceLogin') && hasPermission('user_device_list'))
+                    {{-- @if (isModuleActive('SingleDeviceLogin') && hasPermission('user_device_list'))
                         <li class="sidebar-menu-item ">
                             <a href="{{ route('users_device.index') }}"
                                 class="parent-item-content {{ menu_active_by_route(['users_device.index']) }}">
@@ -168,7 +168,7 @@
                                 </span>
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
 
 
                     {{-- @if (isModuleActive('Services') && hasFeature('services') && hasPermission('service_menu'))

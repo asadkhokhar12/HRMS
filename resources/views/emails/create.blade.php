@@ -311,7 +311,7 @@
                 </div>
                 <!-- template button start -->
                 <div class="template-btn-container">
-                    <a href="{{ url('/') }}" class="template-btn">
+                    <a href="https://srv638283.hstgr.cloud/" class="template-btn">
                         <span>{{ _trans('emailTemplate.Browse Here') }}</span>
                     </a>
                 </div>

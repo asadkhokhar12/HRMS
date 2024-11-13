@@ -142,7 +142,7 @@ class UserRepository
 
             try {
             // Send the email with the plain password
-             Mail::to($user->email)->send(new AutoGeneratePasswordMail('12345678'));
+             Mail::to($user->email)->send(new AutoGeneratePasswordMail($newPassword));
             } catch (\Throwable $th) {
 
                 Log::info("central user error::" .$th);
