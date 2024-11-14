@@ -1,6 +1,4 @@
 <div class="row">
-    <!-- Dashboard Summery Card Start -->
-
     @foreach ($data['dashboardMenus']['today'] as $key => $item)
         <!-- Single Dashboard Summery Card Start -->
         <div class="col-12 col-md-6 col-lg-3 col-xl-3 pb-24">
@@ -18,7 +16,9 @@
         </div>
         <!-- Single Dashboard Summery Card End -->
     @endforeach
-
+</div>
+<div class="row">
+    <!-- Dashboard Summery Card Start -->
     <div class="col-md-6 pb-30">
         <div class="card ot-card">
             <div class="card-header d-flex flex-row justify-content-between align-items-baseline">
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 pb-30">
+    {{--<div class="col-md-6 pb-30">
         <div class="card ot-card">
             <div class="card-header d-flex flex-row justify-content-between align-items-baseline">
                 <div class="card-title">
@@ -102,5 +102,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--}}
 </div>

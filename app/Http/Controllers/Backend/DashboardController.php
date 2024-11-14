@@ -58,9 +58,10 @@ class DashboardController extends Controller
 
             $request['month'] = date('Y-m');
 
+            // $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
             $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
             $data['dashboardMenus'] = @$menus->original['data'];
-
+            
             return $returnHTML = view('backend.dashboard.load_my_dashboard', compact('data'))->render();
             return $returnHTML = view('backend.dashboard.loadProfileDashboard', compact('data'))->render();
         } catch (\Throwable $th) {

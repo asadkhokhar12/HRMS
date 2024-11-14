@@ -111,8 +111,8 @@ return [
         'Unisex',
     ],
     'footer_info'=>[
-        'email'=>'contact@onesthrm.com',
-        'address'=>'House no Block - E, 148 Rd No 13B, Dhaka 1216',
-        'phone'=>'+880195588226',
+        'email'=>'',
+        'address'=>'',
+        'phone'=>'',
     ]
 ];
