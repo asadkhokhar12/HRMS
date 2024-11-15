@@ -140,6 +140,42 @@ GlobalSweetAlert = (title, text, icon, button, go_url) => {
   });
 };
 
+function GlobalSweetAlertForLocation(title, text, icon, confirmButtonText, route) {
+  Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: 'Cancel',
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+          return fetch(route, {
+              method: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                  'Accept': 'application/json',
+              },
+          })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error(response.statusText);
+                  }
+                  return response.json();
+              })
+              .catch(error => {
+                  Swal.showValidationMessage(`Request failed: ${error}`);
+              });
+      },
+  }).then(result => {
+      if (result.isConfirmed) {
+          Swal.fire('Success!', 'Location status has been updated.', 'success');
+          location.reload(); // Optional: Reload the page
+      }
+  });
+}
+
+
 MakeHrByAdmin = (id, status, ur, title) => {
   let new_url = `${url + "/" + status + id}`;
   // console.log(new_url);

@@ -501,10 +501,10 @@ class UserController extends Controller
 
             $totalEmployee = User::count();
 
-            if (activeSubscriptionIsEmployeeLimit() && activeSubscriptionEmployeeLimit() == $totalEmployee) {
-                Toastr::error(_trans('response.Employee limit is over!'), 'Error');
-                return back();
-            }
+            // if (activeSubscriptionIsEmployeeLimit() && activeSubscriptionEmployeeLimit() == $totalEmployee) {
+            //     Toastr::error(_trans('response.Employee limit is over!'), 'Error');
+            //     return back();
+            // }
         }
 
         try {
@@ -514,6 +514,7 @@ class UserController extends Controller
             $data['shifts'] = $this->user->getActiveShift();
             $data['roles'] = $this->role->getAll();
             $data['permissions'] = Permission::get();
+            $data['managers'] = $this->user->getActiveAll();
             $data['countries'] = Country::all();
             return view('backend.user.employee.add_user', compact('data'));
         } catch (\Throwable $th) {
@@ -1187,6 +1188,31 @@ class UserController extends Controller
         }
         return $this->user->statusUpdate($request);
     }
+
+    public function changeLocation($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+    
+    
+            $user->update([
+                'is_free_location' => $user->is_free_location === 0 ? 1 : 0,
+            ]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Location status updated successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error updating location: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update location status: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    
 
     // destroy all selected data
 

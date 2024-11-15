@@ -44,13 +44,13 @@ class RoleRepository
         $upperRoles = json_decode(auth()->user()->role->upper_roles, true) ?? [];
 
         return $this->role->query()
+            ->where('name', 'staff') // for staff only
             ->where('company_id', $this->companyInformation()->id)
             ->where('status_id', 1)
             ->where('id', '!=', 1) // Assuming 'id' is an integer
             ->where('permissions', '!=', '')
             ->whereNotIn('id', $upperRoles)
             ->get();
-
     }
 
     public function getPermission()
@@ -160,28 +160,28 @@ class RoleRepository
 
     // data table functions
     public function table($request)
-    {{
-        $data = $this->role->query()->with('status')
-            ->where('company_id', auth()->user()->company_id);
-        $where = array();
-        if ($request->search) {
-            $where[] = ['name', 'like', '%' . $request->search . '%'];
-        }
-        $data = $data
-            ->where($where)
-            ->orderBy('id', 'DESC')
-            ->paginate($request->limit ?? 2);
-        return [
-            'data' => $data->map(function ($data) {
-                $action_button = '';
-                $system_roles = ['admin', 'hr', 'staff'];
-                if (hasPermission('role_update')) {
-                    $action_button .= '<a href="' . route('roles.edit', $data->id) . '" class="dropdown-item"> ' . _trans('common.Edit') . '</a>';
-                }
-                if (hasPermission('role_delete') && !in_array($data->slug, $system_roles)) {
-                    $action_button .= actionButton(_trans('common.Delete'), '__globalDelete(' . $data->id . ',`hrm/roles/delete/`)', 'delete');
-                }
-                $button = ' <div class="dropdown dropdown-action">
+    { {
+            $data = $this->role->query()->with('status')
+                ->where('company_id', auth()->user()->company_id);
+            $where = array();
+            if ($request->search) {
+                $where[] = ['name', 'like', '%' . $request->search . '%'];
+            }
+            $data = $data
+                ->where($where)
+                ->orderBy('id', 'DESC')
+                ->paginate($request->limit ?? 2);
+            return [
+                'data' => $data->map(function ($data) {
+                    $action_button = '';
+                    $system_roles = ['admin', 'hr', 'staff'];
+                    if (hasPermission('role_update')) {
+                        $action_button .= '<a href="' . route('roles.edit', $data->id) . '" class="dropdown-item"> ' . _trans('common.Edit') . '</a>';
+                    }
+                    if (hasPermission('role_delete') && !in_array($data->slug, $system_roles)) {
+                        $action_button .= actionButton(_trans('common.Delete'), '__globalDelete(' . $data->id . ',`hrm/roles/delete/`)', 'delete');
+                    }
+                    $button = ' <div class="dropdown dropdown-action">
                                     <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
                                         <i class="fa-solid fa-ellipsis"></i>
@@ -190,35 +190,34 @@ class RoleRepository
                                     ' . $action_button . '
                                     </ul>
                                 </div>';
-                $web_checked = $data->web_login == 1 ? 'checked' : '';
-                $app_checked = $data->app_login == 1 ? 'checked' : '';
-                return [
-                    'id' => $data->id,
-                    'name' => $data->name,
-                    'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                    $web_checked = $data->web_login == 1 ? 'checked' : '';
+                    $app_checked = $data->app_login == 1 ? 'checked' : '';
+                    return [
+                        'id' => $data->id,
+                        'name' => $data->name,
+                        'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
 
-                    'web_login' => '<div class="form-check form-switch">
+                        'web_login' => '<div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" onchange="changeLoginStatus(`' . route('roles.change_login') . '`,' . $data->id . ',`web_login`)" role="switch" id="web_login_' . $data->id . '" ' . $web_checked . '>
                         <label class="form-check-label" for="web_login_' . $data->id . '"></label>
                     </div>',
-                    'app_login' => '<div class="form-check form-switch">
+                        'app_login' => '<div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" onchange="changeLoginStatus(`' . route('roles.change_login') . '`,' . $data->id . ',`app_login`)" role="switch" id="app_login_' . $data->id . '" ' . $app_checked . '>
                         <label class="form-check-label" for="app_login_' . $data->id . '"></label>
                     </div>',
-                    'action' => $button,
-                ];
-
-            }),
-            'pagination' => [
-                'total' => $data->total(),
-                'count' => $data->count(),
-                'per_page' => $data->perPage(),
-                'current_page' => $data->currentPage(),
-                'total_pages' => $data->lastPage(),
-                'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
-            ],
-        ];
-    }
+                        'action' => $button,
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $data->total(),
+                    'count' => $data->count(),
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total_pages' => $data->lastPage(),
+                    'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+        }
     }
 
     // statusUpdate

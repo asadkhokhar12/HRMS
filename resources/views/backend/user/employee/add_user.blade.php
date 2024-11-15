@@ -44,7 +44,8 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-20">
-                                <label class="mb-10">{{ _trans('profile.Avatar') }}</label>
+                                <label for="backend_image" class="form-label">{{ _trans('common.Avatar') }} <span
+                                        class="text-danger">*</span></label>
                                 <div class="ot_fileUploader left-side mb-20">
                                     <input class="form-control" type="text" placeholder="{{ _trans('profile.Avatar') }}"
                                         name="backend_image" readonly="" id="placeholder3">
@@ -83,7 +84,7 @@
                                     id="_country_id">
                                     @foreach ($data['countries'] as $country)
                                         <option value="{{ $country->id }}"
-                                            {{ $country->name === 'Bangladesh' ? 'selected' : '' }}>
+                                            {{ $country->name === 'Pakistan' ? 'selected' : '' }}>
                                             {{ $country->name }}
                                         </option>
                                     @endforeach
@@ -180,6 +181,23 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-3">
+                                <label for="name" class="form-label">{{ _trans('common.Is free Location?') }} <span
+                                        class="text-danger">*</span></label>
+                                <select name="is_free_location" id="is_free_location" class="form-select ot-input"
+                                    required>
+                                    <option value="1" {{ old('is_free_location') }}>
+                                        {{ _trans('common.Yes') }}</option>
+                                    <option value="0" selected {{ old('is_free_location') }}>
+                                        {{ _trans('common.No') }}</option>
+                                </select>
+                                @if ($errors->has('is_free_location'))
+                                    <div class="error">{{ $errors->first('is_free_location') }}</div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
                                 <label class="form-label" for="password"
                                     class="form-label">{{ _trans('common.Password') }} <span class="text-danger">*</span>
                                 </label> <br>
@@ -189,7 +207,6 @@
                                 <span>{{ _trans('common.Custom Password') }}</span>
                             </div>
                         </div>
-
                         <div id="SelectionDiv" class="col-md-12">
                             <div class="form-group mb-3">
                                 <label class="form-label" for="password"
@@ -213,18 +230,34 @@
                             <div class="form-group mb-3">
                                 <label class="form-label" for="name" class="form-label">{{ _trans('common.Role') }}
                                     <span class="text-danger">*</span></label>
-                                <select name="role_id" class="form-select change-role select2">
-                                    <option value="" disabled>
-                                        {{ _trans('common.Choose One') }}</option>
+                                <select name="role_id" class="form-select change-role">
+                                    {{-- <option value="" disabled>
+                                        {{ _trans('common.Choose One') }}</option> --}}
                                     @foreach ($data['roles'] as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}
-                                        </option>
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->has('role_id'))
                                     <span class="error text-danger">
                                         {{ $errors->first('role_id') }}
                                     </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label for="manager_id" class="form-label">{{ _trans('user.Manager') }}</label>
+                                <select name="manager_id" class="form-select select2">
+                                    <option value="" disabled>{{ _trans('common.Choose One') }}
+                                    </option>
+                                    @foreach ($data['managers'] as $manager)
+                                        <option value="{{ $manager->id }}" {{ old('manager_id') }}>{{ $manager->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('manager_id'))
+                                    <small class="error">{{ $errors->first('manager_id') }}</small>
                                 @endif
                             </div>
                         </div>
@@ -370,13 +403,14 @@
                                     <div class="error text-danger">{{ $errors->first('speak_language') }}</div>
                                 @endif
                             </div>
+
                         </div>
                         <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label class="form-label mt-3">{{ _trans('common.Attendance Method') }} <span
                                         class="text-danger">*</span></label>
-                                <select name="attendance_method[]" class="form-control " id="attendance_method" multiple>
-                                    <option value="face_attendance" selected>{{ _trans('common.Face Attendance') }}
+                                <select name="attendance_method[]" class="form-control " id="attendance_method" >
+                                    <option value="face_attendance" selected>{{ _trans('common.Normal Attendance') }}
                                     </option>
                                 </select>
                                 @if ($errors->has('attendance_method'))
@@ -384,6 +418,7 @@
                                 @endif
                             </div>
                         </div>
+
                     </div>
                     <div class="col-lg-12">
                         <div class="d-flex justify-content-end">

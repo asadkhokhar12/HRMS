@@ -891,51 +891,59 @@ class DashboardRepository
         try {
             $date = date('Y-m-d');
             $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
-
+    
             // Debugging Monthly Summary
             if (!$monthlySummary || !isset($monthlySummary['working_days'], $monthlySummary['present'], $monthlySummary['work_time'])) {
                 throw new \Exception('Invalid monthly summary data');
             }
-
+    
+            // Extracting data and converting to appropriate types
             $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
             $present = (int)str_replace(' days', '', $monthlySummary['present']);
-            $workingTime = (int)str_replace(' min', '', $monthlySummary['work_time']);
-
-            // Avoid division by zero
+            $workingTimeInMinutes = (int)str_replace(' min', '', $monthlySummary['work_time']); // In minutes
+    
+            // Avoid division by zero for working days
             if ($workingDays == 0) {
                 $workingDays = 1;
             }
-
-            $workingTimePerHour = $workingTime;
-            $totalWorkingHours = $workingDays * 9;
-
+    
+            // Convert working time to hours (with proper rounding)
+            $totalWorkedHours = round($workingTimeInMinutes / 60, 2); // Convert minutes to hours
+            $totalWorkingHours = round($workingDays * 9, 2); // Total working hours in the month (assuming 9 hours/day)
+    
+            // Debugging potential zero values
+            if ($totalWorkedHours < 0 || $totalWorkingHours <= 0) {
+                throw new \Exception('Invalid working time or total working hours data');
+            }
+    
             // Salary Calculations
             $basicSalary = auth()->user()->basic_salary ?? 0;
             $salaryPerDay = round($basicSalary / $workingDays, 2);
-            $salaryPerHours = round($salaryPerDay / 9, 2);
-            $totalSalary = round($salaryPerHours * $workingTimePerHour, 2);
-
+            $salaryPerHour = round($salaryPerDay / 9, 2);
+            $totalSalary = round($salaryPerHour * $totalWorkedHours, 2);
+    
+            // Prepare data for response
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Present Days'),
                 'color_class' => 'circle-primary',
-                'number' => "$present/$workingDays",
+                'number' => "$present / $workingDays",
             ];
-
+    
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Total Working Hours'),
                 'color_class' => 'circle-primary',
-                'number' => $workingTimePerHour . " H/{$totalWorkingHours}",
+                'number' => "{$totalWorkedHours} H / {$totalWorkingHours} H",
             ];
-
+    
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Salary'),
                 'color_class' => 'circle-primary',
                 'number' => $totalSalary,
             ];
-
+    
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {
             // Log the error for debugging
@@ -943,7 +951,7 @@ class DashboardRepository
             return $this->responseWithError($exception->getMessage(), [], 500);
         }
     }
-
+    
     public function getNewCompanyDashboardStatistics($request)
     {
         try {

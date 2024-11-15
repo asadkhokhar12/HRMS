@@ -38,6 +38,7 @@ Route::group(['middleware' => ['xss', 'TimeZone'], 'prefix' => 'dashboard'], fun
             Route::get('change-status/{user}/{status}', [UserController::class, 'changeStatus'])->name('user.changeStatus')->middleware('PermissionCheck:user_update');
             Route::post('delete-data', [UserController::class, 'deleteData'])->name('user.delete_data')->middleware('PermissionCheck:user_update');
             Route::post('status-change', [UserController::class, 'statusUpdate'])->name('user.statusUpdate')->middleware('PermissionCheck:leave_type_update');
+            Route::post('change-location/{id}', [UserController::class, 'changeLocation'])->name('user.changeLocation')->middleware('PermissionCheck:user_update');
 
         });
 

@@ -63,7 +63,7 @@ class User extends Authenticatable
         'visa_number', 'visa_file_id', 'visa_expire_date',
         'insurance_number', 'insurance_file_id', 'insurance_expire_date',
         'labour_card_number', 'labour_card_file_id', 'labour_card_expire_date',
-        'attendance_method',
+        'attendance_method','is_free_location'
     ];
 
     /**
@@ -94,7 +94,7 @@ class User extends Authenticatable
         'password_hints', 'avatar_id', 'status_id', 'last_login_at', 'last_logout_at', 'last_login_ip', 'device_token', 'login_access', 'address',
         'gender', 'birth_date', 'religion', 'blood_group', 'joining_date', 'basic_salary', 'marital_status', 'social_id', 'social_type', 'employee_id',
         'nationality', 'nid_card_number', 'nid_card_id', 'facebook_link', 'linkedin_link', 'instagram_link', 'passport_number', 'passport_file_id', 'tin', 'bank_name', 'bank_account', 'emergency_name', 'emergency_mobile_number', 'emergency_mobile_relationship',
-        'manager_id', 'employee_type', 'grade', 'remember_token', 'branch_id',
+        'manager_id', 'employee_type', 'grade', 'remember_token', 'branch_id'
     ];
 
     public function company(): BelongsTo

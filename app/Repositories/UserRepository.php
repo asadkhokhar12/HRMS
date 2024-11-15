@@ -116,6 +116,7 @@ class UserRepository
             $request['password'] = Hash::make($request->password);
             $request['country_id'] = $request->country;
             $request['employee_id'] = $request->employee_id;
+            $request['is_free_location'] = $request->is_free_location ?? 1;
             if ($request->avatar) {
                 $this->deleteImage(asset_path($request->avatar_id));
                 $avatar_id = $this->uploadImage($request->avatar, 'uploads/user')->id;
@@ -125,6 +126,7 @@ class UserRepository
 
 
             // attendance method information
+            // {"normal_attendance": 1}
             $request['attendance_method'] = array_fill_keys($request->attendance_method ?? [], 1);
 
             $user = $this->model->query()->create($request->except('shift_id'));
@@ -228,7 +230,7 @@ class UserRepository
             $user->manager_id = $request->manager_id;
             // $user->permissions = $request->permissions;
             $user->is_free_location = $request->is_free_location;
-            $user->time_zone = $request->time_zone ?? 'Asia/Dhaka';
+            $user->time_zone = $request->time_zone ?? 'Asia/Karachi';
             if ($request->password_type == 'default') {
                 $newPassword = 12345678;
                 $user->password = Hash::make($newPassword);
@@ -810,11 +812,11 @@ class UserRepository
             // Log::info($request->all());
             $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
                 // ->where('status_id', 1)
-                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'face_data', 'face_image', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
+                ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
                 ->where('company_id', auth()->user()->company_id);
-            $where = array();
+            $where = [];
             if ($request->search) {
-                $where[] = ['name', 'like', '%' . $request->search . '%'];
+                $where[] = ['name', 'like', "%{$request->search}%"];
 
 
                 // $attendance->where(function ($query) use ($request) {
@@ -839,6 +841,7 @@ class UserRepository
             $data = $data
                 ->where($where)
                 ->paginate($request->limit ?? 2);
+            // dd($data);
 
             return [
                 'data' => $data->map(function ($data) {
@@ -846,32 +849,38 @@ class UserRepository
                     $action_button = '';
                     $edit = _trans('common.Edit');
                     $delete = _trans('common.Delete');
-                    $unBanned = _trans('common.Unbanned');
-                    $banned = _trans('common.Banned');
-                    $registerFace = _trans('common.Register Face');
+                    $Location_bind = _trans('common.change location');
+                    // $unBanned = _trans('common.Unbanned');
+                    // $banned = _trans('common.Banned');
+                    // $registerFace = _trans('common.Register Face');
                     // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
 
                     if (hasPermission('profile_view')) {
                         $action_button .= actionButton(_trans('common.Profile'), route('user.profile', [$data->id, 'personal']), 'profile');
                     }
                     if (hasPermission('user_edit')) {
-                        $action_button .= actionButton($edit, route('user.edit', $data->id), 'profile');
+                        $action_button .= actionButton($edit, route('user.edit', $data->id), 
+                        'profile');
                     }
-                    if (hasPermission('registerFace') &&  isModuleActive('FaceAttendance')) {
-                        $action_button .= actionButton($registerFace, route('user.registerFace', $data->id), 'new_page');
+                    if (hasPermission('user_edit')) {
+                        $icon = 'success';
+                        $action_button .= actionButton(_trans('common.Allow/Disable Location'), 'GlobalSweetAlertForLocation(`' . _trans('common.Allow/Disable Location') . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.changeLocation', $data->id) . '`)', 'approve');
                     }
+                    // if (hasPermission('registerFace') &&  isModuleActive('FaceAttendance')) {
+                    //     $action_button .= actionButton($registerFace, route('user.registerFace', $data->id), 'new_page');
+                    // }
                     if (hasPermission('user_permission')) {
                         $action_button .= actionButton(_trans('common.Permission'), route('user.permission_edit.profile', $data->id), 'profile');
                     }
-                    if ($data->status_id == 3) {
-                        if (hasPermission('user_banned')) {
-                            $action_button .= actionButton($unBanned, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
-                        }
-                    } else {
-                        if (hasPermission('user_unbanned') && !$data->is_admin) {
-                            $action_button .= actionButton($banned, 'ApproveOrReject(' . $data->id . ',' . "3" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
-                        }
-                    }
+                    // if ($data->status_id == 3) {
+                    //     if (hasPermission('user_banned')) {
+                    //         $action_button .= actionButton($unBanned, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+                    //     }
+                    // } else {
+                    //     if (hasPermission('user_unbanned') && !$data->is_admin) {
+                    //         $action_button .= actionButton($banned, 'ApproveOrReject(' . $data->id . ',' . "3" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
+                    //     }
+                    // }
                     if (hasPermission('user_delete') && !$data->is_admin) {
                         $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`dashboard/user/delete/`)', 'delete');
                     }
@@ -879,18 +888,19 @@ class UserRepository
                         $icon = 'success';
                         $action_button .= actionButton(_trans('common.Password Reset Mail'), 'GlobalSweetAlert(`' . _trans('common.Password Reset Mail') . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.sendResetMail', $data->id) . '`)', 'approve');
                     }
-                    if (hasPermission('make_hr')) {
+                    
+                    // if (hasPermission('make_hr')) {
 
-                        if ($data->is_hr == "1") {
-                            $hr_btn = _trans('leave.Remove HR');
-                            $icon = 'warning';
-                        } else {
-                            $hr_btn = _trans('leave.Make HR');
-                            $icon = 'success';
-                        }
-                        $action_button .= actionButton($hr_btn, 'GlobalSweetAlert(`' . $hr_btn . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.make_hr', $data->id) . '`)', 'approve');
-                        // $action_button .= actionButton($hr_btn, 'MakeHrByAdmin(' . $data->id . ',`dashboard/user/make-hr/`,`HR`)', 'approve');
-                    }
+                    //     if ($data->is_hr == "1") {
+                    //         $hr_btn = _trans('leave.Remove HR');
+                    //         $icon = 'warning';
+                    //     } else {
+                    //         $hr_btn = _trans('leave.Make HR');
+                    //         $icon = 'success';
+                    //     }
+                    //     $action_button .= actionButton($hr_btn, 'GlobalSweetAlert(`' . $hr_btn . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.make_hr', $data->id) . '`)', 'approve');
+                    //     // $action_button .= actionButton($hr_btn, 'MakeHrByAdmin(' . $data->id . ',`dashboard/user/make-hr/`,`HR`)', 'approve');
+                    // }
                     $button = ' <div class="dropdown dropdown-action">
                                     <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -901,7 +911,7 @@ class UserRepository
                                     </ul>
                                 </div>';
                     if (@$data->is_free_location == 1) {
-                        $location = '<br>[<small class="text-info">' . _trans('common.Free Location') . '</small>]';
+                        $location = '<br>[<small class="text-info fs-6">' . _trans('common.Free Location') . '</small>]';
                     }
 
                     if (@$data->is_hr == 1) {

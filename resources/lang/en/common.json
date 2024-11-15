@@ -493,5 +493,10 @@
     "TIN": "TIN",
     "Welcome toooo": "Welcome toooo",
     "Leave Request jj": "Leave Request jj",
-    "Leave Request ": "Leave Request "
+    "Leave Request ": "Leave Request ",
+    "Location Bind": "Location Bind",
+    "Avatar": "Avatar",
+    "change location": "change location",
+    "Allow\/Disable Location": "Allow\/Disable Location",
+    "Normal Attendance": "Normal Attendance"
 }

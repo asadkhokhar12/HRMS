@@ -54,8 +54,9 @@ class CheckInController extends Controller
     public function dashboardAjaxCheckin(Request $request)
     {
         try {
+            $user = auth()->user();
             // Check location validation before proceeding
-            if ($request->remote_mode_in == 1) { // Only check location if not in remote mode
+            if ($user->is_free_location === 1) {
                 $distance = $this->calculateDistance(
                     $request->latitude,
                     $request->longitude,
@@ -123,7 +124,8 @@ class CheckInController extends Controller
                 ->first();
 
             // Check location validation before proceeding
-            if ($last_checkIn) { // Only check location if not in remote mode
+            if ($last_checkIn->is_free_location === 1) { // Only check location if not in remote mode
+
                 $distance = $this->calculateDistance(
                     $request->latitude,
                     $request->longitude,
@@ -131,7 +133,7 @@ class CheckInController extends Controller
                     env('OFFICE_LONGITUDE', '0')
                 );
 
-                $allowedRadius = env('ALLOWED_RADIUS', 1000); // Distance in meters
+                $allowedRadius = env('ALLOWED_RADIUS', 1000);
 
                 if ($distance > $allowedRadius) {
                     return $this->responseWithError(_trans('messages.You must be within office premises to check out'));
