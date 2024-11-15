@@ -45,7 +45,7 @@ class LeaveRequestController extends Controller
             $data['table']     = route('leaveRequest.index');
             $data['url_id']        = 'leave_request_table_url';
 
-            $data['title'] = _trans('common.Leave Request');
+            $data['title'] = _trans('common.Leave Request ');
             $data['departments'] = resolve(DepartmentRepository::class)->getAll();  
             return view('backend.leave.leaveRequest.index', compact('data'));
         } catch (\Exception $exception) {

@@ -767,8 +767,6 @@ class UserRepository
         }
     }
 
-
-
     function editLeaveBalanceAttributes($updateModel)
     {
         return $updateModel->map(function ($item) use ($updateModel) {

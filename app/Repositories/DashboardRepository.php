@@ -139,7 +139,7 @@ class DashboardRepository
                     'number' => Visit::where('date', $date)->where('user_id', auth()->user()->id)->count(),
                 ];
             }
-        
+
             if (in_array('support', $screen_data)) {
                 $data['today'][] = [
                     'image' => global_asset($this->getStatisticsImage('support')),
@@ -206,20 +206,20 @@ class DashboardRepository
                     ->count(),
             ];
             $appoinments = Appoinment::query();
-             $appoinments = $appoinments->with('participants')
-            ->where(function ($query) {
-                $query->where('created_by', auth()->user()->id)
-                    ->orWhere('appoinment_with', auth()->user()->id);
-            })
-            ->when(request()->has('month'), function ($query) {
-                $query->where('date', 'LIKE', '%' . request('month') . '%');
-            })
-            ->when(!request()->has('month'), function ($query) {
-                $query->limit(5);
-            })
+            $appoinments = $appoinments->with('participants')
+                ->where(function ($query) {
+                    $query->where('created_by', auth()->user()->id)
+                        ->orWhere('appoinment_with', auth()->user()->id);
+                })
+                ->when(request()->has('month'), function ($query) {
+                    $query->where('date', 'LIKE', '%' . request('month') . '%');
+                })
+                ->when(!request()->has('month'), function ($query) {
+                    $query->limit(5);
+                })
 
-            ->orderBy('id', 'desc')->get();
-            $data['appoinment_list']=$appoinments->map(function ($appoinment) {
+                ->orderBy('id', 'desc')->get();
+            $data['appoinment_list'] = $appoinments->map(function ($appoinment) {
                 return [
                     'id' => $appoinment->id,
                     'title' => $appoinment->title,
@@ -233,8 +233,8 @@ class DashboardRepository
                     'participants' => $appoinment->participants->map(function ($participant) {
                         return [
                             'name' => $participant->participantInfo->name,
-                            'is_agree' => $participant->is_agree==1 ? 'Agree' : 'Disagree',
-                            'is_present' => $participant->is_present==1 ? 'Present' : 'Absent',
+                            'is_agree' => $participant->is_agree == 1 ? 'Agree' : 'Disagree',
+                            'is_present' => $participant->is_present == 1 ? 'Present' : 'Absent',
                             'present_at' => $participant->present_at,
                             'appoinment_started_at' => $participant->appoinment_started_at,
                             'appoinment_ended_at' => $participant->appoinment_ended_at,
@@ -243,16 +243,16 @@ class DashboardRepository
                     }),
                 ];
             });
-            $holidays=Holiday::query()
-            ->when(request()->has('month'), function ($query) {
-                $query->where('start_date', 'LIKE', '%' . request('month') . '%');
-            })
-            ->when(!request()->has('month'), function ($query) {
-                $query->where('start_date', '>=', date('Y-m-d'))->limit(5);
-            })
-            ->orderBy('start_date', 'ASC')
-            ->get();
-            $data['upcoming_events']=$holidays->map(function ($event) {
+            $holidays = Holiday::query()
+                ->when(request()->has('month'), function ($query) {
+                    $query->where('start_date', 'LIKE', '%' . request('month') . '%');
+                })
+                ->when(!request()->has('month'), function ($query) {
+                    $query->where('start_date', '>=', date('Y-m-d'))->limit(5);
+                })
+                ->orderBy('start_date', 'ASC')
+                ->get();
+            $data['upcoming_events'] = $holidays->map(function ($event) {
                 return [
                     'id' => $event->id,
                     'title' => $event->title,
@@ -285,36 +285,36 @@ class DashboardRepository
             // }
             $data['attendance_status'] = resolve(AttendanceRepository::class)->getCheckInCheckoutStatus(Auth::id())->getData()->data;
             $data['break_history_data'] = resolve(EmployeeBreakService::class)->breakBackHistoryStatics($request)->getData()->data;
-            $base_settings=resolve(AppSettingsRepository::class)->companyBaseSettings();
+            $base_settings = resolve(AppSettingsRepository::class)->companyBaseSettings();
             //object to array
-            $base_settings=(array)$base_settings->getData()->data;
+            $base_settings = (array)$base_settings->getData()->data;
 
             unset($base_settings['departments']);
             unset($base_settings['designations']);
-            unset($base_settings['employee_types'],$base_settings['permissions']);
+            unset($base_settings['employee_types'], $base_settings['permissions']);
 
-            $data['config']=$base_settings;
-            $this_month_notice=resolve(NoticeRepository::class)->currentMonthNotice();
+            $data['config'] = $base_settings;
+            $this_month_notice = resolve(NoticeRepository::class)->currentMonthNotice();
 
             //this_month_notice push to data['config']
-            $data['config']['total_notice']=$this_month_notice;
+            $data['config']['total_notice'] = $this_month_notice;
 
-            $report_permission="false";
+            $report_permission = "false";
             if (hasPermission('report') || hasPermission('report_menu')) {
-                $report_permission="true";
+                $report_permission = "true";
             }
             $menus = AppScreen::where('status_id', 1)->orderBy('position', 'ASC')
-                ->select('name','slug','position','icon')
-                ->when($report_permission=="false", function ($query) {
+                ->select('name', 'slug', 'position', 'icon')
+                ->when($report_permission == "false", function ($query) {
                     return $query->where('slug', '!=', 'report');
                 })
                 ->get();
             foreach ($menus as $menu) {
-                $image_type = pathinfo($menu->icon,PATHINFO_EXTENSION);
+                $image_type = pathinfo($menu->icon, PATHINFO_EXTENSION);
                 $menu->image_type = $image_type;
                 $menu->icon = my_asset($menu->icon);
             }
-            $data['menus']=$menus;
+            $data['menus'] = $menus;
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {
@@ -360,7 +360,7 @@ class DashboardRepository
                     'number' => Visit::where('date', $date)->where('user_id', auth()->user()->id)->count(),
                 ];
             }
-        
+
             if (in_array('support', $screen_data)) {
                 $data['today'][] = [
                     'image' => global_asset($this->getStatisticsImage('support')),
@@ -470,7 +470,7 @@ class DashboardRepository
             // $date = $time[2];
 
 
-       
+
             $data['today'][] = [
                 'image' => global_asset($this->getStatisticsImage('employee')),
                 'title' => 'Total Employees',
@@ -486,7 +486,7 @@ class DashboardRepository
                 'title' => 'Total Meetings',
                 'number' => number_format(Meeting::where('company_id', auth()->user()->company->id)->count()),
             ];
-      
+
             $data['today'][] = [
                 'image' => global_asset($this->getStatisticsImage('support')),
                 'title' => 'Support Tickets',
@@ -799,77 +799,134 @@ class DashboardRepository
             return $this->responseWithError($th->getMessage(), [], 400);
         }
     }
+    // public function getNewDashboardStatistics($request)
+    // {
+    //     try {
+
+    //         $date = date('Y-m-d');
+    //         $time = explode('-', $date);
+    //         $year = $time[0];
+    //         $month = $time[1];
+    //         // $date = $time[2];
+
+
+    //         // $data['today'][] = [
+    //         //     'image' => $this->getNewStatisticsImage('project'),
+    //         //     'title' => _trans('dashboard.Total Projects'),
+    //         //     'color_class' => 'circle-primary',
+    //         //     $project = DB::table('projects')
+    //         //         ->join('project_membars', 'projects.id', '=', 'project_membars.project_id')
+    //         //         ->where('project_membars.user_id', auth()->id())
+    //         //         ->where('projects.company_id', auth()->user()->company_id)
+    //         //         ->count(),
+    //         //     'number' => (number_format_short($project)),
+    //         // ];
+    //         // $data['today'][] = [
+    //         //     'image' => $this->getNewStatisticsImage('tasks'),
+    //         //     'title' => _trans('dashboard.Total Tasks'),
+    //         //     'color_class' => 'circle-warning',
+    //         //     $task  = DB::table('tasks')
+    //         //         ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
+    //         //         ->where('task_members.user_id', auth()->id())
+    //         //         ->where('tasks.company_id', auth()->user()->company_id)
+    //         //         ->count(),
+    //         //     'number' => (number_format_short($task)),
+
+    //         // ];
+    //         // $data['today'][] = [
+    //         //     'image' => $this->getNewStatisticsImage('visit'),
+    //         //     'title' => _trans('dashboard.Total Visit'),
+    //         //     'color_class' => 'circle-lightseagreen',
+    //         //     'number' => number_format_short(DB::table('visits')->where('company_id', auth()->user()->company_id)->where('user_id', auth()->id())->count()),
+    //         // ];
+    //         // $data['today'][] = [
+    //         //     'image' => $this->getNewStatisticsImage('appointment'),
+    //         //     'title' => _trans('dashboard.Total Appointments'),
+    //         //     'color_class' => 'circle-danger',
+    //         //     'number' => number_format_short(DB::table('appoinments')->where('company_id', auth()->user()->company_id)->where('created_by', auth()->id())->count()),
+    //         // ];
+
+    //         $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
+
+    //         $workingDays = str_replace(' days', '',$monthlySummary['working_days']);
+    //         $present = str_replace(' days', '',$monthlySummary['present']);
+    //         $workingTime = str_replace(' min', '',$monthlySummary['work_time']);
+    //         $workingTimePerHour = ($workingTime/60);
+    //         $totalWorkingHours = $workingDays * 9;
+
+    //         $basicSalary = auth()->user()->basic_salary;
+    //         $salaryPerDay = $basicSalary/$workingDays;
+    //         $salaryPerHours = $salaryPerDay/9;
+    //         $totalSalary = $salaryPerHours * $workingTimePerHour;
+
+    //         $data['today'][] = [
+    //             'image' => $this->getNewStatisticsImage('project'),
+    //             'title' => _trans('dashboard.Total Working Hours'),
+    //             'color_class' => 'circle-primary',
+    //             'number' => $workingTimePerHour . " H/{$totalWorkingHours}",
+    //         ];
+
+    //         $data['today'][] = [
+    //             'image' => $this->getNewStatisticsImage('project'),
+    //             'title' => _trans('dashboard.Present Days'),
+    //             'color_class' => 'circle-primary',
+    //             'number' => $present.'/'.$workingDays,
+    //         ];
+
+    //         $data['today'][] = [
+    //             'image' => $this->getNewStatisticsImage('project'),
+    //             'title' => _trans('dashboard.Salary'),
+    //             'color_class' => 'circle-primary',
+    //             'number' => $totalSalary,
+    //         ];
+
+    //         return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
+    //     } catch (\Throwable $exception) {
+    //         return $this->responseWithError($exception->getMessage(), [], 500);
+    //     }
+    // }
+
     public function getNewDashboardStatistics($request)
     {
         try {
-
             $date = date('Y-m-d');
-            $time = explode('-', $date);
-            $year = $time[0];
-            $month = $time[1];
-            // $date = $time[2];
-
-
-            // $data['today'][] = [
-            //     'image' => $this->getNewStatisticsImage('project'),
-            //     'title' => _trans('dashboard.Total Projects'),
-            //     'color_class' => 'circle-primary',
-            //     $project = DB::table('projects')
-            //         ->join('project_membars', 'projects.id', '=', 'project_membars.project_id')
-            //         ->where('project_membars.user_id', auth()->id())
-            //         ->where('projects.company_id', auth()->user()->company_id)
-            //         ->count(),
-            //     'number' => (number_format_short($project)),
-            // ];
-            // $data['today'][] = [
-            //     'image' => $this->getNewStatisticsImage('tasks'),
-            //     'title' => _trans('dashboard.Total Tasks'),
-            //     'color_class' => 'circle-warning',
-            //     $task  = DB::table('tasks')
-            //         ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
-            //         ->where('task_members.user_id', auth()->id())
-            //         ->where('tasks.company_id', auth()->user()->company_id)
-            //         ->count(),
-            //     'number' => (number_format_short($task)),
-
-            // ];
-            // $data['today'][] = [
-            //     'image' => $this->getNewStatisticsImage('visit'),
-            //     'title' => _trans('dashboard.Total Visit'),
-            //     'color_class' => 'circle-lightseagreen',
-            //     'number' => number_format_short(DB::table('visits')->where('company_id', auth()->user()->company_id)->where('user_id', auth()->id())->count()),
-            // ];
-            // $data['today'][] = [
-            //     'image' => $this->getNewStatisticsImage('appointment'),
-            //     'title' => _trans('dashboard.Total Appointments'),
-            //     'color_class' => 'circle-danger',
-            //     'number' => number_format_short(DB::table('appoinments')->where('company_id', auth()->user()->company_id)->where('created_by', auth()->id())->count()),
-            // ];
-
             $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
-            
-            $workingDays = str_replace(' days', '',$monthlySummary['working_days']);
-            $present = str_replace(' days', '',$monthlySummary['present']);
-            $workingTime = str_replace(' min', '',$monthlySummary['work_time']);
-            $workingTimePerHour = ($workingTime/60);
-            
-            $basicSalary = auth()->user()->basic_salary;
-            $salaryPerDay = $basicSalary/$workingDays;
-            $salaryPerHours = $salaryPerDay/9;
-            $totalSalary = $salaryPerHours * $workingTimePerHour;
 
-            $data['today'][] = [
-                'image' => $this->getNewStatisticsImage('project'),
-                'title' => _trans('dashboard.Total Working Hours'),
-                'color_class' => 'circle-primary',
-                'number' => $workingTimePerHour . ' H',
-            ];
+            // Debugging Monthly Summary
+            if (!$monthlySummary || !isset($monthlySummary['working_days'], $monthlySummary['present'], $monthlySummary['work_time'])) {
+                throw new \Exception('Invalid monthly summary data');
+            }
+
+            $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
+            $present = (int)str_replace(' days', '', $monthlySummary['present']);
+            $workingTime = (int)str_replace(' min', '', $monthlySummary['work_time']);
+
+            // Avoid division by zero
+            if ($workingDays == 0) {
+                $workingDays = 1;
+            }
+
+            $workingTimePerHour = $workingTime;
+            $totalWorkingHours = $workingDays * 9;
+
+            // Salary Calculations
+            $basicSalary = auth()->user()->basic_salary ?? 0;
+            $salaryPerDay = round($basicSalary / $workingDays, 2);
+            $salaryPerHours = round($salaryPerDay / 9, 2);
+            $totalSalary = round($salaryPerHours * $workingTimePerHour, 2);
 
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Present Days'),
                 'color_class' => 'circle-primary',
-                'number' => $present.'/'.$workingDays,
+                'number' => "$present/$workingDays",
+            ];
+
+            $data['today'][] = [
+                'image' => $this->getNewStatisticsImage('project'),
+                'title' => _trans('dashboard.Total Working Hours'),
+                'color_class' => 'circle-primary',
+                'number' => $workingTimePerHour . " H/{$totalWorkingHours}",
             ];
 
             $data['today'][] = [
@@ -878,12 +935,15 @@ class DashboardRepository
                 'color_class' => 'circle-primary',
                 'number' => $totalSalary,
             ];
-            
+
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {
+            // Log the error for debugging
+            Log::error('Dashboard Statistics Error: ' . $exception->getMessage());
             return $this->responseWithError($exception->getMessage(), [], 500);
         }
     }
+
     public function getNewCompanyDashboardStatistics($request)
     {
         try {
@@ -894,12 +954,12 @@ class DashboardRepository
             $month = $time[1];
             // $date = $time[2];
             \Illuminate\Support\Facades\App::setLocale(userLocal());
-            
+
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('employee'),
                 'color_class' => 'circle-violet',
                 'title' => _trans('dashboard.Total Employees'),
-                'number' => number_format_short(User::where('company_id', auth()->user()->company->id)->where('status_id', 1)->where('role_id', '!=', 1)->where('branch_id',userBranch())->count()),
+                'number' => number_format_short(User::where('company_id', auth()->user()->company->id)->where('status_id', 1)->where('role_id', '!=', 1)->where('branch_id', userBranch())->count()),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('client'),
@@ -944,7 +1004,7 @@ class DashboardRepository
                 'color_class' => 'circle-danger',
                 'number' => number_format_short(Appoinment::where('company_id', auth()->user()->company_id)->count()),
             ];
-         
+
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {

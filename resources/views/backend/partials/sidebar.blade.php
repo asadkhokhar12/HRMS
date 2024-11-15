@@ -175,7 +175,7 @@
                         @include('services::sidebar.service_sidebar')
                     @endif --}}
 
-                    @if (hasPermission('leave_request_read') &&  hasFeature('leaves'))
+                    @if (hasPermission('leave_request_read') && hasFeature('leaves'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('leave.index'), route('assignLeave.index')]) }}">
                             <a href="javascript:void(0)"
@@ -202,10 +202,10 @@
                                         <a href="{{ route('assignLeave.index') }}"
                                             class=" {{ set_active(route('assignLeave.index')) }}">
                                             <span> {{ _trans('leave.Assign Leave') }}</span>
-                                        </a>    
+                                        </a>
                                     </li>
                                 @endif
-                                @if (hasPermission('leave_request_read'))
+                                @if (hasPermission('leave_request_read') && Auth::user()->role->name !== 'Staff')
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leaveRequest.create']) }}">
                                         <a href="{{ route('leaveRequest.index') }}"
@@ -214,6 +214,20 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if (Auth::user()->role)
+                                    @if (Auth::user()->role->name === 'Staff')
+                                        <li
+                                            class="nav-item {{ menu_active_by_route('user.authProfile', ['leave_request']) }}">
+                                            <a href="{{ route('user.authProfile', ['leave_request']) }}"
+                                                class="{{ set_active(route('user.authProfile', ['leave_request'])) }}">
+                                                <span>{{ _trans('leave.Leave Request') }}</span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endif
+
+
+
                                 {{-- @if (auth()->user()->userRole(['Staff']))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leave.balance.user', auth()->id()]) }}">
@@ -223,7 +237,7 @@
                                         </a>
                                     </li>
                                 @endif --}}
-                                @if (hasPermission('daily_leave_read'))
+                                {{-- @if (hasPermission('daily_leave_read'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['daily_leave.index', 'daily_leave.create']) }}">
                                         <a href="{{ route('daily_leave.index') }}"
@@ -231,7 +245,7 @@
                                             <span>{{ _trans('leave.Daily Leave') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
                                 @if (hasPermission('leave_type_read'))
                                     <li class="nav-item {{ menu_active_by_route(['leaveRequest.balance']) }}">
                                         <a href="{{ route('leaveRequest.balance') }}"
@@ -263,14 +277,18 @@
                                     </li>
                                 @endif
 
-                                @if (hasPermission('attendance_read'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route('employeeAttendance', auth()->id()) }}">
-                                        <a href="{{ route('employeeAttendance', auth()->id()) }}"
-                                            class=" {{ set_active(route('employeeAttendance', auth()->id())) }}">
-                                            <span>{{ _trans('attendance.Attendance Summary') }}</span>
-                                        </a>
-                                    </li>
+                                @if (Auth::user()->role)
+                                    @if (Auth::user()->role->name === 'Staff')
+                                        @if (hasPermission('attendance_read'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route('employeeAttendance', auth()->id()) }}">
+                                                <a href="{{ route('employeeAttendance', auth()->id()) }}"
+                                                    class=" {{ set_active(route('employeeAttendance', auth()->id())) }}">
+                                                    <span>{{ _trans('attendance.Attendance Summary') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endif
                                 @endif
 
                                 @if (hasPermission('hr_menu') && hasFeature('hr'))
@@ -705,9 +723,9 @@
                         </li>
                     @endif --}}
 
-                    {{-- @include('backend.partials.configurations-sidebar')
+                    @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') --}}
+                    @include('backend.partials.settings-sidebar')
 
                 @endif
             </ul>

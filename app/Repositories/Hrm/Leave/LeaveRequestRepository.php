@@ -1110,7 +1110,7 @@ class LeaveRequestRepository
             _trans('common.Days'),
             _trans('common.Available Days'),
             _trans('common.Substitute'),
-            _trans('common.Manager Approved'),
+            // _trans('common.Manager Approved'),
             _trans('common.HR Approved'),
             _trans('common.File'),
             _trans('common.Status'),
@@ -1239,12 +1239,11 @@ class LeaveRequestRepository
     function table($request)
     {
         try {
-            // Log::info($request);
             $leaveRequest = $this->leaveRequest->query()->where('company_id', auth()->user()->company_id);
-
+    
             if (auth()->user()->role->slug == 'staff') {
                 $staffMemberIDs = @auth()->user()->staffMembers()->pluck('id')->toArray() ?? [];
-
+    
                 if ($staffMemberIDs) {
                     $staffMemberIDs[] = auth()->id();
                     $leaveRequest = $leaveRequest->whereIn('user_id', $staffMemberIDs);
@@ -1256,20 +1255,21 @@ class LeaveRequestRepository
                     return $builder->where('user_id', \request()->get('user_id'));
                 });
             }
-
+    
             if (@$request->department) {
                 $leaveRequest->whereHas('user', function ($query) use ($request) {
                     $query->where('department_id', $request->department);
                 });
             }
-
+    
             if ($request->from && $request->to) {
                 $leaveRequest = $leaveRequest->whereBetween('apply_date', start_end_datetime($request->from, $request->to));
             }
+    
             $leaveRequest->when(\request()->get('type'), function (Builder $builder) {
                 return $builder->where('status_id', \request()->get('type'));
             });
-
+    
             $data = $leaveRequest->orderBy('id', 'desc')->paginate($request->limit ?? 2);
             return [
                 'data' => $data->map(function ($data) {
@@ -1277,44 +1277,23 @@ class LeaveRequestRepository
                     $view = _trans('common.View');
                     $approve = _trans('common.Approve');
                     $reject = _trans('common.Reject');
-                    $refer = _trans('common.Refer');
                     $delete = _trans('common.Delete');
+    
                     if (hasPermission('leave_request_read')) {
                         $action_button .= '<a href="' . route('leaveRequest.view', $data->id) . '" class="dropdown-item"> ' . $view . ' </a>';
                     }
-
-                    $hasManager = @$data->user->manager_id ? true : false;
-                    $isManager = @$data->user->manager_id == auth()->id() ? true : false;
-
+    
                     if (hasPermission('leave_request_approve')) {
-                        if ($hasManager && $isManager && $data->status_id == 2) {
-                            $action_button .= actionButton($approve, 'ApproveOrReject(' . $data->id . ',' . "17" . ',`hrm/leave/request/approve-or-reject/`,`Approve`)', 'approve');
-                            $action_button .= actionButton($reject, 'ApproveOrReject(' . $data->id . ',' . "6" . ',`hrm/leave/request/approve-or-reject/`,`Reject`)', 'reject');
-                        } elseif ($hasManager && !$isManager && $data->status_id == 2) {
-                            $action_button .= actionButton($reject, 'ApproveOrReject(' . $data->id . ',' . "6" . ',`hrm/leave/request/approve-or-reject/`,`Reject`)', 'reject');
-                        } elseif (($hasManager && !$isManager && $data->status_id == 17) || (!$hasManager && $data->status_id == 2)) {
+                        if ($data->status_id == 2) {
                             $action_button .= actionButton($approve, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`hrm/leave/request/approve-or-reject/`,`Approve`)', 'approve');
-                            $action_button .= actionButton($reject, 'ApproveOrReject(' . $data->id . ',' . "6" . ',`hrm/leave/request/approve-or-reject/`,`Reject`)', 'reject');
-                        } elseif (($hasManager && !$isManager && $data->status_id == 6) || (!$hasManager && $data->status_id == 6)) {
-                            $action_button .= actionButton($approve, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`hrm/leave/request/approve-or-reject/`,`Approve`)', 'approve');
-                        }
-                    }
-
-                    if (hasPermission('leave_request_approve')) {
-                        if ($data->status_id == 1) {
                             $action_button .= actionButton($reject, 'ApproveOrReject(' . $data->id . ',' . "6" . ',`hrm/leave/request/approve-or-reject/`,`Reject`)', 'reject');
                         }
                     }
-
+    
                     if (hasPermission('leave_request_delete')) {
                         $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/leave/request/delete/`)', 'delete');
                     }
-
-                    if (!$hasManager && hasPermission('team_update')) {
-                        if ($data->status_id != 17) {
-                            $action_button .= actionButton($refer, 'ApproveOrReject(' . $data->id . ',' . "17" . ',`hrm/leave/request/approve-or-reject/`,`Refer`)', 'approve');
-                        }
-                    }
+    
                     $button = ' <div class="dropdown dropdown-action">
                                     <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -1324,7 +1303,7 @@ class LeaveRequestRepository
                                     ' . $action_button . '
                                     </ul>
                                 </div>';
-
+    
                     $available_days = @resolve(LeaveService::class)->leaveSummary($data)->original['data'];
                     $available_leave = '';
                     foreach ($available_days['available_leave'] as $availables) {
@@ -1334,9 +1313,8 @@ class LeaveRequestRepository
                         </div>';
                         $available_leave .= $htm;
                     }
-
+    
                     return [
-
                         'id' => $data->id,
                         'file' => ($data->attachment_file_id != null) ? '<a href="' . uploaded_asset($data->attachment_file_id) . '" download class="btn btn-white btn-sm"><i class="fas fa-download"></i></a>' : _trans('common.No File'),
                         'name' => @$data->user->name,
@@ -1345,7 +1323,6 @@ class LeaveRequestRepository
                         'days' => $data->days,
                         'available_days' => $available_leave,
                         'substitute' => @$data->substitute->name,
-                        'manager_approved' => $hasManager && @AuthorInfo::where(['authorable_type' => get_class($this->leaveRequest), 'authorable_id' => $data->id])->first()->referredUser->name ? _trans('common.Yes') : (!$hasManager ? _trans('common.N/A') : _trans('common.Pending')),
                         'hr_approved' => @AuthorInfo::where(['authorable_type' => get_class($this->leaveRequest), 'authorable_id' => $data->id])->first()->approveUser->name ? _trans('common.Yes') : _trans('common.Pending'),
                         'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
                         'action' => $button,
@@ -1364,6 +1341,7 @@ class LeaveRequestRepository
             return $this->responseWithError($e->getMessage());
         }
     }
+    
 
     // statusUpdate
     public function statusUpdate($request)

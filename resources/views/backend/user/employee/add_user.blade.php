@@ -106,12 +106,6 @@
                             </div>
                         </div>
 
-
-
-
-
-
-
                         <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label class="form-label" for="gender">{{ _trans('common.Date Of Birth') }}</label>
@@ -163,7 +157,7 @@
                         <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label class="form-label" for="name"
-                                    class="form-label">{{ _trans('common.Gross Salary') }} <span
+                                    class="form-label">{{ _trans('common.Basic Salary') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="number" name="basic_salary" placeholder="{{ _trans('common.Salary') }}"
                                     autocomplete="off" class="form-control ot-form-control ot-input" step=0.01
