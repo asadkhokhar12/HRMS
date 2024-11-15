@@ -534,7 +534,7 @@ class UserController extends Controller
                 $employeeId = $result->original['data']->employee_id;
 
                 // Call the storeAttendance method and pass the employee_id
-                $this->zktecoController->storeAttendance($employeeId);
+                // $this->zktecoController->storeAttendance($employeeId);
 
                 Toastr::success($result->original['message'], 'Success');
                 return redirect()->route('user.index');
