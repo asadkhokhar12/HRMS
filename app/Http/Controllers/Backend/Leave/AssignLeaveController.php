@@ -5,18 +5,19 @@ namespace App\Http\Controllers\Backend\Leave;
 use App\Models\Role\Role;
 use Illuminate\Http\Request;
 use App\Models\Hrm\Leave\LeaveType;
+use App\Models\Hrm\Leave\LeaveYear;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\Hrm\Leave\AssignLeave;
+use App\Models\Hrm\Department\Department;
 use App\Repositories\Admin\RoleRepository;
 use App\Http\Requests\Hrm\Leave\AssignLeaveRequest;
 use App\Repositories\Hrm\Leave\LeaveTypeRepository;
 use App\Helpers\CoreApp\Traits\ApiReturnFormatTrait;
 use App\Repositories\Hrm\Leave\AssignLeaveRepository;
 use App\Models\coreApp\Relationship\RelationshipTrait;
-use App\Models\Hrm\Leave\LeaveYear;
 use App\Repositories\Hrm\Department\DepartmentRepository;
-use App\Repositories\UserRepository;
 
 class AssignLeaveController extends Controller
 {
@@ -62,20 +63,25 @@ class AssignLeaveController extends Controller
     public function create()
     {
         try {
-            $data['title']     = _trans('leave.Create Assign Leave');
-            $data['url']       = route('assignLeave.store');
-            if (settings('leave_assign')==1) {  // employee
+            $data['title'] = _trans('leave.Create Assign Leave');
+            $data['url'] = route('assignLeave.store');
+
+            // Fetch all departments
+            $departments = Department::all(); // 
+            $data['departments'] = $departments;
+
+            if (settings('leave_assign') == 1) { // employee
                 $data['attributes'] = $this->assignLeave->createUserAttributes();
-            }else{
+            } else {
                 $data['attributes'] = $this->assignLeave->createAttributes();
             }
-            @$data['button']   = _trans('common.Save');
+
+            @$data['button'] = _trans('common.Save');
             return view('backend.modal.create', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');
         }
     }
-
 
     public function dataTable(Request $request)
     {
@@ -94,7 +100,7 @@ class AssignLeaveController extends Controller
                 Toastr::error(_trans('response.Please click on button!'), 'Error');
                 return redirect()->back();
             }
-           
+
             return $this->assignLeave->store($request);
         } catch (\Throwable $th) {
             return $this->responseWithError($th->getMessage(), [], 400);
@@ -107,7 +113,8 @@ class AssignLeaveController extends Controller
     }
 
     // annual leave summary
-    public function leaveSummery(Request $request, $id){
+    public function leaveSummery(Request $request, $id)
+    {
         try {
             if ($request->ajax()) {
                 return $this->assignLeave->leaveSummaryTable($request, $id);
@@ -139,7 +146,8 @@ class AssignLeaveController extends Controller
         }
     }
 
-    public function leaveTransfer(Request $request, $id){
+    public function leaveTransfer(Request $request, $id)
+    {
         try {
             return $this->assignLeave->updateLeaveSummary($request, $id);
         } catch (\Throwable $th) {
@@ -168,7 +176,7 @@ class AssignLeaveController extends Controller
                 Toastr::error(_trans('response.Please click on button!'), 'Error');
                 return redirect()->back();
             }
-           
+
             return $this->assignLeave->update($request, $id);
         } catch (\Throwable $th) {
             return $this->responseWithError($th->getMessage(), [], 400);

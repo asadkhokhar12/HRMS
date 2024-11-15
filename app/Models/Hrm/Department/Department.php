@@ -21,9 +21,11 @@ class Department extends Model
 {
     use HasFactory, StatusRelationTrait, LogsActivity, SoftDeletes,CompanyTrait,BranchTrait;
 
-    protected $fillable = [
-        'company_id', 'id', 'title', 'status_id'
-    ];
+    // protected $fillable = [
+    //     'company_id', 'id', 'title', 'status_id'
+    // ];
+
+    protected $guarded = [];
 
     protected static $logAttributes = [
         'company_id', 'id', 'title', 'status_id'
