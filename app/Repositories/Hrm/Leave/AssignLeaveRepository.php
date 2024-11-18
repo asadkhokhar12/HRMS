@@ -144,7 +144,7 @@ class AssignLeaveRepository
 
     public function store($request)
     {
-        DB::beginTransaction();
+        // DB::beginTransaction();
         try {
             // // Validation
             // $validatedData = $request->validate([
@@ -224,12 +224,12 @@ class AssignLeaveRepository
                         }
                     }
 
-                    DB::commit();
+                    // DB::commit();
                     return $this->responseWithSuccess(_trans('message.Assign leave stored successfully for all departments.'), 200);
                 }
             }
         } catch (\Throwable $th) {
-            DB::rollBack();
+            // DB::rollBack();
             Log::error('Error saving assign leave: ' . $th->getMessage(), ['request' => $request->all()]);
             return $this->responseWithError('An error occurred while saving the data.', [], 400);
         }
