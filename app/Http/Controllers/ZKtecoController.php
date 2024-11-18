@@ -20,7 +20,7 @@ class ZKtecoController extends Controller
 
             date_default_timezone_set('Asia/Karachi');
 
-            $zk = new ZKTeco('192.168.50.200');
+            $zk = new ZKTeco('192.168.50.201');
             $zk->connect();
             $attendanceLog = $zk->getAttendance();
             // dd($attendanceLog);

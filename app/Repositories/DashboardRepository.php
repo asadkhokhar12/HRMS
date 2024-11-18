@@ -892,11 +892,6 @@ class DashboardRepository
             $date = date('Y-m-d');
             $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
     
-            // Debugging Monthly Summary
-            if (!$monthlySummary || !isset($monthlySummary['working_days'], $monthlySummary['present'], $monthlySummary['work_time'])) {
-                throw new \Exception('Invalid monthly summary data');
-            }
-    
             // Extracting data and converting to appropriate types
             $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
             $present = (int)str_replace(' days', '', $monthlySummary['present']);
@@ -907,14 +902,9 @@ class DashboardRepository
                 $workingDays = 1;
             }
     
-            // Convert working time to hours (with proper rounding)
-            $totalWorkedHours = round($workingTimeInMinutes , 2); // Convert minutes to hours
+            // Convert working time to hours (with proper rounding for fractional hours)
+            $totalWorkedHours = round($workingTimeInMinutes, 2); // Total worked hours (including fractional hours)
             $totalWorkingHours = round($workingDays * 9, 2); // Total working hours in the month (assuming 9 hours/day)
-    
-            // Debugging potential zero values
-            if ($totalWorkedHours < 0 || $totalWorkingHours <= 0) {
-                throw new \Exception('Invalid working time or total working hours data');
-            }
     
             // Salary Calculations
             $basicSalary = auth()->user()->basic_salary ?? 0;
@@ -951,6 +941,7 @@ class DashboardRepository
             return $this->responseWithError($exception->getMessage(), [], 500);
         }
     }
+    
     
     public function getNewCompanyDashboardStatistics($request)
     {
