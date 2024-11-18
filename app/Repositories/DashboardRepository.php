@@ -908,7 +908,7 @@ class DashboardRepository
             }
     
             // Convert working time to hours (with proper rounding)
-            $totalWorkedHours = round($workingTimeInMinutes / 60, 2); // Convert minutes to hours
+            $totalWorkedHours = round($workingTimeInMinutes , 2); // Convert minutes to hours
             $totalWorkingHours = round($workingDays * 9, 2); // Total working hours in the month (assuming 9 hours/day)
     
             // Debugging potential zero values
