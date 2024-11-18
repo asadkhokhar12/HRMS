@@ -723,9 +723,9 @@
                         </li>
                     @endif --}}
 
-                    {{-- @include('backend.partials.configurations-sidebar')
+                    @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') --}}
+                    @include('backend.partials.settings-sidebar')
 
                 @endif
             </ul>
