@@ -187,7 +187,7 @@
                             </a>
                             <ul
                                 class="child-menu-list {{ set_active(['hrm/leave*', 'hrm/leave/assign*', 'hrm/leave/request*', 'dashboard/user/leave-balance*', 'hrm/daily-leave*']) }}">
-                                {{-- @if (hasPermission('leave_type_read'))
+                                @if (hasPermission('leave_type_read'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leave.index', 'leave.create', 'leave.edit']) }}">
                                         <a href="{{ route('leave.index') }}"
@@ -195,7 +195,7 @@
                                             <span>{{ _trans('common.Type') }}</span>
                                         </a>
                                     </li>
-                                @endif --}}
+                                @endif
                                 @if (hasPermission('leave_assign_read'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['assignLeave.index', 'assignLeave.create', 'assignLeave.edit']) }}">

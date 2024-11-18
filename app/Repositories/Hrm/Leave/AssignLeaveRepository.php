@@ -144,20 +144,25 @@ class AssignLeaveRepository
 
     public function store($request)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
-            // // Validation
+            // Debugging: Log incoming request data
+            Log::info('Incoming Request Data: ', $request->all());
+
+            // Validation (optional but recommended)
             // $validatedData = $request->validate([
             //     'days' => 'required|numeric',
             //     'type_id' => 'required|exists:leave_types,id',
-            //     // 'department_id' => 'required|exists:departments,id|nullable',
             //     'status_id' => 'required|in:1,4',
-            //     'user_id' => 'required|exists:users,id|nullable', // Only for individual employees
+            //     'user_id' => 'nullable|exists:users,id',
+            //     'department_id' => 'nullable|string',
             // ]);
 
-            if (settings('leave_assign') == 1) { // For individual employees
-                if (!$this->isExistsWhenStoreMultipleColumn($this->assignLeave, 'user_id', 'type_id', $request->user_id, $request->type_id)) {
+            // Individual Employees Case
+            if (settings('leave_assign') == 1) {
+                Log::info('Assign leave for individual employee.');
 
+                if (!$this->isExistsWhenStoreMultipleColumn($this->assignLeave, 'user_id', 'type_id', $request->user_id, $request->type_id)) {
                     // Save assign leave
                     $assign_leave = new $this->assignLeave;
                     $assign_leave->days = $request->days;
@@ -166,6 +171,8 @@ class AssignLeaveRepository
                     $assign_leave->company_id = auth()->user()->company_id;
                     $assign_leave->status_id = $request->status_id;
                     $assign_leave->save();
+
+                    Log::info('Assign leave stored for individual user: ', ['user_id' => $request->user_id]);
 
                     // Leave year (individual employee)
                     if (settings('leave_carryover')) {
@@ -178,62 +185,94 @@ class AssignLeaveRepository
                         $leave_year->year = now()->format('Y');
                         $leave_year->status_id = 1;
                         $leave_year->save();
+
+                        Log::info('Leave year stored for individual user: ', ['user_id' => $request->user_id]);
                     }
 
                     DB::commit();
                     return $this->responseWithSuccess(_trans('message.Assign leave stored successfully.'), 200);
                 } else {
+                    Log::warning('Data already exists for individual user: ', ['user_id' => $request->user_id, 'type_id' => $request->type_id]);
                     DB::rollBack();
                     return $this->responseWithError(_trans('message.Data already exists'), [], 400);
                 }
-            } else { // For departments
+            } else { // Assign Leave to Departments
+                Log::info('Assign leave for departments.');
+
                 if ($request->department_id === 'all') {
-                    // Get all department IDs for the company
+                    // Fetch all departments
                     $departmentIds = Department::where('company_id', auth()->user()->company_id)
                         ->where('status_id', 1)
                         ->pluck('id')
                         ->toArray();
 
-                    // Log department IDs for debugging
-                    Log::info('Department IDs: ', ['department_ids' => $departmentIds]);
+                    Log::info('Fetched Department IDs: ', ['department_ids' => $departmentIds]);
 
                     foreach ($departmentIds as $department_id) {
-                        if (!$this->isExistsWhenStoreMultipleColumn($this->assignLeave, 'department_id', 'type_id', $department_id, $request->type_id)) {
+                        Log::info('Processing department: ', ['department_id' => $department_id]);
 
+                        if (!$this->isExistsWhenStoreMultipleColumn($this->assignLeave, 'department_id', 'type_id', $department_id, $request->type_id)) {
                             // Save assign leave
-                            $assign_leave = new $this->assignLeave;
-                            $assign_leave->days = $request->days;
-                            $assign_leave->type_id = $request->type_id;
-                            $assign_leave->department_id = $department_id;
-                            $assign_leave->company_id = auth()->user()->company_id;
-                            $assign_leave->status_id = $request->status_id;
-                            $assign_leave->save();
+                            try {
+                                $assign_leave = new $this->assignLeave;
+                                $assign_leave->days = $request->days;
+                                $assign_leave->type_id = $request->type_id;
+                                $assign_leave->department_id = $department_id;
+                                $assign_leave->company_id = auth()->user()->company_id;
+                                $assign_leave->status_id = $request->status_id;
+                                $assign_leave->save();
+
+                                Log::info('Assign leave stored for department: ', ['department_id' => $department_id]);
+                            } catch (\Exception $e) {
+                                Log::error('Error saving assign leave for department: ', [
+                                    'department_id' => $department_id,
+                                    'error' => $e->getMessage(),
+                                ]);
+                            }
 
                             // Leave year (for department)
                             if (settings('leave_carryover')) {
-                                $leave_year = new $this->leaveYear;
-                                $leave_year->type_id = $request->type_id;
-                                $leave_year->department_id = $department_id;
-                                $leave_year->leave_days = $request->days;
-                                $leave_year->leave_available = $request->days;
-                                $leave_year->leave_used = 0;
-                                $leave_year->year = now()->format('Y');
-                                $leave_year->status_id = 1;
-                                $leave_year->save();
+                                try {
+                                    $leave_year = new $this->leaveYear;
+                                    $leave_year->type_id = $request->type_id;
+                                    $leave_year->department_id = $department_id;
+                                    $leave_year->leave_days = $request->days;
+                                    $leave_year->leave_available = $request->days;
+                                    $leave_year->leave_used = 0;
+                                    $leave_year->year = now()->format('Y');
+                                    $leave_year->status_id = 1;
+                                    $leave_year->save();
+
+                                    Log::info('Leave year stored for department: ', ['department_id' => $department_id]);
+                                } catch (\Exception $e) {
+                                    Log::error('Error saving leave year for department: ', [
+                                        'department_id' => $department_id,
+                                        'error' => $e->getMessage(),
+                                    ]);
+                                }
                             }
+                        } else {
+                            Log::info('Leave already exists for department: ', [
+                                'department_id' => $department_id,
+                                'type_id' => $request->type_id,
+                            ]);
                         }
                     }
 
-                    // DB::commit();
+                    DB::commit();
                     return $this->responseWithSuccess(_trans('message.Assign leave stored successfully for all departments.'), 200);
                 }
             }
         } catch (\Throwable $th) {
-            // DB::rollBack();
-            Log::error('Error saving assign leave: ' . $th->getMessage(), ['request' => $request->all()]);
+            DB::rollBack();
+            Log::error('Error saving assign leave: ', [
+                'error' => $th->getMessage(),
+                'request' => $request->all(),
+            ]);
             return $this->responseWithError('An error occurred while saving the data.', [], 400);
         }
     }
+
 
 
     public function show($id): object

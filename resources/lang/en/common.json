@@ -499,5 +499,7 @@
     "change location": "change location",
     "Allow\/Disable Location": "Allow\/Disable Location",
     "Normal Attendance": "Normal Attendance",
-    "Select All Departments": "Select All Departments"
+    "Select All Departments": "Select All Departments",
+    "Update Weekend": "Update Weekend",
+    "Is Weekend": "Is Weekend"
 }
