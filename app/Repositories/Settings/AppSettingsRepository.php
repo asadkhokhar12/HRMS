@@ -69,7 +69,7 @@ class AppSettingsRepository
 
     public function companyBaseSettings()
     {
-        date_default_timezone_set(auth()->user()->country->time_zone??'Asia/Dhaka');
+        date_default_timezone_set(auth()->user()->country->time_zone??'Asia/Karachi');
 
         //get con=
         $data = [];
@@ -87,7 +87,7 @@ class AppSettingsRepository
         $data['permissions'] = auth()->user()->permissions;
         
         $data['time_wish'] = $this->timeWish();
-        $data['time_zone'] = auth()->user()->country->time_zone??'Asia/Dhaka';
+        $data['time_zone'] = auth()->user()->country->time_zone??'Asia/Karachi';
         $data['currency_symbol'] = $this->companySetup()['currency_symbol'] ?? '$';
         $data['currency_code'] = $this->companySetup()['currency_code'] ?? 'USD';
         $data['attendance_method'] = $this->companySetup()['attendance_method'] ?? AttendanceMethod::NORMAL;
@@ -283,7 +283,7 @@ class AppSettingsRepository
     public function timeWish()
     {
         // set default time zone
-        date_default_timezone_set(auth()->user()->country->time_zone??'Asia/Dhaka');
+        date_default_timezone_set(auth()->user()->country->time_zone??'Asia/Karachi');
 
         $current_hour = date('H');
         $time_wish = [];

@@ -73,7 +73,7 @@ class CreateTimeZonesTable extends Migration
             ['AZ', 'Asia/Baku'],
             ['BA', 'Europe/Sarajevo'],
             ['BB', 'America/Barbados'],
-            ['BD', 'Asia/Dhaka'],
+            ['BD', 'Asia/Karachi'],
             ['BE', 'Europe/Brussels'],
             ['BF', 'Africa/Ouagadougou'],
             ['BG', 'Europe/Sofia'],

@@ -57,7 +57,7 @@ INSERT INTO `geo_zones` VALUES
 (48,'AZ','Asia/Baku'),
 (49,'BA','Europe/Sarajevo'),
 (50,'BB','America/Barbados'),
-(51,'BD','Asia/Dhaka'),
+(51,'BD','Asia/Karachi'),
 (52,'BE','Europe/Brussels'),
 (53,'BF','Africa/Ouagadougou'),
 (54,'BG','Europe/Sofia'),

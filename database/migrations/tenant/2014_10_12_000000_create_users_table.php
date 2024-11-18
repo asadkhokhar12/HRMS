@@ -128,7 +128,7 @@ class CreateUsersTable extends Migration
             //is_free_location
             $table->tinyInteger('is_free_location')->default(0);
             // time zone set
-            $table->string('time_zone', 191)->default('Asia/Dhaka');
+            $table->string('time_zone', 191)->default('Asia/Karachi');
             $table->string('speak_language', 191)->default('english');
             $table->string('lang')->nullable();
             //social login

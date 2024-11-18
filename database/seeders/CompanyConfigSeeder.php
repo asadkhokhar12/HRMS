@@ -30,7 +30,7 @@ class CompanyConfigSeeder extends Seeder
             "lang" => "en",
             "multi_checkin" => 0,
             "currency" => 2,
-            "timezone" => "Asia/Dhaka",
+            "timezone" => "Asia/Karachi",
             "currency_code" => "USD",
             'location_check' => 0,
             'attendance_method' => 'N',

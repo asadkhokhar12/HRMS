@@ -41,7 +41,7 @@ trait GeoLocationTrait
         // date_default_timezone_set($userCountry->time_zone);
         $date = \request()->get('date') . ' ' . $time . ':00';
         $datetime = new \DateTime($date);
-        $la_time = new DateTimeZone(@auth()->user()->time_zone??'Asia/Dhaka');
+        $la_time = new DateTimeZone(@auth()->user()->time_zone??'Asia/Karachi');
         $datetime->setTimezone($la_time);
         return $datetime->format('Y-m-d H:i:s');
     }
