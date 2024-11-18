@@ -40,6 +40,7 @@ class ZKtecoController extends Controller
             DeviceLog::insert($todayRecords);
             dd('Device log added successfully');
         } catch (\Throwable $th) {
+            dd('error : ', $th);
             throw $th;
         }
     }
