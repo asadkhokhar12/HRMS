@@ -9,7 +9,7 @@
                     </div>
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>
-                        <h1> {{ @$item['number'] }}</h1>
+                        <h1 class="custom"> {{ @$item['number'] }}</h1>
                     </div>
                 </div>
             </div>

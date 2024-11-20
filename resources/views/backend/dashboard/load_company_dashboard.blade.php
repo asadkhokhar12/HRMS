@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <!-- Single Dashboard Summery Card End -->
+        <!-- Single Dashboard Summery Card End  -->
     @endforeach
 
 
