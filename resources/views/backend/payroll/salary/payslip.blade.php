@@ -12,9 +12,9 @@
             <div class="card-body">
                 <div id="General-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">
+                        <div class="img-fluid mb-0 col-md-2">
                             @include('backend.auth.backend_logo')
-                        </h4>
+                        </div>
                         <div class="text-center">
                             <h2>
                                 {{ @date('F', strtotime($data['salary']->date)).' '.@date('Y', strtotime($data['salary']->date)) }}
