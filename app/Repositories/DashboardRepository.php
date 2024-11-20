@@ -910,7 +910,9 @@ class DashboardRepository
             $basicSalary = auth()->user()->basic_salary ?? 0;
             $salaryPerDay = round($basicSalary / $workingDays, 2);
             $salaryPerHour = round($salaryPerDay / 9, 2);
-            $totalSalary = round($salaryPerHour * $totalWorkedHours, 2);
+
+            // Include minutes in salary calculation for more accuracy
+            $totalSalary = round($salaryPerHour * $totalWorkedHours + ($salaryPerHour / 60) * $totalWorkedMinutes, 2);
 
             // Prepare data for response
             $data['today'][] = [
@@ -931,7 +933,7 @@ class DashboardRepository
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Salary'),
                 'color_class' => 'circle-primary',
-                'number' => $totalSalary,
+                'number' => "Rs " . number_format($totalSalary, 2),
             ];
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
@@ -940,6 +942,7 @@ class DashboardRepository
             return $this->responseWithError($exception->getMessage(), [], 500);
         }
     }
+
 
 
     public function getNewCompanyDashboardStatistics($request)
