@@ -502,5 +502,15 @@
     "Select All Departments": "Select All Departments",
     "Update Weekend": "Update Weekend",
     "Is Weekend": "Is Weekend",
-    "Annual leave summary": "Annual leave summary"
+    "Annual leave summary": "Annual leave summary",
+    "Commission Type": "Commission Type",
+    "Amount type": "Amount type",
+    "Fixed": "Fixed",
+    "Percentage": "Percentage",
+    "Basic Info": "Basic Info",
+    "Total Leave": "Total Leave",
+    "Total Holiday": "Total Holiday",
+    "Amount Type": "Amount Type",
+    "Account": "Account",
+    "Enter payment note": "Enter payment note"
 }

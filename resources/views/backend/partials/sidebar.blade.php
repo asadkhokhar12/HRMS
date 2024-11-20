@@ -326,73 +326,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (hasPermission('payroll_menu') && hasFeature('payroll'))
-                        <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
-                            <a href="javascript:void(0)"
-                                class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                <i class="las la-comment-dollar"></i>
-                                <span class="on-half-expanded">
-                                    {{ _trans('payroll.Payroll') }}
-
-                                </span>
-                            </a>
-                            <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
-
-                                @if (hasPermission('payroll_item_menu'))
-                                    <li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
-                                        <a href="{{ route('hrm.payroll_items.index') }}" class="">
-                                            <span> {{ _trans('payroll.Commissions') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if (hasPermission('payroll_set_menu'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup']) }}">
-                                        <a href="{{ route('hrm.payroll_setup.index') }}" class="">
-                                            <span> {{ _trans('payroll.Setup') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('advance_type_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_type.index']) }}">
-                                        <a href="{{ route('hrm.payroll_advance_type.index') }}" class="">
-                                            <span> {{ _trans('payroll.Advance Type') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if (hasPermission('advance_salaries_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show']) }}">
-                                        <a href="{{ route('hrm.payroll_advance_salary.index') }}" class="">
-                                            <span> {{ _trans('payroll.Advance') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('salary_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                        <a href="{{ route('hrm.payroll_salary.index') }}" class="">
-                                            <span> {{ _trans('payroll.Salary Generate') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('payroll_set_menu'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                        <a href="{{ route('hrm.monthly.salary.table') }}" class="">
-                                            <span> {{ _trans('payroll.Salary Sheet') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-
-                            </ul>
-                        </li>
-                    @endif
+                  
                     @if (hasPermission('account_menu') && hasFeature('accounts'))
                         <li
                             class="sidebar-menu-item {{ set_menu([route('hrm.accounts.index', 'hrm.accounts.create')]) }}">
@@ -489,6 +423,73 @@
                                         </ul>
                                     </li>
                                 @endif
+
+                            </ul>
+                        </li>
+                    @endif --}}
+                    {{-- @if (hasPermission('payroll_menu') && hasFeature('payroll'))
+                        <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
+                            <a href="javascript:void(0)"
+                                class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                <i class="las la-comment-dollar"></i>
+                                <span class="on-half-expanded">
+                                    {{ _trans('payroll.Payroll') }}
+
+                                </span>
+                            </a>
+                            <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
+
+                                @if (hasPermission('payroll_item_menu'))
+                                    <li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
+                                        <a href="{{ route('hrm.payroll_items.index') }}" class="">
+                                            <span> {{ _trans('payroll.Commissions') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (hasPermission('payroll_set_menu'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup']) }}">
+                                        <a href="{{ route('hrm.payroll_setup.index') }}" class="">
+                                            <span> {{ _trans('payroll.Setup') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if (hasPermission('advance_type_list'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_type.index']) }}">
+                                        <a href="{{ route('hrm.payroll_advance_type.index') }}" class="">
+                                            <span> {{ _trans('payroll.Advance Type') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (hasPermission('advance_salaries_list'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show']) }}">
+                                        <a href="{{ route('hrm.payroll_advance_salary.index') }}" class="">
+                                            <span> {{ _trans('payroll.Advance') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if (hasPermission('salary_list'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                        <a href="{{ route('hrm.payroll_salary.index') }}" class="">
+                                            <span> {{ _trans('payroll.Salary Generate') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                @if (hasPermission('payroll_set_menu'))
+                                    <li
+                                        class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                        <a href="{{ route('hrm.monthly.salary.table') }}" class="">
+                                            <span> {{ _trans('payroll.Salary Sheet') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+
 
                             </ul>
                         </li>
