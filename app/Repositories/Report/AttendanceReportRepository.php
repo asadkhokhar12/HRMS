@@ -850,7 +850,6 @@ class AttendanceReportRepository
         return $data;
     }
 
-
     public function singleAttendanceSummary($user, $request)
     {
         $data = [];
@@ -901,8 +900,7 @@ class AttendanceReportRepository
                 if ($attendance->check_out) {
                     $totalWorkTime += $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
                 }
-        Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out)}");
-
+                Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
             }
         }
 
@@ -918,9 +916,6 @@ class AttendanceReportRepository
 
         return $data;
     }
-
-
-
     public function monthlyAttendanceSummary($user, $request)
     {
         $data = [];

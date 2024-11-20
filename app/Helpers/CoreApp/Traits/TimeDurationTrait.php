@@ -50,18 +50,12 @@ trait TimeDurationTrait
         return $hours;
     }
 
-    public function totalTimeDifferenceEmployee($start, $end): float
+    public function totalTimeDifferenceEmployee($start, $end): int
     {
         $startTime = Carbon::parse($start);
         $endTime = Carbon::parse($end);
-
-        // Calculate the total difference in seconds
-        $diffInSeconds = $endTime->diffInSeconds($startTime);
-
-        // Convert to hours with precision
-        $hours = round($diffInSeconds / 3600, 2); // Round to 2 decimal places
-
-        return $hours; // Return as a float for better arithmetic compatibility
+        $diffInMinutes = $endTime->diffInMinutes($startTime);
+        return $diffInMinutes;
     }
 
     public function overTimeCount($attendance)
