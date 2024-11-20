@@ -943,8 +943,6 @@ class DashboardRepository
         }
     }
 
-
-
     public function getNewCompanyDashboardStatistics($request)
     {
         try {

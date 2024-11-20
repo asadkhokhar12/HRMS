@@ -9015,3 +9015,7 @@ option:hover {
   -o-object-position: 50% 50%;
   object-position: 50% 50%;
 }
+
+.summery-card .card-heading .card-content h1.custom {
+    font-size: 18px;
+}
