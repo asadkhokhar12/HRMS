@@ -205,7 +205,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (hasPermission('leave_request_read') && Auth::user()->role->name !== 'Staff')
+                                @if (hasPermission('leave_request_read') )
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leaveRequest.create']) }}">
                                         <a href="{{ route('leaveRequest.index') }}"
@@ -214,7 +214,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Auth::user()->role)
+                                <!-- @if (Auth::user()->role)
                                     @if (Auth::user()->role->name === 'Staff')
                                         <li
                                             class="nav-item {{ menu_active_by_route('user.authProfile', ['leave_request']) }}">
@@ -224,7 +224,7 @@
                                             </a>
                                         </li>
                                     @endif
-                                @endif
+                                @endif -->
 
 
 
@@ -724,9 +724,9 @@
                         </li>
                     @endif --}}
 
-                    {{-- @include('backend.partials.configurations-sidebar')
+                    <!-- @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') --}}
+                    @include('backend.partials.settings-sidebar') -->
 
                 @endif
             </ul>
