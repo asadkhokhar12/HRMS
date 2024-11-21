@@ -427,7 +427,7 @@
                             </ul>
                         </li>
                     @endif --}}
-                    @if (hasPermission('payroll_menu') && hasFeature('payroll'))
+                    {{-- @if (hasPermission('payroll_menu') && hasFeature('payroll'))
                         <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
@@ -493,7 +493,7 @@
 
                             </ul>
                         </li>
-                    @endif
+                    @endif --}}
                     {{-- Start Client Module --}}
                     {{-- @include('backend.client.sidebar') --}}
                     {{-- End Client Module --}}
