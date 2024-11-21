@@ -28,8 +28,6 @@
                                 </label>
                             </div>
 
-
-
                             <div class="align-self-center d-flex flex-wrap gap-2">
                                 <div class="align-self-center">
                                     @if (hasPermission('advance_salaries_create'))

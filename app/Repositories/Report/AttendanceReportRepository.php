@@ -744,8 +744,6 @@ class AttendanceReportRepository
             return [];
         }
     }
-
-
     public function dateAttendanceSummary($request)
     {
         $data = [];
@@ -853,6 +851,132 @@ class AttendanceReportRepository
     public function singleAttendanceSummary($user, $request)
     {
         $data = [];
+        $present = [];
+        $absent = [];
+        $totalPresent = 0;
+        $totalAbsent = 0;
+        $totalWorkTime = 0;
+        $totalLeave = 0;
+        $totalOnTimeIn = 0;
+        $totalEarlyIn = 0;
+        $totalLateIn = 0;
+        $totalLeftTimely = 0;
+        $totalLeftEarly = 0;
+        $totalLeftLater = 0;
+        $workDayWithoutWeekend = 0;
+        $totalHoliday = 0;
+        $holiday_dates = [];
+        $totalWeekend = 0;
+        if ($request->month) {
+            $monthArray = $this->getSelectedMonthDays($request->month);
+        } else {
+            $monthArray = $this->getCurrentMonthDays();
+        }
+
+        foreach ($monthArray as $day) {
+            $todayDateName = strtolower($day->format('l'));
+            $todayDateInSqlFormat = $day->format('Y-m-d');
+
+            $weekEnds = Weekend::where(['company_id' => $user->company->id, 'is_weekend' => 'yes'])
+                ->pluck('name')->toArray();
+            if (in_array($todayDateName, $weekEnds)) {
+                $totalWeekend += 1;
+            } else {
+                $workDayWithoutWeekend += 1;
+            }
+
+            $holidays = Holiday::where('company_id', $user->company->id)
+                ->where('start_date', '<=', $todayDateInSqlFormat)
+                ->where('end_date', '>=', $todayDateInSqlFormat)
+                ->select('start_date', 'end_date')
+                ->first();
+            if ($holidays) {
+                $holiday_dates[] = $todayDateInSqlFormat;
+                $totalHoliday += 1;
+            }
+
+            $leaveDate = LeaveRequest::where(['company_id' => $user->company->id, 'user_id' => $user->id, 'status_id' => 1])
+                ->where('leave_from', '<=', $todayDateInSqlFormat)
+                ->where('leave_to', '>=', $todayDateInSqlFormat)
+                ->first();
+
+            $leaveCountedAlready = 0;
+            if ($leaveDate) {
+                $leaveCountedAlready = 1;
+                $totalLeave += 1;
+            }
+            if($leaveCountedAlready < 1){
+                $attendance = $this->attendance->query()->where(['company_id' => $this->companyInformation()->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])->first();
+                if ($attendance) {
+                    $totalPresent += 1;
+                    if ($attendance->check_out) {
+                        $totalWorkTime += $this->totalTimeDifference($attendance->check_in, $attendance->check_out);
+                    }
+                    //                $todayInTimeStatus = $this->checkInStatus($attendance->user_id, $attendance->check_in);
+                    if ($attendance->in_status == 'OT' || $attendance->in_status_approve == 'OT') {
+                        $totalOnTimeIn += 1;
+                    } elseif ($attendance->in_status == 'E') {
+                        $totalEarlyIn += 1;
+                    } elseif ($attendance->in_status == 'L') {
+                        $totalLateIn += 1;
+                    } else {
+                        $totalOnTimeIn += 1;
+                    }
+    
+                    if ($attendance->check_out) {
+                        //                    $todayOutTimeStatus = $this->checkOutStatus($attendance->user_id, $attendance->check_out);
+                        if ($attendance->out_status == 'LT' || $attendance->out_status_approve == 'LT') {
+                            $totalLeftTimely += 1;
+                        } elseif ($attendance->out_status == 'LE') {
+                            $totalLeftEarly += 1;
+                        } elseif ($attendance->out_status == 'LL') {
+                            $totalLeftLater += 1;
+                        } else {
+                            $totalLeftTimely += 1;
+                        }
+                    }
+                } else {
+                    $month_date = date('Y-m-d', strtotime($todayDateInSqlFormat));
+                    $current_date = strtotime(date('Y-m-d'));
+                    $month_date = strtotime($month_date);
+                    if ($month_date < $current_date) {
+                        $day = Carbon::createFromFormat('Y-m-d', $todayDateInSqlFormat)->format('l');
+                        $day = strtolower($day);
+                        if (!in_array($day, $weekEnds) && !in_array($todayDateInSqlFormat, $holiday_dates)) {
+                            $totalAbsent += 1;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        $totalDayOfThisMonth = count($monthArray);
+        $totalOffday = $totalWeekend + $totalHoliday;
+        $totalWorkingDays = ($totalDayOfThisMonth - $totalOffday);
+        $totalAbsentDays = ($totalWorkingDays - $totalPresent);
+        $totalWorkTime = number_format($totalWorkTime, 2);
+
+        $data['working_days'] = "{$totalWorkingDays} days";
+        $data['present'] = "{$totalPresent} days";
+        $data['work_time'] = "{$totalWorkTime} min";
+        // $data['absent'] = "{$totalAbsentDays} days";
+        $data['absent'] = "{$totalAbsent} days";
+        $data['total_on_time_in'] = "{$totalOnTimeIn} days";
+        $data['total_leave'] = "{$totalLeave} days";
+        $data['total_early_in'] = "{$totalEarlyIn} days";
+        $data['total_late_in'] = "{$totalLateIn} days";
+        $data['total_left_timely'] = "{$totalLeftTimely} days";
+        $data['total_left_early'] = "{$totalLeftEarly} days";
+        $data['total_left_later'] = "{$totalLeftLater} days";
+        return $data;
+    }
+
+
+    public function singleAttendanceSummaryEmployee($user, $request)
+    {
+        $data = [];
         $totalPresent = 0;
         $totalWorkTime = 0; // In minutes
         $totalLeave = 0;
@@ -916,6 +1040,7 @@ class AttendanceReportRepository
 
         return $data;
     }
+
     public function monthlyAttendanceSummary($user, $request)
     {
         $data = [];
