@@ -676,10 +676,10 @@ class AttendanceReportRepository
          */
 
         $user_info = User::find($user_id);
-        if(!$user_info){
+        if (!$user_info) {
             return [];
         }
-        if(!$shiftId){
+        if (!$shiftId) {
             $shiftId = $user_info->shift_id;
         }
 
@@ -714,7 +714,7 @@ class AttendanceReportRepository
          */
 
         $user_info = User::find($user_id);
-        if(!$shiftId){
+        if (!$shiftId) {
             $shiftId = $user_info->shift_id;
         }
         $schedule = DutySchedule::where('shift_id', @$shiftId)->first();
@@ -803,9 +803,9 @@ class AttendanceReportRepository
                     $totalWorkTime += $this->totalTimeDifference($attendance->check_in, $attendance->check_out);
                 }
                 if ($attendance->in_status == 'OT' || $attendance->in_status_approve == 'OT') {
-                    if($attendance->in_status_approve == 'OT'){
+                    if ($attendance->in_status_approve == 'OT') {
                         $totalOnTimeIn = $attendances->where('in_status_approve', 'OT')->count();
-                    } else{
+                    } else {
                         $totalOnTimeIn = $attendances->where('in_status', 'OT')->count();
                     }
                 } elseif ($attendance->in_status == 'E') {
@@ -817,9 +817,9 @@ class AttendanceReportRepository
                 }
                 if ($attendance->check_out) {
                     if ($attendance->out_status == 'LT' || $attendance->out_status_approve == 'LT') {
-                        if($attendance->out_status_approve == 'LT'){
+                        if ($attendance->out_status_approve == 'LT') {
                             $totalLeftTimely = $attendances->where('out_status_approve', 'LT')->count();
-                        } else{
+                        } else {
                             $totalLeftTimely = $attendances->where('out_status', 'LT')->count();
                         }
                     } elseif ($attendance->out_status == 'LE') {
@@ -849,35 +849,27 @@ class AttendanceReportRepository
         $data['left_later'] = "{$totalLeftLater}";
         return $data;
     }
+
     public function singleAttendanceSummary($user, $request)
     {
         $data = [];
-        $present = [];
-        $absent = [];
         $totalPresent = 0;
-        $totalAbsent = 0;
-        $totalWorkTime = 0;
+        $totalWorkTime = 0; // In minutes
         $totalLeave = 0;
-        $totalOnTimeIn = 0;
-        $totalEarlyIn = 0;
-        $totalLateIn = 0;
-        $totalLeftTimely = 0;
-        $totalLeftEarly = 0;
-        $totalLeftLater = 0;
-        $workDayWithoutWeekend = 0;
-        $totalHoliday = 0;
-        $holiday_dates = [];
         $totalWeekend = 0;
-        if ($request->month) {
-            $monthArray = $this->getSelectedMonthDays($request->month);
-        } else {
-            $monthArray = $this->getCurrentMonthDays();
-        }
+        $totalHoliday = 0;
+        $workDayWithoutWeekend = 0;
+        $holidayDates = [];
+
+        $monthArray = $request->month
+            ? $this->getSelectedMonthDays($request->month)
+            : $this->getCurrentMonthDays();
 
         foreach ($monthArray as $day) {
             $todayDateName = strtolower($day->format('l'));
             $todayDateInSqlFormat = $day->format('Y-m-d');
 
+            // Calculate weekends
             $weekEnds = Weekend::where(['company_id' => $user->company->id, 'is_weekend' => 'yes'])
                 ->pluck('name')->toArray();
             if (in_array($todayDateName, $weekEnds)) {
@@ -886,95 +878,44 @@ class AttendanceReportRepository
                 $workDayWithoutWeekend += 1;
             }
 
-            $holidays = Holiday::where('company_id', $user->company->id)
+            // Calculate holidays
+            $holiday = Holiday::where('company_id', $user->company->id)
                 ->where('start_date', '<=', $todayDateInSqlFormat)
                 ->where('end_date', '>=', $todayDateInSqlFormat)
-                ->select('start_date', 'end_date')
                 ->first();
-            if ($holidays) {
-                $holiday_dates[] = $todayDateInSqlFormat;
+            if ($holiday) {
+                $holidayDates[] = $todayDateInSqlFormat;
                 $totalHoliday += 1;
             }
 
-            $leaveDate = LeaveRequest::where(['company_id' => $user->company->id, 'user_id' => $user->id, 'status_id' => 1])
-                ->where('leave_from', '<=', $todayDateInSqlFormat)
-                ->where('leave_to', '>=', $todayDateInSqlFormat)
+            // Calculate attendance
+            $attendance = $this->attendance->query()
+                ->where(['company_id' => $user->company->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])
                 ->first();
 
-            $leaveCountedAlready = 0;
-            if ($leaveDate) {
-                $leaveCountedAlready = 1;
-                $totalLeave += 1;
-            }
-            if($leaveCountedAlready < 1){
-                $attendance = $this->attendance->query()->where(['company_id' => $this->companyInformation()->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])->first();
-                if ($attendance) {
-                    $totalPresent += 1;
-                    if ($attendance->check_out) {
-                        $totalWorkTime += $this->totalTimeDifference($attendance->check_in, $attendance->check_out);
-                    }
-                    //                $todayInTimeStatus = $this->checkInStatus($attendance->user_id, $attendance->check_in);
-                    if ($attendance->in_status == 'OT' || $attendance->in_status_approve == 'OT') {
-                        $totalOnTimeIn += 1;
-                    } elseif ($attendance->in_status == 'E') {
-                        $totalEarlyIn += 1;
-                    } elseif ($attendance->in_status == 'L') {
-                        $totalLateIn += 1;
-                    } else {
-                        $totalOnTimeIn += 1;
-                    }
-    
-                    if ($attendance->check_out) {
-                        //                    $todayOutTimeStatus = $this->checkOutStatus($attendance->user_id, $attendance->check_out);
-                        if ($attendance->out_status == 'LT' || $attendance->out_status_approve == 'LT') {
-                            $totalLeftTimely += 1;
-                        } elseif ($attendance->out_status == 'LE') {
-                            $totalLeftEarly += 1;
-                        } elseif ($attendance->out_status == 'LL') {
-                            $totalLeftLater += 1;
-                        } else {
-                            $totalLeftTimely += 1;
-                        }
-                    }
-                } else {
-                    $month_date = date('Y-m-d', strtotime($todayDateInSqlFormat));
-                    $current_date = strtotime(date('Y-m-d'));
-                    $month_date = strtotime($month_date);
-                    if ($month_date < $current_date) {
-                        $day = Carbon::createFromFormat('Y-m-d', $todayDateInSqlFormat)->format('l');
-                        $day = strtolower($day);
-                        if (!in_array($day, $weekEnds) && !in_array($todayDateInSqlFormat, $holiday_dates)) {
-                            $totalAbsent += 1;
-                        }
-                    }
-                }
-            }
+            if ($attendance) {
+                $totalPresent += 1;
 
+                // Calculate work time
+                if ($attendance->check_out) {
+                    $totalWorkTime += $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
+                }
+                Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
+            }
         }
 
-
+        // Calculate total working days and absent days
         $totalDayOfThisMonth = count($monthArray);
         $totalOffday = $totalWeekend + $totalHoliday;
-        $totalWorkingDays = ($totalDayOfThisMonth - $totalOffday);
-        $totalAbsentDays = ($totalWorkingDays - $totalPresent);
-        $totalWorkTime = number_format($totalWorkTime, 2);
+        $totalWorkingDays = $totalDayOfThisMonth - $totalOffday;
 
         $data['working_days'] = "{$totalWorkingDays} days";
         $data['present'] = "{$totalPresent} days";
-        $data['work_time'] = "{$totalWorkTime} min";
-        // $data['absent'] = "{$totalAbsentDays} days";
-        $data['absent'] = "{$totalAbsent} days";
-        $data['total_on_time_in'] = "{$totalOnTimeIn} days";
-        $data['total_leave'] = "{$totalLeave} days";
-        $data['total_early_in'] = "{$totalEarlyIn} days";
-        $data['total_late_in'] = "{$totalLateIn} days";
-        $data['total_left_timely'] = "{$totalLeftTimely} days";
-        $data['total_left_early'] = "{$totalLeftEarly} days";
-        $data['total_left_later'] = "{$totalLeftLater} days";
+        $data['work_time'] = "{$totalWorkTime} min"; // Work time in minutes
+
+
         return $data;
     }
-
-
     public function monthlyAttendanceSummary($user, $request)
     {
         $data = [];
@@ -1275,13 +1216,12 @@ class AttendanceReportRepository
 
             $attendance = $this->attendance->query()->where(['user_id' => $user->id, 'date' => $todayDateInSqlFormat])->first();
             if ($attendance) {
-                if (settings('multi_checkin')) { 
+                if (settings('multi_checkin')) {
                     $multi_attendance = $this->attendance->query()->where(['user_id' => $user->id, 'date' => $todayDateInSqlFormat])->get();
                     $dailyReports[] = $this->attendanceVariousStatus($attendance, $day, 'Holiday', $multi_attendance ?? '');
-                } else{
+                } else {
                     $dailyReports[] = $this->attendanceVariousStatus($attendance, $day, 'Holiday', []);
                 }
-
             } else {
                 $weekEnds = Weekend::where(['company_id' => $user->company->id, 'is_weekend' => 'yes'])
                     ->pluck('name')->toArray();
@@ -1386,15 +1326,15 @@ class AttendanceReportRepository
 
             $shiftId = $attendance->shift_id ? $attendance->shift_id : ($attendance->user->default_shift ? $attendance->user->default_shift->shift_id : $attendance->user->shift_id);
             // check in approval status
-            if($attendance->in_status_approve === 'OT'){
+            if ($attendance->in_status_approve === 'OT') {
                 $updatedCheckInStatus = "OT";
-            } else{
+            } else {
                 $updatedCheckInStatus = $this->checkInStatus($attendance->user->id, $attendance->check_in, $shiftId)[0];
             }
             // check out approval status
-            if($attendance->out_status_approve === 'LT'){
+            if ($attendance->out_status_approve === 'LT') {
                 $updatedCheckOutStatus = 'LT';
-            } else{
+            } else {
                 $updatedCheckOutStatus = $this->checkOutStatus($last_checkout->user->id, $last_checkout->check_out, $shiftId)[0];
             }
 
@@ -1427,7 +1367,7 @@ class AttendanceReportRepository
                         'check_out_reason' => $last_checkout->earlyOutReason ? "{$last_checkout->earlyOutReason->reason}" : '',
                     ];
                 }
-            } else{
+            } else {
                 $multipleAttendanceReport = $multi_attendance;
             }
             // multi attendance end
@@ -1562,7 +1502,7 @@ class AttendanceReportRepository
                     break;
             }
         } else {
-            
+
             // $data['attendance'] = $this->attendance->query()
             //     ->where(['attendances.company_id' => $this->companyInformation()->id, $search_column => $type_sign, 'date' => $request->date])
             //     ->leftJoin('users', 'users.id', '=', 'attendances.user_id')
@@ -1571,10 +1511,14 @@ class AttendanceReportRepository
             //     ->get();
 
             // updated for attendance status approval
-            $data['attendance'] = $this->attendance->query()->where(['attendances.company_id' => $this->companyInformation()->id, $search_column => $type_sign, 
-                    'date' => $request->date, $search_column."_approve" => null])
+            $data['attendance'] = $this->attendance->query()->where([
+                'attendances.company_id' => $this->companyInformation()->id,
+                $search_column => $type_sign,
+                'date' => $request->date,
+                $search_column . "_approve" => null
+            ])
                 ->orWhere(function ($query) use ($search_column, $type_sign) {
-                    $query->where($search_column."_approve", $type_sign);
+                    $query->where($search_column . "_approve", $type_sign);
                 })
                 ->leftJoin('users', 'users.id', '=', 'attendances.user_id')
                 ->leftJoin('designations', 'designations.id', '=', 'users.designation_id')
@@ -1614,13 +1558,13 @@ class AttendanceReportRepository
     // new functions for
     function CheckInTable($data)
     {
-        if($data->in_status_approve === 'OT'){
+        if ($data->in_status_approve === 'OT') {
             $checkInStatus = ['OT'];
-        } else{
+        } else {
             $shiftId = $data->shift_id ? $data->shift_id : ($data->user->default_shift ? $data->user->default_shift->shift_id : $data->user->shift_id);
             $checkInStatus = $this->checkInStatus($data->user_id, $data->check_in, $shiftId);
         }
-        
+
         if (is_array($checkInStatus) && !empty($checkInStatus)) {
             if ($checkInStatus[0] === 'OT') {
                 $status = '';
@@ -1629,8 +1573,8 @@ class AttendanceReportRepository
                 $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . $data->check_in_location . '"> <i class="fa fa-h-square"></i> </span>';
                 $status .= '</div>';
 
-                if($data->lateInReason && $data->in_status_approve === 'OT'){
-                    $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> '.Str::limit($data->lateInReason->reason, 60).'</span>';
+                if ($data->lateInReason && $data->in_status_approve === 'OT') {
+                    $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> ' . Str::limit($data->lateInReason->reason, 60) . '</span>';
                 }
 
                 return $status;
@@ -1641,8 +1585,8 @@ class AttendanceReportRepository
                 $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . $data->check_in_location . '"> <i class="fa fa-h-square"></i> </span>';
                 $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . @$data->lateInReason->reason . '"> <i class="fa fa-file"></i> </span>';
                 $status .= '</div>';
-                if($data->lateInReason){
-                    $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> '.Str::limit($data->lateInReason->reason, 60).'</span>';
+                if ($data->lateInReason) {
+                    $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> ' . Str::limit($data->lateInReason->reason, 60) . '</span>';
                 }
                 return $status;
             } else {
@@ -1652,14 +1596,15 @@ class AttendanceReportRepository
     }
 
     // check in & check out approval
-    function attendanceOnTimeApproval($id, $type){
+    function attendanceOnTimeApproval($id, $type)
+    {
         $attendanceApprove = $this->attendance->query()->where('id', $id)->first();
         if ($attendanceApprove) {
-            if($type === 'checkin'){
+            if ($type === 'checkin') {
                 $attendanceApprove->in_status_approve = "OT";
                 $attendanceApprove->in_status_approve_by = auth()->user()->id;
                 $attendanceApprove->save();
-            } elseif($type === 'checkout'){
+            } elseif ($type === 'checkout') {
                 $attendanceApprove->out_status_approve = "LT";
                 $attendanceApprove->out_status_approve_by = auth()->user()->id;
                 $attendanceApprove->save();
@@ -1673,13 +1618,13 @@ class AttendanceReportRepository
     function checkOutTable($data)
     {
         if ($data->check_out) {
-            if($data->out_status_approve === 'LT'){
+            if ($data->out_status_approve === 'LT') {
                 $checkOutStatus = ['LT'];
-            } else{
+            } else {
                 $shiftId = $data->shift_id ? $data->shift_id : ($data->user->default_shift ? $data->user->default_shift->shift_id : $data->user->shift_id);
                 $checkOutStatus = $this->checkOutStatus($data->user_id, $data->check_out, $shiftId);
             }
-           
+
             if (is_array($checkOutStatus) && !empty($checkOutStatus)) {
                 if (@$checkOutStatus[0] === 'LT') {
                     $status = '';
@@ -1687,8 +1632,8 @@ class AttendanceReportRepository
                     $status .= $data->check_out ? '<span class="badge badge-success">' . $this->dateTimeInAmPm($data->check_out) . '</span>' : '';
                     $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . $data->check_out_location . '"> <i class="fa fa-h-square"></i> </span>';
                     $status .= '</div>';
-                    if($data->earlyOutReason){
-                        $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> '.Str::limit($data->earlyOutReason->reason, 60).'</span>';
+                    if ($data->earlyOutReason) {
+                        $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> ' . Str::limit($data->earlyOutReason->reason, 60) . '</span>';
                     }
                     return $status;
                 } elseif (@$checkOutStatus[0] === 'LE') {
@@ -1698,8 +1643,8 @@ class AttendanceReportRepository
                     $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . $data->check_out_location . '"> <i class="fa fa-h-square"></i> </span>';
                     $status .= '<span class="badge badge-primary ml-2" data-toggle="tooltip" data-placement="top" title="' . @$data->earlyOutReason->reason . '"> <i class="fa fa-file"></i> </span>';
                     $status .= '</div>';
-                    if($data->earlyOutReason){
-                        $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> '.Str::limit($data->earlyOutReason->reason, 60).'</span>';
+                    if ($data->earlyOutReason) {
+                        $status .= '<span style="width:60px; text-wrap: pretty;" onclick="mainModalOpen(`' . route('attendance.checkInDetails', 'user_id=' . $data->user_id . '&date=' . $data->date) . '`)"><strong>Reason:</strong> ' . Str::limit($data->earlyOutReason->reason, 60) . '</span>';
                     }
                     return $status;
                 } elseif (@$checkOutStatus[0] === 'OT') {
@@ -1723,58 +1668,57 @@ class AttendanceReportRepository
     }
     function table($request)
     {
-     try {
-        if ($request->from && $request->to) {
-            $start_date=$request->from;
-            $end_date=$request->to;
-        }else{
-            $start_date = date('Y-m-01');
-            $end_date = date('Y-m-t');
+        try {
+            if ($request->from && $request->to) {
+                $start_date = $request->from;
+                $end_date = $request->to;
+            } else {
+                $start_date = date('Y-m-01');
+                $end_date = date('Y-m-t');
+            }
+            $attendance = $this->attendance->query();
+            $attendance = $attendance->where('company_id', auth()->user()->company_id);
+            if (auth()->user()->role->slug == 'staff') {
+                $attendance = $attendance->where('user_id', auth()->id());
+            } else {
+                $attendance->when(\request()->get('user_id'), function (Builder $builder) {
+                    return $builder->where('user_id', \request()->get('user_id'));
+                });
+            }
+            $attendance = $attendance->whereBetween('check_in', start_end_datetime($start_date, $end_date));
 
-        }
-           $attendance = $this->attendance->query();
-           $attendance = $attendance->where('company_id', auth()->user()->company_id);
-           if (auth()->user()->role->slug == 'staff') {
-               $attendance = $attendance->where('user_id', auth()->id());
-           } else {
-               $attendance->when(\request()->get('user_id'), function (Builder $builder) {
-                   return $builder->where('user_id', \request()->get('user_id'));
-               });
-           }
-           $attendance = $attendance->whereBetween('check_in', start_end_datetime($start_date, $end_date));
-    
-           if ($request->user_id) {
-               $attendance = $attendance->where('user_id', $request->user_id);
-           }
-           if ($request->department) {
-               $attendance->when(\request()->get('department'), function (Builder $builder) {
-                   return $builder->whereHas('user.department', function ($builder) {
-                       return $builder->where('id', request()->get('department'));
-                   });
-               });
-           }
+            if ($request->user_id) {
+                $attendance = $attendance->where('user_id', $request->user_id);
+            }
+            if ($request->department) {
+                $attendance->when(\request()->get('department'), function (Builder $builder) {
+                    return $builder->whereHas('user.department', function ($builder) {
+                        return $builder->where('id', request()->get('department'));
+                    });
+                });
+            }
             if ($request->search) {
                 $attendance->where(function ($query) use ($request) {
                     $query->whereHas('user', function ($query) use ($request) {
                         $query->where('name', 'like', '%' .  request()->get('search') . '%');
                     })
-                    ->orWhereHas('user.department', function ($query) use ($request) {
-                        $query->where('title', 'like', '%' . $request->search . '%');
-                    });
+                        ->orWhereHas('user.department', function ($query) use ($request) {
+                            $query->where('title', 'like', '%' . $request->search . '%');
+                        });
                 });
                 // $attendance = $attendance->whereHas('user', function(Builder $builder){
                 //     return $builder->where('name', 'LIKE', '%' .  request()->get('search') . '%');
                 // });
             }
 
-           $data = $attendance->orderBy('id', 'desc')->paginate($request->limit ?? 2);
-           return [
-               'data' => $data->map(function ($data) {
-                   $action_button = '';
-                   if (hasPermission('attendance_update')) {
-                       $action_button .= actionButton(_trans('common.Edit'), route('attendance.checkInEdit', $data->id), 'profile');
-                   }
-                   $button = ' <div class="dropdown dropdown-action">
+            $data = $attendance->orderBy('id', 'desc')->paginate($request->limit ?? 2);
+            return [
+                'data' => $data->map(function ($data) {
+                    $action_button = '';
+                    if (hasPermission('attendance_update')) {
+                        $action_button .= actionButton(_trans('common.Edit'), route('attendance.checkInEdit', $data->id), 'profile');
+                    }
+                    $button = ' <div class="dropdown dropdown-action">
                                        <button type="button" class="btn-dropdown" data-bs-toggle="dropdown"
                                            aria-expanded="false">
                                            <i class="fa-solid fa-ellipsis"></i>
@@ -1784,76 +1728,78 @@ class AttendanceReportRepository
                                        </ul>
                                    </div>';
 
-                   $face_image = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
-                   
-                    if(isModuleActive('SelfieBasedAttendance')){
+                    $face_image = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
+
+                    if (isModuleActive('SelfieBasedAttendance')) {
                         // selfie based attendance routes
                         $checkInImageModalRoute =  route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_in']);
-                        $checkInImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`'.$checkInImageModalRoute.'`)">
+                        $checkInImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkInImageModalRoute . '`)">
                                             <div class="user-img"><img data-toggle="tooltip" data-placement="top" src="' . uploaded_asset($data->check_in_image) . '" class="img-cover"></div>
                                         </a>';
 
 
                         $checkOutImageModalRoute =  route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_out']);
-                        $checkOutImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`'.$checkOutImageModalRoute.'`)">
+                        $checkOutImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkOutImageModalRoute . '`)">
                                             <div class="user-img"><img data-toggle="tooltip" data-placement="top" src="' . uploaded_asset($data->check_out_image) . '" class="img-cover"></div>
                                         </a>';
                     }
-                   
-                  
-                   return [
-                       'id'         => $data->id,
-                       'name'       => $data->user? '<a href="' . route('employeeAttendance', @$data->user->id) . '" target="_blank">' . @$data->user->name . '</a>':'',
-                       'department'       => @$data->user->department->title,
-                       'totalBreak'       =>  RawTable('employee_breaks')->where(['date' => $data->date, 'user_id' => $data->user_id])->count(),
-                       'breakDuration'  => breakDuration($data->date, $data->user_id),
-                       'checkin'      => $this->CheckInTable($data),
 
-                       //'checkInImage'   => $checkInImage,
-                       'checkInImage' => isModuleActive('SelfieBasedAttendance') ? $checkInImage : "",
 
-                       'face_image'   => $face_image,
-                       'checkinLocation'      => $this->checkInLocation($data),
-                       'checkout'      => $this->checkOutTable($data) ?? '',
+                    return [
+                        'id'         => $data->id,
+                        'name'       => $data->user ? '<a href="' . route('employeeAttendance', @$data->user->id) . '" target="_blank">' . @$data->user->name . '</a>' : '',
+                        'department'       => @$data->user->department->title,
+                        'totalBreak'       =>  RawTable('employee_breaks')->where(['date' => $data->date, 'user_id' => $data->user_id])->count(),
+                        'breakDuration'  => breakDuration($data->date, $data->user_id),
+                        'checkin'      => $this->CheckInTable($data),
 
-                       //'checkOutImage'   => $checkOutImage,
-                       'checkOutImage' => isModuleActive('SelfieBasedAttendance') ? $checkOutImage : "",
+                        //'checkInImage'   => $checkInImage,
+                        'checkInImage' => isModuleActive('SelfieBasedAttendance') ? $checkInImage : "",
 
-                       'checkoutLocation'      => $this->checkOutLocation($data),
-                       'hours'        => (@$data->check_out) ? $this->timeDifference($data->check_in, $data->check_out) : '',
-                       'overtime'     => $this->overTimeCount($data) ?? '',
-                       'date'       =>  $data->date. '<br> <span class="badge badge-pill badge-success mr-2">'.@$data->shift->name.'</span>',
-                       'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                       'action'      => $button,
-                   ];
-               }),
-               'pagination' => [
-                   'total' => $data->total(),
-                   'count' => $data->count(),
-                   'per_page' => $data->perPage(),
-                   'current_page' => $data->currentPage(),
-                   'total_pages' => $data->lastPage(),
-                   'pagination_html' =>  $data->links('backend.pagination.custom')->toHtml(),
-               ],
-           ];
-     } catch (\Throwable $th) {
-        dd($th);
-     }
+                        'face_image'   => $face_image,
+                        'checkinLocation'      => $this->checkInLocation($data),
+                        'checkout'      => $this->checkOutTable($data) ?? '',
+
+                        //'checkOutImage'   => $checkOutImage,
+                        'checkOutImage' => isModuleActive('SelfieBasedAttendance') ? $checkOutImage : "",
+
+                        'checkoutLocation'      => $this->checkOutLocation($data),
+                        'hours'        => (@$data->check_out) ? $this->timeDifference($data->check_in, $data->check_out) : '',
+                        'overtime'     => $this->overTimeCount($data) ?? '',
+                        'date'       =>  $data->date . '<br> <span class="badge badge-pill badge-success mr-2">' . @$data->shift->name . '</span>',
+                        'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                        'action'      => $button,
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $data->total(),
+                    'count' => $data->count(),
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total_pages' => $data->lastPage(),
+                    'pagination_html' =>  $data->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 
-    function checkinLocation($data){
+    function checkinLocation($data)
+    {
         $divData = "
-            <b>Lattitude : </b>".@$data->check_in_latitude."<br>
-            <b>Longitude : </b>".@$data->check_in_longitude."<br>
-            <b>Location : </b>".@$data->check_in_location."<br>
+            <b>Lattitude : </b>" . @$data->check_in_latitude . "<br>
+            <b>Longitude : </b>" . @$data->check_in_longitude . "<br>
+            <b>Location : </b>" . @$data->check_in_location . "<br>
         ";
         return $divData;
     }
-    function checkoutLocation($data){
+    function checkoutLocation($data)
+    {
         $divData = "
-            <b>Lattitude : </b>".@$data->check_out_latitude."<br>
-            <b>Longitude : </b>".@$data->check_out_longitude."<br>
-            <b>Location : </b>".@$data->check_out_location."<br>
+            <b>Lattitude : </b>" . @$data->check_out_latitude . "<br>
+            <b>Longitude : </b>" . @$data->check_out_longitude . "<br>
+            <b>Location : </b>" . @$data->check_out_location . "<br>
         ";
         return $divData;
     }

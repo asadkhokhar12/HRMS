@@ -46,8 +46,16 @@ trait TimeDurationTrait
         $startTime = Carbon::parse($start);
         $endTime = Carbon::parse($end);
         $diff = $endTime->diffInSeconds($startTime);
-        $hours = ($diff / 3600);
+        $hours = $diff / 3600;
         return $hours;
+    }
+
+    public function totalTimeDifferenceEmployee($start, $end): int
+    {
+        $startTime = Carbon::parse($start);
+        $endTime = Carbon::parse($end);
+        $diffInMinutes = $endTime->diffInMinutes($startTime);
+        return $diffInMinutes;
     }
 
     public function overTimeCount($attendance)
@@ -60,23 +68,23 @@ trait TimeDurationTrait
         }
         $dutySchedule = Shift::where('id', $attendance->user->shift_id)->with('dutySchedule')->first();
         $workingHour = @$dutySchedule->dutySchedule->hour;
-        $totalSeconds = ($endTime - $startTime ) - $workingHour*3600;
+        $totalSeconds = ($endTime - $startTime) - $workingHour * 3600;
         $hours = (int) floor($totalSeconds / 3600);
         $minutes = (int) floor(($totalSeconds / 60) % 60);
         //$seconds = $totalSeconds % 60;
 
-        if($hours > 0){
+        if ($hours > 0) {
             // hour greater than 1 it will be plural
-            $hours = $hours.' '.Str::plural('hr', $hours);
-            if($minutes >0){
-                $minutes = $minutes.' '.Str::plural('min', $minutes);
-                return $hours . ', '.$minutes;
-            }else{
+            $hours = $hours . ' ' . Str::plural('hr', $hours);
+            if ($minutes > 0) {
+                $minutes = $minutes . ' ' . Str::plural('min', $minutes);
+                return $hours . ', ' . $minutes;
+            } else {
                 return $hours;
             }
-        }else{
-            if ($minutes>0){
-                $minutes = $minutes.' '.Str::plural('min', $minutes);
+        } else {
+            if ($minutes > 0) {
+                $minutes = $minutes . ' ' . Str::plural('min', $minutes);
                 return $minutes;
             }
         }
@@ -106,26 +114,25 @@ trait TimeDurationTrait
         $hours = floor($totalSeconds / 3600);
         $minutes = floor(($totalSeconds / 60) % 60);
         $seconds = $totalSeconds % 60;
-        if($hours > 0){
+        if ($hours > 0) {
             // hour greater than 1 it will be plural
-            $hours = $hours.' '.Str::plural('hr', $hours);
-            if($minutes >0){
-                $minutes = $minutes.' '.Str::plural('min', $minutes);
-            return $hours . ', '.$minutes;
-            }else{
+            $hours = $hours . ' ' . Str::plural('hr', $hours);
+            if ($minutes > 0) {
+                $minutes = $minutes . ' ' . Str::plural('min', $minutes);
+                return $hours . ', ' . $minutes;
+            } else {
                 return $hours;
             }
-        }else{
-            $minutes = $minutes.' '.Str::plural('min', $minutes);
+        } else {
+            $minutes = $minutes . ' ' . Str::plural('min', $minutes);
             return $minutes;
         }
     }
 
-    public function hourMinSecond($start){
-        $start  = new Carbon(date('Y-m-d'). ' '.$start);
+    public function hourMinSecond($start)
+    {
+        $start  = new Carbon(date('Y-m-d') . ' ' . $start);
         $end    = Carbon::now();
-       return $start->diff($end)->format('%H:%I:%S');
+        return $start->diff($end)->format('%H:%I:%S');
     }
-
 }
-
