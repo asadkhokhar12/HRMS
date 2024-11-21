@@ -228,9 +228,10 @@ class LeaveRequestRepository
             //check this user has appropriate role
             if ($userDepartment) {
                 $leaveType = AssignLeave::whereId($request->assign_leave_id)->first();
-
+                
                 if (settings('leave_assign') == 1) {
                     $available_days = @resolve(LeaveService::class)->leaveSummary($leaveType)->original['data'];
+        
                     foreach($available_days['available_leave'] as $value){
                         if($value['type_id'] === $leaveType->type_id){
                             $rest_days = $value['left_days'];
@@ -246,7 +247,7 @@ class LeaveRequestRepository
                 if ($leaveType) {
                     $department_check = false;
                     $user_check = false;
-
+                    
                     if (settings('leave_assign') == 1) {
                         if ($leaveType->user_id == $userDepartment->id) {
                             $user_check = true;
@@ -257,6 +258,7 @@ class LeaveRequestRepository
                         }
                     }
                     //check assign leave and user role id is same then store data to related tables
+                    
                     if ($user_check || $department_check) {
                         $user = $this->userRepository->getById($request->user_id);
                         if ($user) {
