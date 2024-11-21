@@ -62,13 +62,13 @@
                                                 <td align="left" valign="middle">{{ @$data['info']['total_late'] }}
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td align="left" valign="middle" class="black12">
                                                     {{ _trans('common.Total Early Leave') }}</td>
                                                 <td align="center" valign="middle" class="black12">:</td>
                                                 <td align="left" valign="middle">{{ @$data['info']['total_early'] }}
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <td align="left" valign="middle" class="black12">
                                                     {{ _trans('common.Total Leave') }}</td>
@@ -76,14 +76,14 @@
                                                 <td align="left" valign="middle">{{ @$data['info']['total_leave'] }}
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td align="left" valign="middle" class="black12">
-                                                    {{ _trans('common.Total Holiday') }}</td>
-                                                <td align="center" valign="middle" class="black12">:</td>
-                                                <td align="left" valign="middle">
-                                                    {{ @$data['info']['total_holiday'] }}
-                                                </td>
-                                            </tr>
+                                            {{-- <tr>
+                                                    <td align="left" valign="middle" class="black12">
+                                                        {{ _trans('common.Total Holiday') }}</td>
+                                                    <td align="center" valign="middle" class="black12">:</td>
+                                                    <td align="left" valign="middle">
+                                                        {{ @$data['info']['total_holiday'] }}
+                                                    </td>
+                                                </tr> --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -138,7 +138,7 @@
                                 </div>
 
 
-                                <h4>{{ _trans('payroll.Addition Salary') }}</h4>
+                                {{-- <h4>{{ _trans('payroll.Addition Salary') }}</h4>
                                 <hr>
                                 <div class="table-content table-basic">
                                     <table width="100%" border="0" cellpadding="5" cellspacing="0"
@@ -194,14 +194,13 @@
                                             </td>
                                         </tfoot>
                                     </table>
-                                </div>
+                                </div> --}}
 
 
-                                <h4>{{ _trans('payroll.Deduction Salary') }}</h4>
+                                {{-- <h4>{{ _trans('payroll.Deduction Salary') }}</h4>
                                 <hr>
                                 <div class="table-content table-basic">
-                                    <table width="100%" border="0" cellpadding="5" cellspacing="0"
-                                        class="black12">
+                                    <table width="100%" cellpadding="5" cellspacing="0" class="black12">
                                         <thead>
                                             <tr>
                                                 <th colsapn="3" class="text-start">
@@ -221,9 +220,11 @@
                                                         <td class="text-start">{{ @$value['name'] }}</td>
                                                         <td class="text-start">
                                                             @if ($value['type'] == 1)
-                                                                <?= '<small class="badge badge-success">' . _trans('payroll.Addition') . '</small>' ?>
+                                                                <?= '<small class="badge badge-success">' .
+                                                                _trans('payroll.Addition') . '</small>' ?>
                                                             @else
-                                                                <?= '<small class="badge badge-danger">' . _trans('payroll.Deduction') . '</small>' ?>
+                                                                <?= '<small class="badge badge-danger">' .
+                                                                _trans('payroll.Deduction') . '</small>' ?>
                                                             @endif
                                                         </td>
                                                         <td class="text-start">
@@ -238,22 +239,25 @@
                                                         </td>
                                                         <td class="text-end">
                                                             @if ($value['amount_type'] == 1)
-                                                                <?= '<small class="badge badge-success">' . _trans('common.Fixed') . '</small><br>' ?>
+                                                                <?= '<small class="badge badge-success">' .
+                                                                _trans('common.Fixed') . '</small><br>' ?>
                                                             @else
-                                                                <?= '<small class="badge badge-primary">' . _trans('common.Percentage') . '</small><br>' ?>
+                                                                <?= '<small class="badge badge-primary">' .
+                                                                _trans('common.Percentage') . '</small><br>' ?>
                                                             @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            @endif
-                                        </tbody>
+
                                         <tfoot>
                                             <td> {{ _trans('common.Total') }}:
                                                 {{ currency_format($data['info']['deduction']) }}
                                             </td>
                                         </tfoot>
+                                        @endif
+                                        </tbody>
                                     </table>
-                                </div>
+                                </div> --}}
 
                                 <hr>
                                 <div class="table-content table-basic">
@@ -268,12 +272,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (@$data['info']['addition_detail'])
+                                            {{-- @if (@$data['info']['addition_detail'])
                                                 @foreach (@$data['info']['addition_detail'] as $key => $value)
                                                     <tr>
                                                         <td colspan="5" class="w-350 text-start">
                                                             {{ @$value['name'] }} [
-                                                            <?= '<small class="text-success">' . _trans('payroll.Addition') . '</small>' ?>
+                                                            <?= '<small class="text-success">' .
+                                                            _trans('payroll.Addition') . '</small>' ?>
                                                             ] </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             <span class="text-info">
@@ -282,27 +287,29 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            @endif
+                                            @endif --}}
 
-                                            @if (@$data['info']['deduction_detail'])
+                                            {{-- @if (@$data['info']['deduction_detail'])
                                                 @foreach (@$data['info']['deduction_detail'] as $key => $value)
                                                     <tr>
                                                         <td colspan="5" class="w-350 text-start">
                                                             {{ @$value['name'] }} [
-                                                            <?= '<small class="text-danger">' . _trans('payroll.Deduction') . '</small>' ?>
+                                                            <?= '<small class="text-danger">' .
+                                                            _trans('payroll.Deduction') . '</small>' ?>
                                                             ] </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             {{ currency_format($value['amount']) }} </td>
                                                     </tr>
                                                 @endforeach
-                                            @endif
+                                            @endif --}}
 
                                             @if (@$data['info']['advance_salary'])
                                                 @foreach (@$data['info']['advance_salary'] as $key => $value)
                                                     <tr>
                                                         <td colspan="5" class="w-350 text-start">
                                                             {{ $value->advance_type->name }} [
-                                                            <?= '<small class="text-danger">' . _trans('payroll.Deduction') . '</small>' ?>
+                                                            <?= '<small class="text-danger">' .
+                                                            _trans('payroll.Deduction') . '</small>' ?>
                                                             ] </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             @if ($value->recovery_mode == 1)
@@ -317,8 +324,9 @@
 
                                             <tr>
                                                 <td colspan="5" class="w-350 text-start">
-                                                    {{ _trans('payroll.Absent') }} [
-                                                    <?= '<small class="text-danger">' . _trans('payroll.Deduction') . '</small>' ?>
+                                                    {{ _trans('payroll.Absents') }} [
+                                                    <?= '<small class="text-danger">' . _trans('payroll.Deduction') .
+                                                    '</small>' ?>
                                                     ] </td>
                                                 <td colspan="5" class="w-350 text-end">
                                                     {{ currency_format(number_format(@$data['info']['leave_cuts'], 2)) }}

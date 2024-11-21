@@ -74,7 +74,8 @@ class SalaryRepository
         $content = $content->where($params)->latest()->get();
         return $this->generateDatatable($content);
     }
-    function getPayslipList($request){
+    function getPayslipList($request)
+    {
         try {
             $content = $this->model->query()->where('company_id', auth()->user()->company_id);
             $params = [];
@@ -89,24 +90,24 @@ class SalaryRepository
 
 
 
-            
+
             if ($request->month) {
                 $content = $content->where('date', 'LIKE', '%' . $request->month . '%');
-            }else{
+            } else {
                 $content = $content->whereYear('date', date('Y'));
             }
-             
+
             $content = $content->where($params)->latest()->get();
 
-            $payslip_collection=$content->map(function($payslip){
+            $payslip_collection = $content->map(function ($payslip) {
                 return [
                     'id' => $payslip->id,
                     'employee_name' => $payslip->employee->name,
                     'month' => date('F', strtotime($payslip->date)),
-                    'is_calculated' => $payslip->is_calculated==1? true : false,
+                    'is_calculated' => $payslip->is_calculated == 1 ? true : false,
                     'salary' => $payslip->gross_salary,
                     // 'payslip_view_link'=>route('appPayslip.show.html',[encrypt($payslip->id),encrypt($payslip->user_id)] ),
-                    'payslip_link'=>route('appPayslip.show',[encrypt($payslip->id),encrypt($payslip->user_id)] ),
+                    'payslip_link' => route('appPayslip.show', [encrypt($payslip->id), encrypt($payslip->user_id)]),
                 ];
             });
             return $this->responseWithSuccess('Payslip List', $payslip_collection);
@@ -280,7 +281,7 @@ class SalaryRepository
         ];
     }
 
-    
+
 
     public  function holiday($date, $weekends)
     {
@@ -392,32 +393,34 @@ class SalaryRepository
         }
     }
 
-    function approveLeaveOfMonth($user_id,$yearMonth){
+    function approveLeaveOfMonth($user_id, $yearMonth)
+    {
 
-        $leaves=LeaveRequest::where('user_id',$user_id)->where('status_id',1)
-            ->where(function($query) use($yearMonth){
-                $query->where('leave_from','like','%'.$yearMonth.'%')->orWhere('leave_to','like','%'.$yearMonth.'%');
+        $leaves = LeaveRequest::where('user_id', $user_id)->where('status_id', 1)
+            ->where(function ($query) use ($yearMonth) {
+                $query->where('leave_from', 'like', '%' . $yearMonth . '%')->orWhere('leave_to', 'like', '%' . $yearMonth . '%');
             })
             ->get();
 
-            $total_leave=0;
+        $total_leave = 0;
 
-            foreach($leaves as $leave){
-                $start_date=$leave->leave_from;
-                $end_date=$leave->leave_to;
-                $dates = getBetweenDates($start_date, $end_date);
+        foreach ($leaves as $leave) {
+            $start_date = $leave->leave_from;
+            $end_date = $leave->leave_to;
+            $dates = getBetweenDates($start_date, $end_date);
 
-                foreach($dates as $date){
-                    $date=date('Y-m',strtotime($date));
-                    if($date==$yearMonth){
-                        $total_leave++;
-                    }
+            foreach ($dates as $date) {
+                $date = date('Y-m', strtotime($date));
+                if ($date == $yearMonth) {
+                    $total_leave++;
                 }
             }
-            return $total_leave;
+        }
+        return $total_leave;
     }
 
     public function info($params)
+
     {
         try {
             $salary_info = $this->model($params)->first();
@@ -516,6 +519,117 @@ class SalaryRepository
             return $this->responseExceptionError($th->getMessage(), [], 400);
         }
     }
+
+    // public function info($params)
+    // {
+    //     try {
+    //         $salary_info = $this->model($params)->first();
+    //         $date = $salary_info->date;
+    //         $user = $salary_info->employee;
+    //         if (strtotime($user->joining_date) > strtotime($date)) {
+    //             $weekends = $this->join_weekends($user->joining_date);
+    //             $holiday               = $this->holiday($date, $weekends['weekends']);
+    //         } else {
+    //             //total weekends
+    //             $weekends              = $this->weekends($date);
+    //             //total holidays
+    //             $holiday               = $this->holiday($date, $weekends['weekends']);
+    //         }
+    //         // total working days
+    //         $total_leave = $this->approveLeaveOfMonth($user->id, date('Y-m', strtotime($date)));
+    //         $total_working_days    = count($weekends['workdays']) - (count($holiday)) - $total_leave;
+    //         $workable_days = count($weekends['workdays']);
+    //         $raw               =  DB::table('attendances')->where('company_id', auth()->user()->company_id)->where('user_id', $user->id)->whereMonth('date', date('m', strtotime($date)));
+    //         $checkinAtt        = $raw->clone()->orderby('id', 'asc')->groupBy('date')->get();
+    //         // $checkoutAtt       = $raw->clone()->orderby('id', 'desc')->get()->unique('date');
+
+    //         $total_present = $checkinAtt->count();
+
+    //         $total_absent  = $total_working_days - $total_present;
+    //         $total_late    = $raw->clone()->where('in_status', 'L')->orderby('id', 'asc')->groupBy('date')->count();
+    //         $total_early   = $raw->clone()->where('out_status', 'LE')->orderby('id', 'desc')->get()->unique('date')->count();
+    //         $per_day_salary = ($user->basic_salary / $total_working_days);
+    //         $leave_cuts = $this->getLeave($date, $user, $per_day_salary, $total_absent);
+    //         //advance salary
+    //         $advance_salary = AdvanceSalary::with('payment', 'advance_type')
+    //             ->where('status_id', 5)
+    //             ->where('company_id', auth()->user()->company_id)
+    //             ->where('user_id', $user->id)
+    //             ->whereMonth('recover_from', date('m', strtotime($date)));
+
+    //         //installment salary
+    //         $installment = $advance_salary->clone()->where('recovery_mode', 1)->sum('installment_amount');
+
+    //         //onetime salary
+    //         $onetime = $advance_salary->clone()->where('recovery_mode', 2)->sum('amount');
+
+    //         // commission salary
+    //         $commission = SalarySetupDetails::with('commission:id,type,name')
+    //             ->where('status_id', 1)
+    //             ->where('company_id', auth()->user()->company_id)
+    //             ->where('user_id', $user->id)->get();
+
+    //         $advanceSalaryLog = AdvanceSalaryLog::with('employee', 'payment', 'advance_type')
+    //             ->where('status_id', 1)
+    //             // ->where('company_id', auth()->user()->company_id)
+    //             ->where('user_id', $user->id)->get();
+
+    //         $addition = 0;
+    //         $deduction = 0;
+    //         //json addition and deduction details
+    //         $addition_detail = [];
+    //         $deduction_detail = [];
+    //         foreach ($advanceSalaryLog as $value) {
+    //             // if ($value->commission->type == 1) {
+    //             // $addition += $value->amount_type == 1 ? $value->amount : (($value->amount / 100) * $user->basic_salary);
+    //             // $addition_detail[] = [
+    //             //     'type' => @$value->commission->type,
+    //             //     'amount_type' => @$value->amount_type,
+    //             //     'amount' => @$value->amount_type == 1 ? $value->amount : (($value->amount / 100) * $user->basic_salary),
+    //             //     'old_amount' => @$value->amount,
+    //             //     'name' => @$value->commission->name,
+    //             // ];
+    //             // } else {
+    //             $deduction += $value->amount_type == 1 ? $value->amount : (($value->amount / 100) * $user->basic_salary);
+    //             $deduction_detail[] = [
+    //                 'type' => @$value->advance_type->Name,
+    //                 'amount_type' => @$value->amount_type == 1 ? 'Installment' : 'One Time',
+    //                 'old_amount' => @$value->amount,
+    //                 'amount' => @$value->amount_type == 1 ? $value->amount : (($value->amount / 100) * $user->basic_salary),
+    //                 'name' => @$value->employee->name,
+    //                 'deduction' => $value->amount_type == 1 ? $value->amount : (($value->amount / 100) * $user->basic_salary)
+    //             ];
+    //             // }
+    //         }
+
+    //         return [
+    //             'workable_days' => @$workable_days,
+    //             'total_working_days' => $total_working_days,
+    //             'total_present' => $total_present,
+    //             'total_absent' => $total_absent,
+    //             'total_late' => $total_late,
+    //             'total_early' => $total_early,
+    //             'per_day_salary' => $per_day_salary,
+    //             'advance_salary' => $advance_salary->get(),
+    //             'total_leave' => $total_leave,
+    //             'total_holiday' => count($holiday),
+    //             'leave_cuts' => $leave_cuts,
+    //             'installment' => $installment,
+    //             'onetime' => $onetime,
+    //             'addition' => $addition,
+    //             'deductions' => 0,
+    //             'addition_detail' => $addition_detail,
+    //             'deduction_detail' => $deduction_detail,
+    //             'net_salary' => (($user->basic_salary + $addition) - ($deduction + $leave_cuts + $installment + $onetime)),
+    //         ];
+    //     } catch (\Throwable $th) {
+    //         return [
+    //             'error' => true,
+    //             'message' => $th->getMessage(),
+    //             'info' => [], // Provide a default structure to prevent errors in Blade
+    //         ];
+    //     }
+    // }
 
     public function calculate($request, $params)
     {
@@ -744,8 +858,8 @@ class SalaryRepository
                     $is_calculated .= '<span class="text-danger">' . _trans('payroll.Deduction') . ' : ' . currency_format(number_format(($data->deduction_amount + $data->absent_amount + $data->advance_amount), 2)) . '</span><br>';
                     $is_calculated .= '<span class="text-success">' . _trans('payroll.Adjust Salary') . ' : ' . currency_format(number_format($data->adjust, 2)) . '</span><br>';
                     $is_calculated .= '<span class="text-info">' . _trans('payroll.Net Salary') . ' : ' . currency_format(number_format($data->net_salary, 2)) . '</span><br>';
-                }else {
-                    $is_calculated = '<span class="badge badge-danger">' . _trans('common.No') . '</span>';                    
+                } else {
+                    $is_calculated = '<span class="badge badge-danger">' . _trans('common.No') . '</span>';
                 }
 
                 return [
@@ -770,7 +884,8 @@ class SalaryRepository
         ];
     }
 
-    function getMonthlyPayroll(){
+    function getMonthlyPayroll()
+    {
         $data = [];
         $category = [];
         $info = [];
@@ -787,6 +902,5 @@ class SalaryRepository
         ];
         $data['date_array'] = $category;
         return $data;
-
     }
 }
