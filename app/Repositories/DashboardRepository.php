@@ -889,7 +889,7 @@ class DashboardRepository
     public function getNewDashboardStatistics($request)
     {
         try {
-            $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
+            $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummaryEmployee(auth()->user(), $request);
 
             // Extracting data and converting to appropriate types
             $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
