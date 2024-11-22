@@ -107,8 +107,12 @@
                                                     <tr>
                                                         <td>{{ @$value->advance_type->name }}</td>
                                                         <td>
-                                                            <?= '<small class="text-info">' . _trans('payroll.Requested') . ' : ' . currency_format($value->request_amount) . '</small><br>' ?>
-                                                            <?= '<small class="text-success">' . _trans('payroll.Approved') . ' : ' . currency_format($value->amount) . '</small><br>' ?>
+                                                            <?= '<small class="text-info">' .
+                                                            _trans('payroll.Requested') . ' : ' .
+                                                            currency_format($value->request_amount) . '</small><br>' ?>
+                                                            <?= '<small class="text-success">' .
+                                                            _trans('payroll.Approved') . ' : ' .
+                                                            currency_format($value->amount) . '</small><br>' ?>
                                                         </td>
                                                         <td>
                                                             <small class="text-info">
@@ -122,7 +126,8 @@
                                                             </small>
                                                         </td>
                                                         <td>
-                                                            <?= '<small class="badge badge-' . @$value->payment->class . '">' . @$value->payment->name . '</small>' ?>
+                                                            <?= '<small class="badge badge-' . @$value->payment->class .
+                                                            '">' . @$value->payment->name . '</small>' ?>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -220,11 +225,9 @@
                                                         <td class="text-start">{{ @$value['name'] }}</td>
                                                         <td class="text-start">
                                                             @if ($value['type'] == 1)
-                                                                <?= '<small class="badge badge-success">' .
-                                                                _trans('payroll.Addition') . '</small>' ?>
+                                                                <?= '<small class="badge badge-success">' . _trans('payroll.Addition') . '</small>' ?>
                                                             @else
-                                                                <?= '<small class="badge badge-danger">' .
-                                                                _trans('payroll.Deduction') . '</small>' ?>
+                                                                <?= '<small class="badge badge-danger">' . _trans('payroll.Deduction') . '</small>' ?>
                                                             @endif
                                                         </td>
                                                         <td class="text-start">
@@ -239,11 +242,9 @@
                                                         </td>
                                                         <td class="text-end">
                                                             @if ($value['amount_type'] == 1)
-                                                                <?= '<small class="badge badge-success">' .
-                                                                _trans('common.Fixed') . '</small><br>' ?>
+                                                                <?= '<small class="badge badge-success">' . _trans('common.Fixed') . '</small><br>' ?>
                                                             @else
-                                                                <?= '<small class="badge badge-primary">' .
-                                                                _trans('common.Percentage') . '</small><br>' ?>
+                                                                <?= '<small class="badge badge-primary">' . _trans('common.Percentage') . '</small><br>' ?>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -277,8 +278,7 @@
                                                     <tr>
                                                         <td colspan="5" class="w-350 text-start">
                                                             {{ @$value['name'] }} [
-                                                            <?= '<small class="text-success">' .
-                                                            _trans('payroll.Addition') . '</small>' ?>
+                                                            <?= '<small class="text-success">' . _trans('payroll.Addition') . '</small>' ?>
                                                             ] </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             <span class="text-info">
@@ -294,8 +294,7 @@
                                                     <tr>
                                                         <td colspan="5" class="w-350 text-start">
                                                             {{ @$value['name'] }} [
-                                                            <?= '<small class="text-danger">' .
-                                                            _trans('payroll.Deduction') . '</small>' ?>
+                                                            <?= '<small class="text-danger">' . _trans('payroll.Deduction') . '</small>' ?>
                                                             ] </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             {{ currency_format($value['amount']) }} </td>
@@ -322,6 +321,43 @@
                                                 @endforeach
                                             @endif
 
+                                            @if (@$data['info']['late_deductions'])
+                                                <tr>
+                                                    <td colspan="5" class="w-450 text-start">
+                                                        {{ _trans('payroll.Late Deductions') }}
+                                                        [
+                                                        <small class="text-danger">
+                                                            {{ $data['info']['total_late'] }} Lates
+                                                        </small>
+                                                        ]
+                                                    </td>
+
+                                                    <td colspan="5" class="text-end">
+                                                        {{ currency_format(number_format($data['info']['late_deductions'] * $data['info']['per_day_salary'], 2)) }}
+                                                    </td>
+
+                                                </tr>
+                                            @endif
+
+
+                                            @if (@$data['info']['half_day_deductions'])
+                                                <tr>
+                                                    <td colspan="5" class="w-450 text-start">
+                                                        {{ _trans('payroll.Half-Day Deductions') }}
+                                                        [
+                                                        <small class="text-danger">
+                                                            {{ $data['info']['half_day_count'] }} Lates
+                                                        </small>
+                                                        ]
+                                                    </td>
+
+                                                    <td colspan="5" class="text-end">
+                                                        {{ currency_format(number_format($data['info']['half_day_deductions'] * $data['info']['per_day_salary'], 2)) }}
+                                                    </td>
+
+                                                </tr>
+                                            @endif
+
                                             <tr>
                                                 <td colspan="5" class="w-350 text-start">
                                                     {{ _trans('payroll.Absents') }} [
@@ -335,6 +371,16 @@
 
                                         </tbody>
                                         <tfoot class="card-footer-invoice border-none">
+                                            <tr>
+                                                <td class="text-start border-bottom-0" colspan="1">
+                                                    {{ _trans('payroll.Tax:') }}
+                                                </td>
+                                                <td class="text-start border-bottom-0" colspan="2">
+                                                    <input type="number" step=any class="form-control ot-input"
+                                                        name="tax" step=0.01 placeholder="Tax">
+                                                </td>
+
+                                            </tr>
                                             <tr>
                                                 <td class="text-start border-bottom-0" colspan="1">
                                                     {{ _trans('payroll.Adjust:') }}
@@ -353,10 +399,6 @@
                                         </tfoot>
                                     </table>
                                 </div>
-
-
-
-
                             </div>
                             <div class="form-group text-right mt-3 d-flex justify-content-end">
                                 <button type="submit"

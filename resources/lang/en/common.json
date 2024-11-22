@@ -520,5 +520,9 @@
     "Already Approved": "Already Approved",
     "Edit Advance Type": "Edit Advance Type",
     "Contract Setup": "Contract Setup",
-    "No deduction details available": "No deduction details available"
+    "No deduction details available": "No deduction details available",
+    "Recover Mode": "Recover Mode",
+    "Recover Cycle": "Recover Cycle",
+    "Recover Amount": "Recover Amount",
+    "Print": "Print"
 }

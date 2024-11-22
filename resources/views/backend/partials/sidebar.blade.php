@@ -439,7 +439,7 @@
                             </a>
                             <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
 
-                                @if (hasPermission('payroll_item_menu'))
+                                {{-- @if (hasPermission('payroll_item_menu'))
                                     <li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
                                         <a href="{{ route('hrm.payroll_items.index') }}" class="">
                                             <span> {{ _trans('payroll.Commissions') }}</span>
@@ -453,7 +453,7 @@
                                             <span> {{ _trans('payroll.Setup') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
 
                                 @if (hasPermission('advance_type_list'))
                                     <li
@@ -481,14 +481,14 @@
                                     </li>
                                 @endif
 
-                                @if (hasPermission('payroll_set_menu'))
+                                {{-- @if (hasPermission('payroll_set_menu'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
                                         <a href="{{ route('hrm.monthly.salary.table') }}" class="">
                                             <span> {{ _trans('payroll.Salary Sheet') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
 
 
                             </ul>
@@ -724,9 +724,9 @@
                         </li>
                     @endif --}}
 
-                    <!-- @include('backend.partials.configurations-sidebar')
+                     @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') -->
+                    @include('backend.partials.settings-sidebar')
 
                 @endif
             </ul>

@@ -119,7 +119,7 @@ class SalaryController extends Controller
 
             $data['salary'] = $this->salaryRepository->model($params)->first();
             if ($data['salary']) {
-                $data['info'] = $this->salaryRepository->info($params);
+                $data['info'] = $this->salaryRepository->infoNew($params);
                 return view('backend.payroll.salary.calculate_modal', compact('data'));
             } else {
                 return response()->json('fail');
@@ -135,7 +135,8 @@ class SalaryController extends Controller
                 'id' => $id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
-            $result = $this->salaryRepository->calculate($request, $params);
+            // $result = $this->salaryRepository->calculate($request, $params);
+            $result = $this->salaryRepository->calculateNew($request, $params);
             if ($result->original['result']) {
                 Toastr::success($result->original['message'], 'Success');
                 return redirect()->route('hrm.payroll_salary.index');
