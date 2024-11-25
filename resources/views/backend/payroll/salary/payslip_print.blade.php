@@ -6,324 +6,189 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ @date('F', strtotime($data['salary']->date)).' '.@date('Y', strtotime($data['salary']->date)) }}</title>
     <style>
-        .table{
-            border-collapse: collapse;
-
-        }
-        .payslip{
-            border:2px solid #000;
+        .container{
+            width:90%;
+            height:100%;
             padding: 4%;
+            font-family:Arial, Helvetica, sans-serif;
+            color:#343a40;
         }
-        .head_title{
-            border: 1px dotted #000;
-            text-align: center;
-            width: 33%;
+        
+        .brand{
+            width:100%;
+            text-align:left;
+            font-size:42px;
+            font-weight:bold;
         }
-        .pay_info_td{
-            border: 1px dotted #000;
-            text-align: center;
+
+        .payslip-info{
+            margin:2% 0;
         }
-        .pay_info_title{
-            text-align: left;
-            width: 50%;
+
+        .row{
+            display:flex;
+        }
+
+        .col-md-6{
+            width:50%;
+        }
+        .col-md-12{
+            width:100%;
+        }
+
+        .fw-bold{
             font-weight: bold;
         }
-        .pay_info_text{
-            text-align: right;
-            width: 50%;
-            padding-right: 20px;
+
+        .text-start{text-align:start;}
+        .text-center{ text-align:center;}
+        .text-end{ text-align:end;}
+        .table{
+            width:100%;
+            border-collapse: collapse;
         }
+        .table-bordered tr th{
+            border:1px solid #adb5bd ;
+            padding:8px;
+            background-color:#e9ecef  ;
+        }
+
+        .table-bordered tr td{
+            border:1px solid #adb5bd;
+            padding:8px;
+        }
+
+        .my-5{
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .mx-5{
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+
     </style>
 </head>
 <body>
     
     <div class="container">
-
-        <div class="payslip">
-            <div class="company_logo">
-                <img class="full-logo dark_logo d-none" src="{{ logo_dark(@base_settings('company_logo_frontend')) }}" alt="" >
+        <div class="">
+            <div class=" mb-5 col-md-12 brand">
+                <span class="brand-name">Cybertron Labs (Pvt) Ltd</span>
             </div>
-                <h2>
-                   {{ _trans('common.Month') }} : {{ @date('F', strtotime($data['salary']->date)).' '.@date('Y', strtotime($data['salary']->date)) }}
-                </h2>
-            <table class="table" style="width: 100%;">
-                <tr>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('common.Employee Details') }}
-                        </h3>
-                    </td>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('common.Attendance Details') }}
-                        </h3>
-                    </td>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('common.Deductions') }} 
-                        </h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="pay_info_td">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Employee Name') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['employee_info']->name }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="pay_info_title">
-                                    {{ _trans('common.Employee ID') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['employee_info']->employee_id }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Department') }} 
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['employee_info']->department->title }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Designation') }} 
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['employee_info']->designation->title }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Joining Date') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ ShowDate(@$data['employee_info']->joining_date) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.TIN') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ ShowDate(@$data['employee_info']->tin) }}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    
-                    <td class="pay_info_td">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Working Day') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['salary']->total_working_day ?? 0 }} {{ _trans('common.Days') }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Present') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['salary']->present ?? 0 }} {{ _trans('common.Days') }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Absent') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['salary']->absent ?? 0 }} {{ _trans('common.Days') }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Late') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['salary']->late ?? 0 }} {{ _trans('common.Days') }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Early Leave') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ @$data['salary']->left_early ?? 0 }} {{ _trans('common.Days') }}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td class="pay_info_td">
-                        <table style="width: 100%;">
-                                @if (@$data['salary']->deduction_details)
-                                    @foreach (@$data['salary']->deduction_details as $key => $value)
-                                    <tr>
-                                        <td class="pay_info_title">
-                                            {{ @$value['name'] }}
-                                        </td>
-                                        <td class="pay_info_text">
-                                            {{ currency_format($value['amount']) }}
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                @endif
-                                <tr>
-                                    <td class="pay_info_title">
-                                        {{ _trans('payroll.Absent') }}
-                                    </td>
-                                    <td class="pay_info_text">
-                                        {{ currency_format(number_format(@$data['salary']->absent_amount, 2)) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pay_info_title">
-                                        {{ _trans('payroll.Advance') }}
-                                    </td>
-                                    <td class="pay_info_text">
-                                         {{ currency_format($data['salary']->advance_amount) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="pay_info_title">
-                                        <h4>
-                                            {{ _trans('common.Total') }}
-                                        </h4>
-                                    </td>
-                                    <td class="pay_info_text">
-                                         {{ currency_format(@$data['salary']->absent_amount+$data['salary']->deduction_amount) }}
-                                    </td>
-                                </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <br>
-            {{-- @dd('here') --}}
-            <table class="table" style=" width: 100%;">
-                <tr>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('payroll.Addition') }}
-                        </h3>
-                    </td>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('common.Payment') }}
-                        </h3>
-                    </td>
-                    <td class="head_title">
-                        <h3>
-                            {{ _trans('common.Net Pay') }}
-                        </h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="pay_info_td">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('payroll.Adjust Salary') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(number_format(@$data['salary']->adjust, 2)) }}
-                                </td>
-                            </tr>
-                            @if ($data['salary']->allowance_details != null)
-                                @forelse (@$data['salary']->allowance_details as $key => $value)
-                                <tr>
-                                    <td class="pay_info_title">
-                                        {{ @$value['name'] }}
-                                    </td>
-                                    <td class="pay_info_text">
-                                        {{ currency_format($value['amount']) }}
-                                    </td>
-                                </tr>
-                                @empty
-                                    {{-- <p class="text-center">--- No Allowance ---</p> --}}
-                                @endforelse
-                            @endif
-                            <tr>
-                                <td class="pay_info_title">
-                                    <h4>
-                                        {{ _trans('common.Total') }}
-                                    </h4>
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(@$data['salary']->allowance_amount+$data['salary']->adjust) }}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td class="pay_info_td">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Gross Salary') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(@$data['salary']->employee->basic_salary) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Deduction') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(@$data['salary']->absent_amount+$data['salary']->deduction_amount) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Addition') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(@$data['salary']->allowance_amount+$data['salary']->adjust) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Payable') }}
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(number_format(@$data['salary']->net_salary, 2)) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Paid') }} 
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(number_format(@$data['salary']->net_salary - $data['salary']->due_amount, 2)) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="pay_info_title">
-                                    {{ _trans('common.Total Due') }} 
-                                </td>
-                                <td class="pay_info_text">
-                                    {{ currency_format(number_format($data['salary']->due_amount, 2)) }}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td class="pay_info_td">
-                        <h2 class="text-center mt-20">
-                            {{ currency_format(number_format($data['salary']->due_amount, 2)) }}
-                        </h2>
-                    </td>
-                </tr>
-            </table>
+            <div class="payslip-info">
+                <div><label>Payslip-</label>{{$data['employee_info']->name}} - {{@date('M Y', strtotime($data['salary']->date))}}</div>
+                <div><label>Pay Date:</label> {{@date('d/m/Y')}}</div>
+                <div><label>Pay Period:</label> {{@date('F Y')}}</div>
+            </div>
         </div>
-        
+
+        <div class="row">
+            <div class="col-md-6">
+                <div> <span class="fs-5 fw-bold">Employee Details</span></div>
+                <div>{{$data['employee_info']->name}}</div>
+                <div>{{$data['employee_info']->designation->title}}</div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="text-end"><span class="fs-5 fw-bold">Employer Details</span></div>
+                <div class="text-end"><span>Cybertron Labs (Pvt) Ltd</span></div>
+                <div class="text-end"><span>A29 KDA Scheme 1 Karsaz Road,</span></div>
+                <div class="text-end"><span>Karachi, Pakistan</span></div>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top:2%;">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th style="width:50%" class="text-start">Earnings</th>
+                            <th style="width:50%" class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Basic Pay</td>
+                            <td class="text-end">64,300.00</td>
+                        </tr>
+                        <tr>
+                            <td>Travel Allowance</td>
+                            <td class="text-end">5,000.00</td>
+                        </tr>
+                        <tr>
+                            <td>Medical Allowance</td>
+                            <td class="text-end">700.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th style="width:50%" class="text-start">Deductions</th>
+                            <th style="width:50%" class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ _trans('common.Absent Deduction') }}</td>
+                            <td class="text-end">{{ (@$data['salary']->absent_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ _trans('common.Late Deduction') }}</td>
+                            <td class="text-end">{{ (@$data['salary']->late_deductions_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td> {{ _trans('common.Half-Day Deduction') }}</td>
+                            <td class="text-end">{{ (@$data['salary']->half_day_deductions_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ _trans('common.Loan') }}</td>
+                            <td class="text-end">{{ (@$data['salary']->advance_amount) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ _trans('common.Tax') }}</td>
+                            <td class="text-end">{{ (@$data['salary']->employee->tax) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th style="width:50%" class="text-start"> {{ _trans('common.Total Pay') }}</th>
+                            <th style="width:50%" class="text-end">PKR {{ (number_format($data['salary']->net_salary, 2)) }}</th>
+                        </tr>
+                        <tr>
+                            <th style="width:50%" class="text-start"> {{ _trans('common.Total Pay in Words') }}</th>
+                            <th style="width:50%" class="text-end">{{ numberTowords($data['salary']->net_salary) }} PKR</th>
+                        </tr>
+
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="col-md-6">
+                <div> <span class="fs-5 fw-bold">Payment Details</span></div>
+                <div>Payment made to employee's bank account.</div>
+                <div>Employee Signature</div>
+            </div>
+            <div class="col-md-6" style="display:flex; justify-content:end; align-items:center;">
+                <div class="text-end w-100">Employee Signature</div>
+            </div>
+
+            
+        </div>
+
+        <div class="col-md-12" style="display:flex; justify-content:center; align-items:center;">
+            <div>This is a system generated payslip.</div>
+        </div>
     </div>
+
 </body>
 </html>

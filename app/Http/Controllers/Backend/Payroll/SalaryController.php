@@ -327,6 +327,8 @@ class SalaryController extends Controller
             $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
 
             return $pdf->download($file_name); // Download PDF
+
+            // return view('backend.payroll.salary.payslip_print', compact('data'));
         } catch (\Throwable $e) {
             \Log::error('PDF generation error: ' . $e->getMessage());
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
