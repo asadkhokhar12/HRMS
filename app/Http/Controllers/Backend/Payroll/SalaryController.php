@@ -271,33 +271,64 @@ class SalaryController extends Controller
         }
     }
 
+    // function invoice_print($id)
+    // {
+    //     // dd("reached");
+    //     try {
+    //         $data['title'] = _trans('payroll.Payslip');
+    //         $params                = [
+    //             'id' => $id,
+    //             'company_id' => $this->companyRepository->company()->id,
+    //         ];
+    //         if (auth()->user()->role->slug == 'staff') {
+    //             $params['user_id'] = auth()->user()->id;
+    //         }
+    //         $data['salary']       = $this->salaryRepository->model($params)->first();
+    //         $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
+
+    //         // return view('backend.payroll.salary.payslip_print', compact('data'));
+    //         //landscape pdf view
+    //         $pdf = PDF::loadView('backend.payroll.salary.payslip_print', [
+    //             'data' => $data
+    //         ])->setPaper('a4', 'landscape');
+
+    //         $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
+
+    //         return $pdf->stream($file_name);
+    //     } catch (\Throwable $e) {
+    //         dd($e);
+    //         Toastr::error(_trans('response.Something went wrong.'), 'Error');
+    //         return redirect()->back();
+    //     }
+    // }
+
     function invoice_print($id)
     {
-        dd("reached");
         try {
+            set_time_limit(300); // Extend execution time.
+            ini_set('memory_limit', '512M'); // Increase memory limit.
+
             $data['title'] = _trans('payroll.Payslip');
-            $params                = [
+            $params = [
                 'id' => $id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
             if (auth()->user()->role->slug == 'staff') {
                 $params['user_id'] = auth()->user()->id;
             }
-            $data['salary']       = $this->salaryRepository->model($params)->first();
+            $data['salary'] = $this->salaryRepository->model($params)->first();
             $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
 
-            // return view('backend.payroll.salary.payslip_print', compact('data'));
-            //landscape pdf view
+            // Generate PDF
             $pdf = PDF::loadView('backend.payroll.salary.payslip_print', [
                 'data' => $data
             ])->setPaper('a4', 'landscape');
 
-
             $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
 
-            return $pdf->stream($file_name);
+            return $pdf->download($file_name); // Download PDF
         } catch (\Throwable $e) {
-            dd($e);
+            \Log::error('PDF generation error: ' . $e->getMessage());
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
             return redirect()->back();
         }
