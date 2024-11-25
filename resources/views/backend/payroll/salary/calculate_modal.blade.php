@@ -218,6 +218,7 @@
                                                     {{ _trans('common.Amount Type') }}</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
                                             @if (@$data['info']['deduction_detail'])
                                                 @foreach (@$data['info']['deduction_detail'] as $key => $value)
@@ -309,7 +310,8 @@
                                                             {{ $value->advance_type->name }} [
                                                             <?= '<small class="text-danger">' .
                                                             _trans('payroll.Deduction') . '</small>' ?>
-                                                            ] </td>
+                                                            ] 
+                                                        </td>
                                                         <td colspan="5" class="w-350 text-end">
                                                             @if ($value->recovery_mode == 1)
                                                                 {{ currency_format(@$value->installment_amount) }}
@@ -333,7 +335,7 @@
                                                     </td>
 
                                                     <td colspan="5" class="text-end">
-                                                        {{ currency_format(number_format($data['info']['late_deductions'] * $data['info']['per_day_salary'], 2)) }}
+                                                        {{ currency_format(number_format(@$data['info']['late_deductions'], 2)) }}
                                                     </td>
 
                                                 </tr>
@@ -346,13 +348,13 @@
                                                         {{ _trans('payroll.Half-Day Deductions') }}
                                                         [
                                                         <small class="text-danger">
-                                                            {{ $data['info']['half_day_count'] }} Lates
+                                                            {{ @$data['info']['half_day_count'] }} Lates
                                                         </small>
                                                         ]
                                                     </td>
 
                                                     <td colspan="5" class="text-end">
-                                                        {{ currency_format(number_format($data['info']['half_day_deductions'] * $data['info']['per_day_salary'], 2)) }}
+                                                        {{ currency_format(number_format(@$data['info']['half_day_deductions'], 2)) }}
                                                     </td>
 
                                                 </tr>
@@ -368,19 +370,20 @@
                                                     {{ currency_format(number_format(@$data['info']['leave_cuts'], 2)) }}
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td colspan="5" class="w-350 text-start">
+                                                    {{ _trans('payroll.Tax') }} [
+                                                    <?= '<small class="text-danger">' . _trans('payroll.Deduction') .
+                                                    '</small>' ?>
+                                                    ] </td>
+                                                <td colspan="5" class="w-350 text-end">
+                                                    {{ currency_format(number_format(@$data['info']['tax'], 2)) }}
+                                                </td>
+                                            </tr>
 
                                         </tbody>
                                         <tfoot class="card-footer-invoice border-none">
-                                            <tr>
-                                                <td class="text-start border-bottom-0" colspan="1">
-                                                    {{ _trans('payroll.Tax:') }}
-                                                </td>
-                                                <td class="text-start border-bottom-0" colspan="2">
-                                                    <input type="number" step=any class="form-control ot-input"
-                                                        name="tax" step=0.01 placeholder="Tax">
-                                                </td>
 
-                                            </tr>
                                             <tr>
                                                 <td class="text-start border-bottom-0" colspan="1">
                                                     {{ _trans('payroll.Adjust:') }}

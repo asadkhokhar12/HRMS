@@ -1,3 +1,4 @@
+{{-- {{dd($data)}} --}}
 <div class="profile-body p-40 pl-40 pr-40 pt-10">
     <!-- profile body nav start -->
     <div class="profile-body-form">
@@ -7,9 +8,21 @@
                 @csrf
                 <input type="text" hidden name="user_id" value="{{ $data['id'] }}">
         @endif
+        @if (hasPermission('user_update'))
+            <div class="form-group mt-20">
+                <label class="mb-10">{{ _trans('common.Tax') }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control ot-form-control ot-input" name="tax"
+                    placeholder="{{ _trans('common.Enter Tax') }}"
+                    value="{{ $data['show']->original['data']['tax'] ?? 'N/A' }}">
+                @if ($errors->has('tax'))
+                    <span class="text-danger">{{ $errors->first('tax') }}</span>
+                @endif
+            </div>
+        @endif
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('common.Phone') }} <span class="text-danger">*</span></label>
-            <input type="text" class="form-control ot-form-control ot-input" name="phone" placeholder="{{ _trans('common.Enter Phone') }}"
+            <input type="text" class="form-control ot-form-control ot-input" name="phone"
+                placeholder="{{ _trans('common.Enter Phone') }}"
                 value="{{ $data['show']->original['data']['phone'] ?? 'N/A' }}">
             @if ($errors->has('phone'))
                 <span class="text-danger">{{ $errors->first('phone') }}</span>
@@ -17,7 +30,8 @@
         </div>
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('profile.Date of Birth') }}</label>
-            <input type="text" class="form-control ot-form-control ot-input s_date" name="birth_date" placeholder="{{ _trans('profile.Date of Birth') }}"
+            <input type="text" class="form-control ot-form-control ot-input s_date" name="birth_date"
+                placeholder="{{ _trans('profile.Date of Birth') }}"
                 value="{{ date('m/d/y', strtotime(@$data['show']->original['data']['birth_date_db'])) }}">
             @if ($errors->has('birth_date'))
                 <span class="text-danger">{{ $errors->first('birth_date') }}</span>
@@ -41,7 +55,8 @@
         </div>
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('common.Address') }}</label>
-            <input type="text" class="form-control ot-form-control ot-input" placeholder="{{ _trans('common.Enter Address') }}" name="address"
+            <input type="text" class="form-control ot-form-control ot-input"
+                placeholder="{{ _trans('common.Enter Address') }}" name="address"
                 value="{{ @$data['show']->original['data']['address'] ?? 'N/A' }}">
             @if ($errors->has('address'))
                 <span class="text-danger">{{ $errors->first('address') }}</span>
@@ -50,14 +65,15 @@
 
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('profile.Nationality') }}</label>
-            <input type="text" class="form-control ot-form-control ot-input" placeholder="{{ _trans('profile.Enter Nationality') }}" name="nationality"
+            <input type="text" class="form-control ot-form-control ot-input"
+                placeholder="{{ _trans('profile.Enter Nationality') }}" name="nationality"
                 value="{{ @$data['show']->original['data']['nationality'] }}">
             @if ($errors->has('nationality'))
                 <span class="text-danger">{{ $errors->first('nationality') }}</span>
             @endif
         </div>
 
-        
+
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('common.Blood Group') }} <span class="text-danger">*</span></label>
 
@@ -78,9 +94,11 @@
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('profile.Avatar') }}</label>
             <div class="ot_fileUploader left-side mb-3">
-                <input class="form-control" type="text" placeholder="{{ _trans('profile.Avatar') }}" name="backend_image" readonly="" id="placeholder3">
+                <input class="form-control" type="text" placeholder="{{ _trans('profile.Avatar') }}"
+                    name="backend_image" readonly="" id="placeholder3">
                 <button class="primary-btn-small-input" type="button">
-                    <label class="btn btn-lg ot-btn-primary m-0" for="fileBrouse3">{{ _trans('common.Browse') }}</label>
+                    <label class="btn btn-lg ot-btn-primary m-0"
+                        for="fileBrouse3">{{ _trans('common.Browse') }}</label>
                     <input type="file" class="d-none form-control" name="avatar" id="fileBrouse3">
                 </button>
             </div>

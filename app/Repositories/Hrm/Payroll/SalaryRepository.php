@@ -576,9 +576,10 @@ class SalaryRepository
 
             // Calculate deductions
             $late_deductions_floor = floor($remaining_lates / 3); // 3 lates = 1 day
-            $late_deductions = round($late_deductions_floor, 2);
+            $total_late_deductions = round($late_deductions_floor, 2);
 
-            $half_day_deductions = floor($half_day_count / 2);  // 2 half days = 1 full day deduction
+
+            $total_half_day_deductions = floor($half_day_count / 2);  // 2 half days = 1 full day deduction
 
             // Early leave count (unchanged)
             $total_late = $remaining_lates; // Update total_late to exclude half-days
@@ -586,7 +587,11 @@ class SalaryRepository
 
             // Calculate salary deductions
             $per_day_salary = $user->basic_salary / $total_working_days;
-            $total_deduction_days = $late_deductions + $half_day_deductions;
+
+            $late_deductions = $total_late_deductions * $per_day_salary;
+            $half_day_deductions = $total_half_day_deductions * $per_day_salary;
+
+            $total_deduction_days = $total_late_deductions + $total_half_day_deductions;
 
             // Leave deductions
             $leave_cuts = $this->getLeave($date, $user, $per_day_salary, $total_absent);
@@ -641,11 +646,13 @@ class SalaryRepository
                 }
             }
 
+            $tax = $user->tax;
+
             // Final salary calculation
-            $net_salary = round(($user->basic_salary + $addition)
-                - ($deduction + $leave_cuts + $installment + $onetime + $total_deduction_days * $per_day_salary), 2);
+            $net_salary = round(($user->basic_salary + $addition) - ($tax + $deduction + $leave_cuts + $installment + $onetime + $total_deduction_days * $per_day_salary), 2);
 
             return [
+                'tax' => $tax,
                 'workable_days' => $workable_days,
                 'total_working_days' => $total_working_days,
                 'total_present' => $total_present,
@@ -797,7 +804,6 @@ class SalaryRepository
                 return $this->responseWithError(_trans('message.Salary already calculated!'), 'id', 404);
             }
             $info = $this->info($params);
-            $salary_info->tax = floatval($request->tax); // For tax 
             $salary_info->amount = floatval($info['net_salary']) + floatval($request->adjust) -  $salary_info->tax;
             $salary_info->due_amount = 0;
             $salary_info->total_working_day = $info['total_working_days'];
@@ -864,8 +870,11 @@ class SalaryRepository
                 return $this->responseWithError(_trans('message.Salary already calculated!'), 'id', 404);
             }
             $info = $this->infoNew($params);
-            $salary_info->tax = floatval($request->tax); // For tax 
-            $salary_info->amount = floatval($info['net_salary']) + floatval($request->adjust) -  floatval($request->tax);
+            // dd($info);
+            $salary_info->tax = floatval($info['tax']);
+            $salary_info->late_deductions_amount = round($info['late_deductions'], 2);
+            $salary_info->half_day_deductions_amount = round($info['half_day_deductions'], 2);
+            $salary_info->amount = floatval($info['net_salary']) + floatval($request->adjust);
             $salary_info->due_amount = 0;
             $salary_info->total_working_day = $info['total_working_days'];
             $salary_info->present = $info['total_present'];
@@ -874,14 +883,15 @@ class SalaryRepository
             $salary_info->left_early = $info['total_early'];
             $salary_info->allowance_amount = $info['addition'];
             $salary_info->allowance_details = $info['addition_detail'];
-            $salary_info->deduction_amount = $info['deduction'];
             $salary_info->deduction_details = $info['deduction_detail'];
             $salary_info->absent_amount = $info['leave_cuts'];
+           
             $salary_info->net_salary = $salary_info->amount;
             $salary_info->adjust = floatval($request->adjust);
             $salary_info->is_calculated = 1;
             $salary_info->advance_amount = $info['installment'] + $info['onetime'];
             $salary_info->advance_details =  $info['advance_salary'];
+            $salary_info->deduction_amount = $salary_info->tax + $salary_info->late_deductions_amount + $salary_info->half_day_deductions_amount + $salary_info->absent_amount + $salary_info->advance_amount;
             $salary_info->save();
             // dd($salary_info->amount);
 

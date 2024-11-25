@@ -41,7 +41,7 @@
 
         <div class="payslip">
             <div class="company_logo">
-                <img style="width: 20%;" class="full-logo dark_logo d-none" src="{{ logo_dark(@base_settings('company_logo_frontend')) }}" alt="" >
+                <img class="full-logo dark_logo d-none" src="{{ logo_dark(@base_settings('company_logo_frontend')) }}" alt="" >
             </div>
                 <h2>
                    {{ _trans('common.Month') }} : {{ @date('F', strtotime($data['salary']->date)).' '.@date('Y', strtotime($data['salary']->date)) }}

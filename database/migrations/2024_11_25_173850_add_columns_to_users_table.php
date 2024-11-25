@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('salary_generates', function (Blueprint $table) {
-            $table->unsignedBigInteger('tax')->after('adjust')->default(0);
+        Schema::table('users', function (Blueprint $table) {
+            $table->double('tax')->after('basic_salary')->default(0.0);
+            
         });
     }
 
@@ -25,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('salary_generates', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

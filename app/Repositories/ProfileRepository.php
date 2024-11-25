@@ -247,6 +247,7 @@ class ProfileRepository
         $data['nid_card_number'] = $user->nid_card_number ?? null;
         $data['nid_card_id'] = uploaded_asset($user->nid_card_id);
         $data['nid_file'] = $user->nid_card_id;
+        $data['tax'] = $user->tax;
 
         $data['speak_language'] = $user->speak_language;
         $data['employee_id'] = $user->employee_id;
@@ -862,6 +863,8 @@ class ProfileRepository
 
                     $user->speak_language = $request->speak_language;
                     $user->employee_id = $request->employee_id;
+                    $user->tax = $request->tax;
+
 
                     //upload avatar start
                     if ($request->hasFile('avatar')) {
