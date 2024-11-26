@@ -173,13 +173,13 @@ class UserController extends Controller
                     $data['fields'] = $this->taskService->fields();
                     $data['class'] = 'task_table_class';
                     break;
-                case 'award':
-                    $data['title'] = _trans('award.Award List');
-                    $data['table'] = route('award.table');
-                    $data['url_id'] = 'award_table_url';
-                    $data['fields'] = $this->awardService->fields();
-                    $data['class'] = 'award_table_class';
-                    break;
+                // case 'award':
+                //     $data['title'] = _trans('award.Award List');
+                //     $data['table'] = route('award.table');
+                //     $data['url_id'] = 'award_table_url';
+                //     $data['fields'] = $this->awardService->fields();
+                //     $data['class'] = 'award_table_class';
+                //     break;
                 case 'travel':
                     $data['title'] = _trans('travel.Travel List');
                     $data['table'] = route('user.profileDataTable', ['user_id' => $data['id'], 'type' => 'travel']);
