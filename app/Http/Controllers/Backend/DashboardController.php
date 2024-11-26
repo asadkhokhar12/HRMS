@@ -17,7 +17,8 @@ use App\Repositories\Hrm\Finance\ExpenseRepository;
 use App\Repositories\Hrm\Expense\HrmExpenseRepository;
 use App\Repositories\Hrm\Attendance\AttendanceRepository;
 use App\Repositories\Hrm\Department\DepartmentRepository;
-
+use App\Repositories\Company\CompanyRepository;
+use App\Repositories\UserRepository;
 
 class DashboardController extends Controller
 {
@@ -30,6 +31,8 @@ class DashboardController extends Controller
     protected $taskService;
     protected $projectService;
 
+    protected $companyRepository;
+    protected $employeeRepository;
 
 
     public function __construct(
@@ -40,7 +43,10 @@ class DashboardController extends Controller
         DepartmentRepository $departmentRepo,
         SalaryRepository $salaryRepository,
         TaskService $taskService,
-        ProjectService $projectService
+        ProjectService $projectService,
+        CompanyRepository $companyRepository,
+        UserRepository $employeeRepository
+
     ) {
         $this->dashboardRepository = $dashboardRepository;
         $this->attendanceRepo = $attendanceRepo;
@@ -50,17 +56,24 @@ class DashboardController extends Controller
         $this->salaryRepository = $salaryRepository;
         $this->taskService = $taskService;
         $this->projectService = $projectService;
+        $this->companyRepository = $companyRepository;
+        $this->employeeRepository = $employeeRepository;
+
     }
 
     public function loadMyProfileDashboard($request)
     {
         try {
-
+            $id = auth()->user()->id;
             $request['month'] = date('Y-m');
-
+            $params                = [
+                'id' => $id,
+                'company_id' => $this->companyRepository->company()->id,
+            ];
             // $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
             $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
             $data['dashboardMenus'] = @$menus->original['data'];
+            $data['salary']       = $this->salaryRepository->model($params)->first();
             
             return $returnHTML = view('backend.dashboard.load_my_dashboard', compact('data'))->render();
             return $returnHTML = view('backend.dashboard.loadProfileDashboard', compact('data'))->render();

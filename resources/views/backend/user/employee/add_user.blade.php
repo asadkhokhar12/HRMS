@@ -245,7 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <div class="form-group mb-3">
                                 <label for="manager_id" class="form-label">{{ _trans('user.Manager') }}</label>
                                 <select name="manager_id" class="form-select select2">
@@ -260,7 +260,7 @@
                                     <small class="error">{{ $errors->first('manager_id') }}</small>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-12">
                             <div class="form-group mb-3">

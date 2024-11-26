@@ -1050,7 +1050,7 @@ class SalaryRepository
         }
         if ($request->search) {
             $data->whereHas('employee', function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
+                $query->where('name', 'like', "%{$request->search}%");
             });
         }
         if (@$request->department) {
@@ -1062,15 +1062,15 @@ class SalaryRepository
         return [
             'data' => $data->map(function ($data) {
                 $action_button = '';
-                if (hasPermission('salary_view')) {
-                    $action_button .= '<a href="' . route('hrm.payroll_salary.show', $data->id) . '" class="dropdown-item"> ' . _trans('common.View') . '</a>';
-                }
+                // if (hasPermission('salary_view')) {
+                //     $action_button .= '<a href="' . route('hrm.payroll_salary.show', $data->id) . '" class="dropdown-item"> ' . _trans('common.View') . '</a>';
+                // }
                 if (hasPermission('salary_calculate') && $data->is_calculated == 0) {
                     $action_button .= actionButton(_trans('common.Calculate'), 'mainModalOpen(`' . route('hrm.payroll_salary.calculate_modal', $data->id) . '`)', 'modal');
                 }
-                if (hasPermission('salary_pay') && $data->status_id != 8 && $data->is_calculated == 1) {
-                    $action_button .= actionButton(_trans('common.Pay'), 'mainModalOpen(`' . route('hrm.payroll_salary.pay', $data->id) . '`)', 'modal');
-                }
+                // if (hasPermission('salary_pay') && $data->status_id != 8 && $data->is_calculated == 1) {
+                //     $action_button .= actionButton(_trans('common.Pay'), 'mainModalOpen(`' . route('hrm.payroll_salary.pay', $data->id) . '`)', 'modal');
+                // }
                 if (hasPermission('salary_invoice')) {
                     $action_button .= '<a href="' . route('hrm.payroll_salary.invoice', $data->id) . '" class="dropdown-item"> ' . _trans('common.Payslip') . '</a>';
                 }
@@ -1089,8 +1089,8 @@ class SalaryRepository
                             </div>';
                 $is_calculated = '';
                 if ($data->is_calculated) {
-                    $is_calculated .= '<span class="text-success">' . _trans('payroll.Addition') . ' : ' . currency_format(number_format($data->allowance_amount, 2)) . '</span><br>';
-                    $is_calculated .= '<span class="text-danger">' . _trans('payroll.Deduction') . ' : ' . currency_format(number_format(($data->deduction_amount + $data->absent_amount + $data->advance_amount), 2)) . '</span><br>';
+                    // $is_calculated .= '<span class="text-success">' . _trans('payroll.Addition') . ' : ' . currency_format(number_format($data->allowance_amount, 2)) . '</span><br>';
+                    $is_calculated .= '<span class="text-danger">' . _trans('payroll.Deduction') . ' : ' . currency_format(number_format(($data->deduction_amount), 2)) . '</span><br>';
                     $is_calculated .= '<span class="text-success">' . _trans('payroll.Adjust Salary') . ' : ' . currency_format(number_format($data->adjust, 2)) . '</span><br>';
                     $is_calculated .= '<span class="text-info">' . _trans('payroll.Net Salary') . ' : ' . currency_format(number_format($data->net_salary, 2)) . '</span><br>';
                 } else {

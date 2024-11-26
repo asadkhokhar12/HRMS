@@ -251,7 +251,6 @@ class SalaryController extends Controller
     // }
     function invoice($id)
     {
-
         try {
             $data['title'] = _trans('payroll.Payslip');
             $params                = [
@@ -304,6 +303,10 @@ class SalaryController extends Controller
 
     function invoice_print($id)
     {
+        if ($id == 0) {
+            Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
+            return redirect()->back(); // Redirect the user back
+        }
         try {
             set_time_limit(300); // Extend execution time.
             ini_set('memory_limit', '512M'); // Increase memory limit.
@@ -317,12 +320,20 @@ class SalaryController extends Controller
                 $params['user_id'] = auth()->user()->id;
             }
             $data['salary'] = $this->salaryRepository->model($params)->first();
+
+            // Check if the salary is calculated
+            if ($data['salary']->is_calculated == 0) {
+                // Log and show a user-friendly error message
+                \Log::warning("Attempted to generate payslip for an uncalculated salary. ID: $id");
+                Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
+                return redirect()->back(); // Redirect the user back
+            }
             $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
 
             // Generate PDF
             $pdf = PDF::loadView('backend.payroll.salary.payslip_print', [
                 'data' => $data
-            ])->setPaper('a4', 'landscape');
+            ])->setPaper('a4', 'portrait');
 
             $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
 

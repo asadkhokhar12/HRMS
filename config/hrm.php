@@ -88,6 +88,9 @@ return [
         'appointment'=>[
             'path'=>'las la-calendar-check'
         ],
+        'payroll'=>[
+            'path'=>'las la-receipt'
+        ],
     ],
     'employee_type' => [
         'Permanent',
@@ -107,8 +110,7 @@ return [
     ],
     'gender' => [
         'Male',
-        'Female',
-        'Unisex',
+        'Female'
     ],
     'footer_info'=>[
         'email'=>'',
