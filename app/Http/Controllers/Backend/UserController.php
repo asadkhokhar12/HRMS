@@ -404,7 +404,6 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
 
-
         try {
             $result = $this->user->update($request, $user->id);
             if ($result->original['result']) {

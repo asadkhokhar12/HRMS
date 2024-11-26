@@ -11,8 +11,7 @@
             <label class="mb-10">{{ _trans('common.Phone') }} <span class="text-danger">*</span></label>
             <input type="number" class="form-control ot-form-control ot-input" name="phone"
                 placeholder="{{ _trans('common.Enter Phone') }}"
-                value="{{ old('phone', @$data['show']->original['data']['phone']) }}"
-            >
+                value="{{ old('phone', @$data['show']->original['data']['phone']) }}">
             @if ($errors->has('phone'))
                 <span class="text-danger">{{ $errors->first('phone') }}</span>
             @endif
@@ -92,34 +91,38 @@
                             <input type="file" class="d-none form-control" name="avatar" id="fileBrouse3">
                         </button>
                     </div>
-        
+
                     @if ($errors->has('avatar'))
                         <span class="text-danger">{{ $errors->first('avatar') }}</span>
                     @endif
                 </div>
-        
+
             </div>
             <div class="col-lg-6">
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Speak Language') }}</label>
-                     <input type="text" name="speak_language" value="{{ @$data['show']->original['data']['speak_language']??old('speak_language') }}" class="form-control ot-form-control ot-input">
-        
+                    <input type="text" name="speak_language"
+                        value="{{ @$data['show']->original['data']['speak_language'] ?? old('speak_language') }}"
+                        class="form-control ot-form-control ot-input">
+
                     @if ($errors->has('avatar'))
                         <span class="text-danger">{{ $errors->first('avatar') }}</span>
                     @endif
                 </div>
-        
+
             </div>
             <div class="col-lg-6">
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Employee ID') }}</label>
-                     <input type="text" name="employee_id" value="{{ old('employee_id', @$data['show']->original['data']['employee_id']) }}" class="form-control ot-form-control ot-input">
-        
+                    <input type="text" name="employee_id"
+                        value="{{ old('employee_id', @$data['show']->original['data']['employee_id']) }}"
+                        class="form-control ot-form-control ot-input">
+
                     @if ($errors->has('employee_id'))
                         <span class="text-danger">{{ $errors->first('employee_id') }}</span>
                     @endif
                 </div>
-        
+
             </div>
         </div>
 
@@ -155,9 +158,10 @@
                             <span class="text-danger">*</span>
                         @endif
                     </label>
-                    <input type="text" class="form-control ot-form-control ot-input" placeholder="{{ _trans('profile.Enter Passport Number') }}" name="passport_number" value="{{ old('passport_number', @$data['show']->original['data']['passport_number']) }}" 
-                        {{ $isEmployeePassportRequired ? 'required' : '' }}
-                    >
+                    <input type="text" class="form-control ot-form-control ot-input"
+                        placeholder="{{ _trans('profile.Enter Passport Number') }}" name="passport_number"
+                        value="{{ old('passport_number', @$data['show']->original['data']['passport_number']) }}"
+                        {{ $isEmployeePassportRequired ? 'required' : '' }}>
                     @if ($errors->has('passport_number'))
                         <span class="text-danger">{{ $errors->first('passport_number') }}</span>
                     @endif
@@ -165,7 +169,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="form-group mt-20">
-                    <label class="mb-10">{{ _trans('profile.Passport File') }} 
+                    <label class="mb-10">{{ _trans('profile.Passport File') }}
                         @if ($isEmployeePassportRequired)
                             <span class="text-danger">*</span>
                         @endif
@@ -179,12 +183,14 @@
                         @endif
                     </label>
                     <div class="ot_fileUploader left-side mb-3">
-                        <input class="form-control" type="text"  placeholder="{{ _trans('profile.Passport File') }}" name="" readonly=""  id="placeholder">
+                        <input class="form-control" type="text"
+                            placeholder="{{ _trans('profile.Passport File') }}" name="" readonly=""
+                            id="placeholder">
                         <button class="primary-btn-small-input" type="button">
-                            <label class="btn btn-lg ot-btn-primary m-0" for="fileBrouse">{{ _trans('common.Browse') }}</label>
-                            <input type="file" class="d-none form-control" name="passport_file_id" id="fileBrouse" 
-                                {{ $isEmployeePassportRequired ? 'required' : '' }}
-                            >
+                            <label class="btn btn-lg ot-btn-primary m-0"
+                                for="fileBrouse">{{ _trans('common.Browse') }}</label>
+                            <input type="file" class="d-none form-control" name="passport_file_id"
+                                id="fileBrouse" {{ $isEmployeePassportRequired ? 'required' : '' }}>
                         </button>
                     </div>
                     @if ($errors->has('passport_file_id'))
@@ -195,15 +201,15 @@
             <div class="col-lg-4">
                 <div class="form-group mt-20">
                     <label class="mb-10">
-                        {{ _trans('profile.Passport Expire Date') }} 
-                            @if ($isEmployeePassportRequired)
-                                <span class="text-danger">*</span>
-                            @endif
-                        </label>
+                        {{ _trans('profile.Passport Expire Date') }}
+                        @if ($isEmployeePassportRequired)
+                            <span class="text-danger">*</span>
+                        @endif
+                    </label>
                     <input type="text" class="form-control ot-form-control ot-input expire-date"
-                        name="passport_expire_date" placeholder="{{ _trans('profile.Passport Expire Date') }}" value="{{ old('passport_expire_date', @$data['show']->original['data']['passport_expire_date']) }}" 
-                        {{ $isEmployeePassportRequired ? 'required' : '' }}
-                    >
+                        name="passport_expire_date" placeholder="{{ _trans('profile.Passport Expire Date') }}"
+                        value="{{ old('passport_expire_date', @$data['show']->original['data']['passport_expire_date']) }}"
+                        {{ $isEmployeePassportRequired ? 'required' : '' }}>
                     @if ($errors->has('passport_expire_date'))
                         <span class="text-danger">{{ $errors->first('passport_expire_date') }}</span>
                     @endif
@@ -234,8 +240,7 @@
                     <input type="text" class="form-control ot-form-control ot-input"
                         placeholder="{{ _trans('profile.Enter EID Number') }}" name="eid_number"
                         value="{{ old('eid_number', @$data['show']->original['data']['eid_number']) }}"
-                        {{ $isEmployeeEIDRequired ? 'required' : '' }}
-                    >
+                        {{ $isEmployeeEIDRequired ? 'required' : '' }}>
                     @if ($errors->has('eid_number'))
                         <span class="text-danger">{{ $errors->first('eid_number') }}</span>
                     @endif
@@ -257,12 +262,13 @@
                         @endif
                     </label>
                     <div class="ot_fileUploader left-side mb-3">
-                        <input class="form-control" type="text" placeholder="{{ _trans('profile.EID File') }}"  name="" readonly="" id="placeholder2">
+                        <input class="form-control" type="text" placeholder="{{ _trans('profile.EID File') }}"
+                            name="" readonly="" id="placeholder2">
                         <button class="primary-btn-small-input" type="button">
-                            <label class="btn btn-lg ot-btn-primary m-0" for="fileBrouse2">{{ _trans('common.Browse') }}</label>
-                            <input type="file" class="d-none form-control" name="eid_file_id" id="fileBrouse2" 
-                                {{ $isEmployeeEIDRequired ? 'required' : '' }}
-                            >
+                            <label class="btn btn-lg ot-btn-primary m-0"
+                                for="fileBrouse2">{{ _trans('common.Browse') }}</label>
+                            <input type="file" class="d-none form-control" name="eid_file_id" id="fileBrouse2"
+                                {{ $isEmployeeEIDRequired ? 'required' : '' }}>
                         </button>
                     </div>
 
@@ -274,14 +280,15 @@
             <div class="col-lg-4">
                 <div class="form-group mt-20">
                     <label class="mb-10">
-                        {{ _trans('profile.EID Expire Date') }} 
+                        {{ _trans('profile.EID Expire Date') }}
                         @if ($isEmployeeEIDRequired)
                             <span class="text-danger">*</span>
                         @endif
                     </label>
-                    <input type="text" class="form-control ot-form-control ot-input expire-date" name="eid_expire_date" placeholder="{{ _trans('profile.EID Date') }}"  value="{{ old('eid_expire_date', @$data['show']->original['data']['eid_expire_date']) }}"
-                        {{ $isEmployeeEIDRequired ? 'required' : '' }}
-                    >
+                    <input type="text" class="form-control ot-form-control ot-input expire-date"
+                        name="eid_expire_date" placeholder="{{ _trans('profile.EID Date') }}"
+                        value="{{ old('eid_expire_date', @$data['show']->original['data']['eid_expire_date']) }}"
+                        {{ $isEmployeeEIDRequired ? 'required' : '' }}>
                     @if ($errors->has('eid_expire_date'))
                         <span class="text-danger">{{ $errors->first('eid_expire_date') }}</span>
                     @endif
@@ -329,7 +336,8 @@
                         @endif
                     </label>
                     <div class="ot_fileUploader left-side mb-3">
-                        <input class="form-control" type="text" placeholder="{{ _trans('profile.Visa File') }}" name="" readonly="" id="placeholder6">
+                        <input class="form-control" type="text" placeholder="{{ _trans('profile.Visa File') }}"
+                            name="" readonly="" id="placeholder6">
                         <button class="primary-btn-small-input" type="button">
                             <label class="btn btn-lg ot-btn-primary m-0"
                                 for="fileBrouse6">{{ _trans('common.Browse') }}</label>
@@ -346,7 +354,8 @@
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Visa Expire Date') }} </label>
                     <input type="text" class="form-control ot-form-control ot-input expire-date"
-                        name="visa_expire_date" placeholder="{{ _trans('profile.Visa Expire Date') }}" value="{{ old('visa_expire_date', @$data['show']->original['data']['visa_expire_date']) }}">
+                        name="visa_expire_date" placeholder="{{ _trans('profile.Visa Expire Date') }}"
+                        value="{{ old('visa_expire_date', @$data['show']->original['data']['visa_expire_date']) }}">
                     @if ($errors->has('visa_expire_date'))
                         <span class="text-danger">{{ $errors->first('visa_expire_date') }}</span>
                     @endif
@@ -392,10 +401,14 @@
                         @endif
                     </label>
                     <div class="ot_fileUploader left-side mb-3">
-                        <input class="form-control" type="text"  placeholder="{{ _trans('profile.Insurance File') }}" name="" readonly="" id="placeholder5">
+                        <input class="form-control" type="text"
+                            placeholder="{{ _trans('profile.Insurance File') }}" name="" readonly=""
+                            id="placeholder5">
                         <button class="primary-btn-small-input" type="button">
-                            <label class="btn btn-lg ot-btn-primary m-0" for="fileBrouse5">{{ _trans('common.Browse') }}</label>
-                            <input type="file" class="d-none form-control" name="insurance_file_id" id="fileBrouse5">
+                            <label class="btn btn-lg ot-btn-primary m-0"
+                                for="fileBrouse5">{{ _trans('common.Browse') }}</label>
+                            <input type="file" class="d-none form-control" name="insurance_file_id"
+                                id="fileBrouse5">
                         </button>
                     </div>
                     @if ($errors->has('insurance_file_id'))
@@ -406,7 +419,9 @@
             <div class="col-lg-4">
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Insurance Expire Date') }} </label>
-                    <input type="text" class="form-control ot-form-control ot-input expire-date"  name="insurance_expire_date" placeholder="{{ _trans('profile.Insurance Expire Date') }}" value="{{ old('insurance_expire_date', @$data['show']->original['data']['insurance_expire_date']) }}">
+                    <input type="text" class="form-control ot-form-control ot-input expire-date"
+                        name="insurance_expire_date" placeholder="{{ _trans('profile.Insurance Expire Date') }}"
+                        value="{{ old('insurance_expire_date', @$data['show']->original['data']['insurance_expire_date']) }}">
                     @if ($errors->has('insurance_expire_date'))
                         <span class="text-danger">{{ $errors->first('insurance_expire_date') }}</span>
                     @endif
@@ -430,7 +445,9 @@
             <div class="col-lg-4">
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Labour Card Number') }} </label>
-                    <input type="text" class="form-control ot-form-control ot-input"  placeholder="{{ _trans('profile.Enter Labour Card Number') }}" name="labour_card_number"  value="{{ old('labour_card_number', @$data['show']->original['data']['labour_card_number']) }}">
+                    <input type="text" class="form-control ot-form-control ot-input"
+                        placeholder="{{ _trans('profile.Enter Labour Card Number') }}" name="labour_card_number"
+                        value="{{ old('labour_card_number', @$data['show']->original['data']['labour_card_number']) }}">
                     @if ($errors->has('labour_card_number'))
                         <span class="text-danger">{{ $errors->first('labour_card_number') }}</span>
                     @endif
@@ -449,10 +466,14 @@
                         @endif
                     </label>
                     <div class="ot_fileUploader left-side mb-3">
-                        <input class="form-control" type="text"  placeholder="{{ _trans('profile.Labour Card File') }}" name="" readonly=""  id="placeholder4">
+                        <input class="form-control" type="text"
+                            placeholder="{{ _trans('profile.Labour Card File') }}" name="" readonly=""
+                            id="placeholder4">
                         <button class="primary-btn-small-input" type="button">
-                            <label class="btn btn-lg ot-btn-primary m-0" for="fileBrouse4">{{ _trans('common.Browse') }}</label>
-                            <input type="file" class="d-none form-control" name="labour_card_file_id"  id="fileBrouse4">
+                            <label class="btn btn-lg ot-btn-primary m-0"
+                                for="fileBrouse4">{{ _trans('common.Browse') }}</label>
+                            <input type="file" class="d-none form-control" name="labour_card_file_id"
+                                id="fileBrouse4">
                         </button>
                     </div>
                     @if ($errors->has('labour_card_file_id'))
@@ -463,7 +484,9 @@
             <div class="col-lg-4">
                 <div class="form-group mt-20">
                     <label class="mb-10">{{ _trans('profile.Labour Card Expire Date') }} </label>
-                    <input type="text" class="form-control ot-form-control ot-input expire-date"  name="labour_card_expire_date" placeholder="{{ _trans('profile.Labour Card Expire Date') }}" value="{{ old('labour_card_expire_date', @$data['show']->original['data']['labour_card_expire_date']) }}">
+                    <input type="text" class="form-control ot-form-control ot-input expire-date"
+                        name="labour_card_expire_date" placeholder="{{ _trans('profile.Labour Card Expire Date') }}"
+                        value="{{ old('labour_card_expire_date', @$data['show']->original['data']['labour_card_expire_date']) }}">
                     @if ($errors->has('labour_card_expire_date'))
                         <span class="text-danger">{{ $errors->first('labour_card_expire_date') }}</span>
                     @endif
