@@ -218,6 +218,9 @@ class UserRepository
 
 
             $user->marital_status = $request->marital_status;
+            if ($request->tax) {
+                $user->tax = $request->tax;
+            }
             if ($request->speak_language) {
                 $user->speak_language = $request->speak_language;
             }

@@ -8,7 +8,7 @@
                 @csrf
                 <input type="text" hidden name="user_id" value="{{ $data['id'] }}">
         @endif
-        @if (hasPermission('user_update'))
+        {{-- @if (hasPermission('user_update'))
             <div class="form-group mt-20">
                 <label class="mb-10">{{ _trans('common.Tax') }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control ot-form-control ot-input" name="tax"
@@ -18,7 +18,7 @@
                     <span class="text-danger">{{ $errors->first('tax') }}</span>
                 @endif
             </div>
-        @endif
+        @endif --}}
         <div class="form-group mt-20">
             <label class="mb-10">{{ _trans('common.Phone') }} <span class="text-danger">*</span></label>
             <input type="text" class="form-control ot-form-control ot-input" name="phone"
