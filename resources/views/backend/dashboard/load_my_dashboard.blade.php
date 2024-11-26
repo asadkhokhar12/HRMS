@@ -9,7 +9,12 @@
                     </div>
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>
-                        <h1 class="custom"> {{ @$item['number'] }}</h1>
+                        @if ($item['title'] === _trans('dashboard.Payslip'))
+                            <a href="{{ route('hrm.payroll_salary.invoice_print', $data['salary']->id ?? '0') }}"
+                                class="btn btn-primary mt-3">Download</a>
+                        @else
+                            <h1 class="custom"> {{ @$item['number'] }}</h1>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -17,6 +22,7 @@
         <!-- Single Dashboard Summery Card End -->
     @endforeach
 </div>
+
 <div class="row">
     <!-- Dashboard Summery Card Start -->
     <div class="col-md-6 pb-30">
@@ -43,7 +49,7 @@
             </div>
         </div>
     </div>
-    {{--<div class="col-md-6 pb-30">
+    {{-- <div class="col-md-6 pb-30">
         <div class="card ot-card">
             <div class="card-header d-flex flex-row justify-content-between align-items-baseline">
                 <div class="card-title">
@@ -102,5 +108,5 @@
                 </div>
             </div>
         </div>
-    </div>--}}
+    </div> --}}
 </div>

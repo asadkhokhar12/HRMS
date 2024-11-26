@@ -205,7 +205,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (hasPermission('leave_request_read') )
+                                @if (hasPermission('leave_request_read'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['leaveRequest.index', 'leaveRequest.create']) }}">
                                         <a href="{{ route('leaveRequest.index') }}"
@@ -216,14 +216,14 @@
                                 @endif
                                 <!-- @if (Auth::user()->role)
                                     @if (Auth::user()->role->name === 'Staff')
-                                        <li
+<li
                                             class="nav-item {{ menu_active_by_route('user.authProfile', ['leave_request']) }}">
                                             <a href="{{ route('user.authProfile', ['leave_request']) }}"
                                                 class="{{ set_active(route('user.authProfile', ['leave_request'])) }}">
                                                 <span>{{ _trans('leave.Leave Request') }}</span>
                                             </a>
                                         </li>
-                                    @endif
+@endif
                                 @endif -->
 
 
@@ -427,19 +427,21 @@
                             </ul>
                         </li>
                     @endif --}}
-                    {{-- @if (hasPermission('payroll_menu') && hasFeature('payroll'))
-                        <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
-                            <a href="javascript:void(0)"
-                                class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                <i class="las la-comment-dollar"></i>
-                                <span class="on-half-expanded">
-                                    {{ _trans('payroll.Payroll') }}
+                    @if (Auth::user()->role)
+                        @if (Auth::user()->role->name != 'Staff')
+                            @if (hasPermission('payroll_menu') && hasFeature('payroll'))
+                                <li class="sidebar-menu-item {{ set_menu([route('hrm.payroll_items.index')]) }}">
+                                    <a href="javascript:void(0)"
+                                        class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.payroll_items.index', 'hrm.payroll_setup.index', 'hrm.payroll_setup.user_setup', 'hrm.payroll_setup.user_commission_setup', 'hrm.payroll_advance_type.index', 'hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show', 'hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                        <i class="las la-comment-dollar"></i>
+                                        <span class="on-half-expanded">
+                                            {{ _trans('payroll.Payroll') }}
 
-                                </span>
-                            </a>
-                            <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
+                                        </span>
+                                    </a>
+                                    <ul class="child-menu-list {{ set_active(['hrm/payroll*']) }}">
 
-                                @if (hasPermission('payroll_item_menu'))
+                                        {{-- @if (hasPermission('payroll_item_menu'))
                                     <li class="nav-item {{ menu_active_by_route(['hrm.payroll_items.index']) }}">
                                         <a href="{{ route('hrm.payroll_items.index') }}" class="">
                                             <span> {{ _trans('payroll.Commissions') }}</span>
@@ -453,47 +455,51 @@
                                             <span> {{ _trans('payroll.Setup') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
 
-                                @if (hasPermission('advance_type_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_type.index']) }}">
-                                        <a href="{{ route('hrm.payroll_advance_type.index') }}" class="">
-                                            <span> {{ _trans('payroll.Advance Type') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if (hasPermission('advance_salaries_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show']) }}">
-                                        <a href="{{ route('hrm.payroll_advance_salary.index') }}" class="">
-                                            <span> {{ _trans('payroll.Advance') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
+                                        @if (hasPermission('advance_type_list'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_type.index']) }}">
+                                                <a href="{{ route('hrm.payroll_advance_type.index') }}"
+                                                    class="">
+                                                    <span> {{ _trans('payroll.Advance Type') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (hasPermission('advance_salaries_list'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.payroll_advance_salary.index', 'hrm.payroll_advance_salary.create', 'hrm.payroll_advance_salary.edit', 'hrm.payroll_advance_salary.show']) }}">
+                                                <a href="{{ route('hrm.payroll_advance_salary.index') }}"
+                                                    class="">
+                                                    <span> {{ _trans('payroll.Advance') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
-                                @if (hasPermission('salary_list'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
-                                        <a href="{{ route('hrm.payroll_salary.index') }}" class="">
-                                            <span> {{ _trans('payroll.Salary Generate') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
+                                        @if (hasPermission('salary_list'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.payroll_salary.index', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
+                                                <a href="{{ route('hrm.payroll_salary.index') }}" class="">
+                                                    <span> {{ _trans('payroll.Salary Generate') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
-                                @if (hasPermission('payroll_set_menu'))
+                                        {{-- @if (hasPermission('payroll_set_menu'))
                                     <li
                                         class="nav-item {{ menu_active_by_route(['hrm.monthly.salary.table', 'hrm.payroll_salary.show', 'hrm.payroll_salary.invoice']) }}">
                                         <a href="{{ route('hrm.monthly.salary.table') }}" class="">
                                             <span> {{ _trans('payroll.Salary Sheet') }}</span>
                                         </a>
                                     </li>
-                                @endif
+                                @endif --}}
 
 
-                            </ul>
-                        </li>
-                    @endif --}}
+                                    </ul>
+                                </li>
+                            @endif
+                        @endif
+                    @endif
                     {{-- Start Client Module --}}
                     {{-- @include('backend.client.sidebar') --}}
                     {{-- End Client Module --}}
@@ -724,9 +730,9 @@
                         </li>
                     @endif --}}
 
-                    <!-- @include('backend.partials.configurations-sidebar')
+                    {{-- @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') -->
+                    @include('backend.partials.settings-sidebar') --}}
 
                 @endif
             </ul>

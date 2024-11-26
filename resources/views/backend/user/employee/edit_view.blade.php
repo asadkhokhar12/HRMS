@@ -232,7 +232,8 @@
                                     @foreach ($data['roles'] as $role)
                                         <option value="{{ $role->id }}"
                                             {{ old('role_id', $data['show']->role_id) == $role->id ? 'selected' : '' }}>
-                                            {{ $role->name }}</option>
+                                            {{ $role->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

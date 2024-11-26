@@ -62,5 +62,13 @@
     "Salary Sheet": "Salary Sheet",
     "Commission Setup": "Commission Setup",
     "Salary Table": "Salary Table",
-    "Add Commission": "Add Commission"
+    "Add Commission": "Add Commission",
+    "Offs": "Offs",
+    "Absents": "Absents",
+    "Late Deductions": "Late Deductions",
+    "Half-Day Deductions": "Half-Day Deductions",
+    "Late": "Late",
+    "Deductions": "Deductions",
+    "Tax:": "Tax:",
+    "Tax": "Tax"
 }

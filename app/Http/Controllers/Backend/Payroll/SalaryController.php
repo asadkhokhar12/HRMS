@@ -119,7 +119,7 @@ class SalaryController extends Controller
 
             $data['salary'] = $this->salaryRepository->model($params)->first();
             if ($data['salary']) {
-                $data['info'] = $this->salaryRepository->info($params);
+                $data['info'] = $this->salaryRepository->infoNew($params);
                 return view('backend.payroll.salary.calculate_modal', compact('data'));
             } else {
                 return response()->json('fail');
@@ -135,7 +135,8 @@ class SalaryController extends Controller
                 'id' => $id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
-            $result = $this->salaryRepository->calculate($request, $params);
+            // $result = $this->salaryRepository->calculate($request, $params);
+            $result = $this->salaryRepository->calculateNew($request, $params);
             if ($result->original['result']) {
                 Toastr::success($result->original['message'], 'Success');
                 return redirect()->route('hrm.payroll_salary.index');
@@ -168,22 +169,22 @@ class SalaryController extends Controller
                     'status_id' => 1,
                     'company_id' => $this->companyRepository->company()->id
                 ]
-                )->get();
-                $data['payment_method'] = DB::table('payment_methods')->where(
+            )->get();
+            $data['payment_method'] = DB::table('payment_methods')->where(
                 [
                     'company_id' => $this->companyRepository->company()->id
-                    ]
-                    )->get();
-                    $data['url']           = (hasPermission('salary_pay')) ? route('hrm.payroll_salary.pay_store', $id) : '';
-                    if (auth()->user()->role->slug == 'staff' && $data['advance']->status_id != 2) {
-                        $data['url'] = '';
-                    }
-                    $data['accounts']      = $this->accountRepository->model(
-                        [
-                            'company_id' => $this->companyRepository->company()->id,
-                            'status_id' => 1,
-                            ]
-                            )->get();
+                ]
+            )->get();
+            $data['url']           = (hasPermission('salary_pay')) ? route('hrm.payroll_salary.pay_store', $id) : '';
+            if (auth()->user()->role->slug == 'staff' && $data['advance']->status_id != 2) {
+                $data['url'] = '';
+            }
+            $data['accounts']      = $this->accountRepository->model(
+                [
+                    'company_id' => $this->companyRepository->company()->id,
+                    'status_id' => 1,
+                ]
+            )->get();
 
             return view('backend.payroll.salary.payment_modal', compact('data'));
         } catch (\Throwable $e) {
@@ -228,9 +229,9 @@ class SalaryController extends Controller
         }
     }
 
-    // function invoice($id)
+    // public function invoice($id)
     // {
-
+    //     // dd("reached");
     //     try {
     //         $data['title'] = _trans('payroll.Payslip');
     //         $params                = [
@@ -241,6 +242,7 @@ class SalaryController extends Controller
     //             $params['user_id'] = auth()->user()->id;
     //         }
     //         $data['salary']       = $this->salaryRepository->model($params)->first();
+    //         // dd($data);
     //         return view('backend.payroll.salary.payslip', compact('data'));
     //     } catch (\Throwable $e) {
     //         Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -249,7 +251,6 @@ class SalaryController extends Controller
     // }
     function invoice($id)
     {
-
         try {
             $data['title'] = _trans('payroll.Payslip');
             $params                = [
@@ -260,7 +261,7 @@ class SalaryController extends Controller
                 $params['user_id'] = auth()->user()->id;
             }
             $data['salary']       = $this->salaryRepository->model($params)->first();
-            $data['employee_info']= $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
+            $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
             // return $data['salary'];
             return view('backend.payroll.salary.payslip', compact('data'));
         } catch (\Throwable $e) {
@@ -268,33 +269,79 @@ class SalaryController extends Controller
             return redirect()->back();
         }
     }
+
+    // function invoice_print($id)
+    // {
+    //     // dd("reached");
+    //     try {
+    //         $data['title'] = _trans('payroll.Payslip');
+    //         $params                = [
+    //             'id' => $id,
+    //             'company_id' => $this->companyRepository->company()->id,
+    //         ];
+    //         if (auth()->user()->role->slug == 'staff') {
+    //             $params['user_id'] = auth()->user()->id;
+    //         }
+    //         $data['salary']       = $this->salaryRepository->model($params)->first();
+    //         $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
+
+    //         // return view('backend.payroll.salary.payslip_print', compact('data'));
+    //         //landscape pdf view
+    //         $pdf = PDF::loadView('backend.payroll.salary.payslip_print', [
+    //             'data' => $data
+    //         ])->setPaper('a4', 'landscape');
+
+    //         $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
+
+    //         return $pdf->stream($file_name);
+    //     } catch (\Throwable $e) {
+    //         dd($e);
+    //         Toastr::error(_trans('response.Something went wrong.'), 'Error');
+    //         return redirect()->back();
+    //     }
+    // }
+
     function invoice_print($id)
     {
-
+        if ($id == 0) {
+            Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
+            return redirect()->back(); // Redirect the user back
+        }
         try {
+            set_time_limit(300); // Extend execution time.
+            ini_set('memory_limit', '512M'); // Increase memory limit.
+
             $data['title'] = _trans('payroll.Payslip');
-            $params                = [
+            $params = [
                 'id' => $id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
             if (auth()->user()->role->slug == 'staff') {
                 $params['user_id'] = auth()->user()->id;
             }
-            $data['salary']       = $this->salaryRepository->model($params)->first();
-            $data['employee_info']= $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
-            
-            // return view('backend.payroll.salary.payslip_print', compact('data'));
-            //landscape pdf view
-            $pdf = PDF::loadView('backend.payroll.salary.payslip_print',[ 
+            $data['salary'] = $this->salaryRepository->model($params)->first();
+
+            // Check if the salary is calculated
+            if ($data['salary']->is_calculated == 0) {
+                // Log and show a user-friendly error message
+                \Log::warning("Attempted to generate payslip for an uncalculated salary. ID: $id");
+                Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
+                return redirect()->back(); // Redirect the user back
+            }
+            $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
+
+            // Generate PDF
+            $pdf = PDF::loadView('backend.payroll.salary.payslip_print', [
                 'data' => $data
-            ])->setPaper('a4', 'landscape');
+            ])->setPaper('a4', 'portrait');
 
+            $file_name = date('F', strtotime($data['salary']->date)) . ' ' . date('Y', strtotime($data['salary']->date)) . '-' . $data['employee_info']->name . '-Payslip.pdf';
 
-            $file_name=date('F', strtotime($data['salary']->date)).' '.date('Y', strtotime($data['salary']->date)).'-'.$data['employee_info']->name.'-Payslip.pdf';
+            return $pdf->download($file_name); // Download PDF
 
-            return $pdf->stream($file_name);
+            // return view('backend.payroll.salary.payslip_print', compact('data'));
         } catch (\Throwable $e) {
-            dd($e);
+            \Log::error('PDF generation error: ' . $e->getMessage());
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
             return redirect()->back();
         }
@@ -343,13 +390,14 @@ class SalaryController extends Controller
         }
     }
 
-    public function getSalaryGeneratedDepartment(Request $request){
+    public function getSalaryGeneratedDepartment(Request $request)
+    {
 
-        $departments= $this->salaryRepository->getSalaryGeneratedDepartment($request);
+        $departments = $this->salaryRepository->getSalaryGeneratedDepartment($request);
         return $departments;
         return response()->json($departments);
     }
-    
+
 
     public function exportExcel($sub_title)
     {
@@ -359,76 +407,77 @@ class SalaryController extends Controller
             ob_end_clean();
             ob_start();
             // return Excel::download(new SalaryExport('test'), 'users.xlsx');
-            return Excel::download(new SalaryExport($sub_title), $sub_title.'.xlsx');
+            return Excel::download(new SalaryExport($sub_title), $sub_title . '.xlsx');
         } catch (\Throwable $th) {
             dd($th);
         }
     }
     // Salary Table
-    public function salaryTable(Request $request){
-        
+    public function salaryTable(Request $request)
+    {
+
         $data['title']         = _trans('payroll.Salary Table');
         $data['departments'] = $this->department->getAll();
         if ($request->method() == 'POST') {
-            $month=date('m',strtotime($request->month));
-            $year=date('Y',strtotime($request->month));
+            $month = date('m', strtotime($request->month));
+            $year = date('Y', strtotime($request->month));
             $data['month'] = date('F', mktime(0, 0, 0, $month, 10));
             $this->salaryRepository->generate($request);
 
             $data['last_day'] = date('t', strtotime($request->month));
-            $data['sub_title'] = 'From 1 '.$data['month'].' to '.$data['last_day'] .' '.$data['month'].' '.$year;
-            $data['commissions']=$commission = Commission::where('status_id', 1)->where('company_id', auth()->user()->company_id)->get();
-            $salarySheet= $this->salaryRepository->salarySheet($request);
+            $data['sub_title'] = 'From 1 ' . $data['month'] . ' to ' . $data['last_day'] . ' ' . $data['month'] . ' ' . $year;
+            $data['commissions'] = $commission = Commission::where('status_id', 1)->where('company_id', auth()->user()->company_id)->get();
+            $salarySheet = $this->salaryRepository->salarySheet($request);
             $data['salarySheet'] = $salarySheet;
             SalarySheetReport::where('company_id', auth()->user()->company_id)->delete();
             foreach ($data['salarySheet'] as $key => $salarySheet) {
-               try {
-                    $db_salary_sheet=new SalarySheetReport();
+                try {
+                    $db_salary_sheet = new SalarySheetReport();
 
-                    $db_salary_sheet->sl_no=$salarySheet['user_id'];
-                    $db_salary_sheet->name_of_the_employee=$salarySheet['user_name'];
-                    $db_salary_sheet->employee_id=$salarySheet['employee_id'];
-                    $db_salary_sheet->designation=$salarySheet['user_designation'];
-                    $db_salary_sheet->w_days=$salarySheet['total_working_days'];
-                    $db_salary_sheet->present=$salarySheet['total_present'];
-                    $db_salary_sheet->absent=$salarySheet['total_absent'];
-                    $db_salary_sheet->tardy=$salarySheet['total_late'];
-                    $db_salary_sheet->tardy_days=$salarySheet['late_dates'];
-                    $db_salary_sheet->gross_salary=$salarySheet['gross_salary'];
+                    $db_salary_sheet->sl_no = $salarySheet['user_id'];
+                    $db_salary_sheet->name_of_the_employee = $salarySheet['user_name'];
+                    $db_salary_sheet->employee_id = $salarySheet['employee_id'];
+                    $db_salary_sheet->designation = $salarySheet['user_designation'];
+                    $db_salary_sheet->w_days = $salarySheet['total_working_days'];
+                    $db_salary_sheet->present = $salarySheet['total_present'];
+                    $db_salary_sheet->absent = $salarySheet['total_absent'];
+                    $db_salary_sheet->tardy = $salarySheet['total_late'];
+                    $db_salary_sheet->tardy_days = $salarySheet['late_dates'];
+                    $db_salary_sheet->gross_salary = $salarySheet['gross_salary'];
 
                     foreach ($salarySheet['addition_detail'] as $key => $addition) {
                         switch ($addition['name']) {
                             case 'Basic':
-                                $db_salary_sheet->basic_50=$addition['amount'];
+                                $db_salary_sheet->basic_50 = $addition['amount'];
                                 break;
                             case 'Medical':
-                                $db_salary_sheet->medical_10=$addition['amount'];
+                                $db_salary_sheet->medical_10 = $addition['amount'];
                                 break;
                             case 'Hra':
-                                $db_salary_sheet->hra_40=$addition['amount'];
+                                $db_salary_sheet->hra_40 = $addition['amount'];
                                 break;
                             case 'HRA':
-                                $db_salary_sheet->hra_40=$addition['amount'];
+                                $db_salary_sheet->hra_40 = $addition['amount'];
                                 break;
                             case 'Performance Incentive':
-                                $db_salary_sheet->performance_incentive=$addition['amount'];
+                                $db_salary_sheet->performance_incentive = $addition['amount'];
                                 break;
-                            
+
                             default:
 
                                 break;
                         }
                     }
 
-                    $db_salary_sheet->absent_amount=0;
-                    $db_salary_sheet->advance=0;
-                    $db_salary_sheet->tardy_amount=0;
-                    $db_salary_sheet->incentive=0;
-                    $db_salary_sheet->net_salary=$salarySheet['net_salary'];
+                    $db_salary_sheet->absent_amount = 0;
+                    $db_salary_sheet->advance = 0;
+                    $db_salary_sheet->tardy_amount = 0;
+                    $db_salary_sheet->incentive = 0;
+                    $db_salary_sheet->net_salary = $salarySheet['net_salary'];
                     $db_salary_sheet->save();
-               } catch (\Throwable $th) {
-                   dd($th);
-               }
+                } catch (\Throwable $th) {
+                    dd($th);
+                }
             }
             return  $this->exportExcel($data['sub_title']);
         }
