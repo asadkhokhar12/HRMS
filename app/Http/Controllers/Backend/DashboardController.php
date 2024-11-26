@@ -5,20 +5,21 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use App\Models\Company\Company;
 use App\Services\Task\TaskService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use App\Repositories\DashboardRepository;
 use App\Services\Management\ProjectService;
+use App\Repositories\Company\CompanyRepository;
 use App\Repositories\Hrm\Payroll\SalaryRepository;
 use App\Repositories\Hrm\Finance\ExpenseRepository;
 use App\Repositories\Hrm\Expense\HrmExpenseRepository;
 use App\Repositories\Hrm\Attendance\AttendanceRepository;
 use App\Repositories\Hrm\Department\DepartmentRepository;
-use App\Repositories\Company\CompanyRepository;
-use App\Repositories\UserRepository;
 
 class DashboardController extends Controller
 {
@@ -58,29 +59,47 @@ class DashboardController extends Controller
         $this->projectService = $projectService;
         $this->companyRepository = $companyRepository;
         $this->employeeRepository = $employeeRepository;
-
     }
 
     public function loadMyProfileDashboard($request)
     {
         try {
-            $id = auth()->user()->id;
+            // Get the authenticated user's ID
+            $userId = auth()->user()->id;
+    
+            // Fetch the latest record for the user from salary_generates
+            $latestSalaryGenerate = DB::table('salary_generates')
+                ->where('user_id', $userId)
+                ->latest() // Orders by 'created_at' in descending order
+                ->first();
+    
+            // Check if a record exists
+            // if (!$latestSalaryGenerate) {
+            //     throw new \Exception('No salary generate records found for this user.');
+            // }
+    
+            // Prepare the parameters for fetching salary and menus
             $request['month'] = date('Y-m');
-            $params                = [
-                'id' => $id,
+            $params = [
+                'id' => $latestSalaryGenerate->id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
-            // $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
+    
+            // Fetch dashboard menus
             $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
+    
+            // Prepare the data for the view
             $data['dashboardMenus'] = @$menus->original['data'];
-            $data['salary']       = $this->salaryRepository->model($params)->first();
-            
-            return $returnHTML = view('backend.dashboard.load_my_dashboard', compact('data'))->render();
-            return $returnHTML = view('backend.dashboard.loadProfileDashboard', compact('data'))->render();
+            $data['salary'] = $this->salaryRepository->model($params)->first();
+    
+            // Render the view and return the HTML
+            return view('backend.dashboard.load_my_dashboard', compact('data'))->render();
         } catch (\Throwable $th) {
+            // Return the error message for debugging
             return $th->getMessage();
         }
     }
+    
 
     public function loadCompanyDashboard($request)
     {
@@ -174,14 +193,14 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        if(isMainCompany()){
+        if (isMainCompany()) {
             return redirect()->route('saas.dashboard');
-        } 
+        }
 
         if (
-            !isMainCompany() && 
-            config('app.mood') == 'Saas' && 
-            isModuleActive('Saas') && 
+            !isMainCompany() &&
+            config('app.mood') == 'Saas' &&
+            isModuleActive('Saas') &&
             checkSingleCompanyIsDeactivated()
         ) {
             return redirect()->route('single-company.deactivated');
