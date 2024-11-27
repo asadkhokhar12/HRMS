@@ -47,7 +47,7 @@ class SalaryRepository
             _trans('payroll.Month'),
             _trans('payroll.Salary Type'),
             _trans('payroll.Calculation'),
-            _trans('payroll.Status'),
+            // _trans('payroll.Status'),
             _trans('payroll.Action'),
         ];
     }
@@ -1104,7 +1104,7 @@ class SalaryRepository
                     'month'          =>  date('F Y', strtotime($data->date)),
                     'type'           => $data->employee->payslip_type ? 'Monthly' : 'Yearly',
                     'is_calculated'  => $is_calculated,
-                    'status'     => '<span class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</span>',
+                    // 'status'     => '<span class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</span>',
                     'action'     => $button
                 ];
             }),
