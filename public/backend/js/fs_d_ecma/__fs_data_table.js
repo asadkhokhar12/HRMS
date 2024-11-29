@@ -608,7 +608,7 @@ function salaryDatatable(...values) {
     limit: $("#entries").val(),
     user_id: $("#__user_id").val(),
     search: $('input[name="search"]').val(),
-    status: $("#status").val(),
+    // status: $("#status").val(),
     department: $("#department_id").val(),
     _token: _token,
   };
@@ -619,7 +619,7 @@ function salaryDatatable(...values) {
     "month",
     "type",
     "is_calculated",
-    "status",
+    // "status",
     "action",
   ];
 
