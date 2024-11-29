@@ -196,7 +196,8 @@
                 </tr>
                 <tr >
                     <th colspan="12">Total Pay in Words</th>
-                    <th colspan="12" class="amount">{{ numberTowords(floor($data['salary']->net_salary)) }} <br> PKR</th>
+                    <th colspan="12" class="amount">
+                        {{ Str::ucfirst(numberTowords_2(floor($data['salary']->net_salary))) }} <br> PKR</th>
                 </tr>
             </thead>
         </table>

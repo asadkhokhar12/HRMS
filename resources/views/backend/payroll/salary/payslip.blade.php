@@ -56,7 +56,7 @@
                             <tbody>
                                 <tr>
                                     <td>Basic Pay</td>
-                                    <td class="text-end">{{$data['salary']->gross_salary}}</td>
+                                    <td class="text-end">{{ $data['salary']->gross_salary }}</td>
                                 </tr>
                                 {{-- <tr>
                                     <td>Travel Allowance</td>
@@ -120,7 +120,8 @@
                                 <tr>
                                     <th style="width:50%"> {{ _trans('common.Total Pay in Words') }}</th>
                                     <th style="width:50%" class="text-end">
-                                        {{ numberTowords(floor($data['salary']->net_salary)) }} <br> PKR</th>
+                                        {{ Str::ucfirst(numberTowords_2(floor($data['salary']->net_salary))) }} <br> PKR
+                                    </th>
                                 </tr>
 
                             </thead>
