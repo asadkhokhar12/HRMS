@@ -654,113 +654,168 @@ function actionButton($string, $param, $type = null)
 }
 
 if (!function_exists('numberTowords')) {
-    function numberTowords($num)
-    {
+        function numberTowords($num)
+        {
 
-        $ones = array(
-            0 => "ZERO",
-            1 => "ONE",
-            2 => "TWO",
-            3 => "THREE",
-            4 => "FOUR",
-            5 => "FIVE",
-            6 => "SIX",
-            7 => "SEVEN",
-            8 => "EIGHT",
-            9 => "NINE",
-            10 => "TEN",
-            11 => "ELEVEN",
-            12 => "TWELVE",
-            13 => "THIRTEEN",
-            14 => "FOURTEEN",
-            15 => "FIFTEEN",
-            16 => "SIXTEEN",
-            17 => "SEVENTEEN",
-            18 => "EIGHTEEN",
-            19 => "NINETEEN",
-            "01" => "ZERO ONE",
-            "02" => "ZERO TWO",
-            "03" => "ZERO THREE",
-            "04" => "ZERO FOUR",
-            "05" => "ZERO FIVE",
-            "06" => "ZERO SIX",
-            "07" => "ZERO SEVEN",
-            "08" => "ZERO EIGHT",
-            "09" => "ZERO NINE",
-        );
-        $tens = array(
-            0 => "ZERO",
-            1 => "TEN",
-            2 => "TWENTY",
-            3 => "THIRTY",
-            4 => "FORTY",
-            5 => "FIFTY",
-            6 => "SIXTY",
-            7 => "SEVENTY",
-            8 => "EIGHTY",
-            9 => "NINETY",
-        );
-        $hundreds = array(
-            "HUNDRED",
-            "THOUSAND",
-            "MILLION",
-            "BILLION",
-            "TRILLION",
-            "QUARDRILLION",
-        ); /*limit t quadrillion */
-        $num = number_format($num, 2, ".", ",");
-        $num_arr = explode(".", $num);
-        $wholenum = $num_arr[0];
-        $decnum = $num_arr[1];
-        $whole_arr = array_reverse(explode(",", $wholenum));
-        krsort($whole_arr, 1);
-        $rettxt = "";
-        foreach ($whole_arr as $key => $i) {
+            $ones = array(
+                0 => "ZERO",
+                1 => "ONE",
+                2 => "TWO",
+                3 => "THREE",
+                4 => "FOUR",
+                5 => "FIVE",
+                6 => "SIX",
+                7 => "SEVEN",
+                8 => "EIGHT",
+                9 => "NINE",
+                10 => "TEN",
+                11 => "ELEVEN",
+                12 => "TWELVE",
+                13 => "THIRTEEN",
+                14 => "FOURTEEN",
+                15 => "FIFTEEN",
+                16 => "SIXTEEN",
+                17 => "SEVENTEEN",
+                18 => "EIGHTEEN",
+                19 => "NINETEEN",
+                "01" => "ZERO ONE",
+                "02" => "ZERO TWO",
+                "03" => "ZERO THREE",
+                "04" => "ZERO FOUR",
+                "05" => "ZERO FIVE",
+                "06" => "ZERO SIX",
+                "07" => "ZERO SEVEN",
+                "08" => "ZERO EIGHT",
+                "09" => "ZERO NINE",
+            );
+            $tens = array(
+                0 => "ZERO",
+                1 => "TEN",
+                2 => "TWENTY",
+                3 => "THIRTY",
+                4 => "FORTY",
+                5 => "FIFTY",
+                6 => "SIXTY",
+                7 => "SEVENTY",
+                8 => "EIGHTY",
+                9 => "NINETY",
+            );
+            $hundreds = array(
+                "HUNDRED",
+                "THOUSAND",
+                "MILLION",
+                "BILLION",
+                "TRILLION",
+                "QUARDRILLION",
+            ); /*limit t quadrillion */
+            $num = number_format($num, 2, ".", ",");
+            $num_arr = explode(".", $num);
+            $wholenum = $num_arr[0];
+            $decnum = $num_arr[1];
+            $whole_arr = array_reverse(explode(",", $wholenum));
+            krsort($whole_arr, 1);
+            $rettxt = "";
+            foreach ($whole_arr as $key => $i) {
 
-            while (substr($i, 0, 1) == "0") {
-                $i = substr($i, 1, 5);
+                while (substr($i, 0, 1) == "0") {
+                    $i = substr($i, 1, 5);
+                }
+
+                if ($i < 20) {
+                    /* echo "getting:".$i; */
+                    $rettxt .= @$ones[$i];
+                } elseif ($i < 100) {
+                    if (substr($i, 0, 1) != "0") {
+                        $rettxt .= $tens[substr($i, 0, 1)];
+                    }
+
+                    if (substr($i, 1, 1) != "0") {
+                        $rettxt .= " " . $ones[substr($i, 1, 1)];
+                    }
+                } else {
+                    if (substr($i, 0, 1) != "0") {
+                        $rettxt .= $ones[substr($i, 0, 1)] . " " . $hundreds[0];
+                    }
+
+                    if (substr($i, 1, 1) != "0") {
+                        $rettxt .= " " . $tens[substr($i, 1, 1)];
+                    }
+
+                    if (substr($i, 2, 1) != "0") {
+                        $rettxt .= " " . $ones[substr($i, 2, 1)];
+                    }
+                }
+                if ($key > 0) {
+                    $rettxt .= " " . $hundreds[$key] . " ";
+                }
             }
-
-            if ($i < 20) {
-                /* echo "getting:".$i; */
-                $rettxt .= @$ones[$i];
-            } elseif ($i < 100) {
-                if (substr($i, 0, 1) != "0") {
-                    $rettxt .= $tens[substr($i, 0, 1)];
-                }
-
-                if (substr($i, 1, 1) != "0") {
-                    $rettxt .= " " . $ones[substr($i, 1, 1)];
-                }
-            } else {
-                if (substr($i, 0, 1) != "0") {
-                    $rettxt .= $ones[substr($i, 0, 1)] . " " . $hundreds[0];
-                }
-
-                if (substr($i, 1, 1) != "0") {
-                    $rettxt .= " " . $tens[substr($i, 1, 1)];
-                }
-
-                if (substr($i, 2, 1) != "0") {
-                    $rettxt .= " " . $ones[substr($i, 2, 1)];
+            if ($decnum > 0) {
+                $rettxt .= " and ";
+                if (@$decnum < 20) {
+                    $rettxt .= $ones[$decnum];
+                } elseif ($decnum < 100) {
+                    $rettxt .= $tens[substr($decnum, 0, 1)];
+                    $rettxt .= " " . $ones[substr($decnum, 1, 1)];
                 }
             }
-            if ($key > 0) {
-                $rettxt .= " " . $hundreds[$key] . " ";
-            }
+            return $rettxt;
         }
-        if ($decnum > 0) {
-            $rettxt .= " and ";
-            if (@$decnum < 20) {
-                $rettxt .= $ones[$decnum];
-            } elseif ($decnum < 100) {
-                $rettxt .= $tens[substr($decnum, 0, 1)];
-                $rettxt .= " " . $ones[substr($decnum, 1, 1)];
-            }
-        }
-        return $rettxt;
-    }
 }
+if (!function_exists('numberTowords_2')) {
+    
+    function numberTowords_2($num) {
+        $ones = [
+            "", "One", "Two", "Three", "Four", "Five", 
+            "Six", "Seven", "Eight", "Nine"
+        ];
+        $tens = [
+            "", "", "Twenty", "Thirty", "Forty", "Fifty", 
+            "Sixty", "Seventy", "Eighty", "Ninety"
+        ];
+        $teens = [
+            "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", 
+            "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+        ];
+    
+        $result = "";
+    
+        if ($num == 0) {
+            return "Zero";
+        }
+    
+        if ($num >= 1000) {
+            $result .= numberTowords(floor($num / 1000)) . " Thousand ";
+            $num %= 1000;
+        }
+    
+        if ($num >= 100) {
+            $result .= $ones[floor($num / 100)] . " Hundred";
+            $num %= 100;
+    
+            if ($num > 0) {
+                $result .= " and ";
+            }
+        }
+    
+        if ($num >= 20) {
+            $result .= $tens[floor($num / 10)];
+            $num %= 10;
+    
+            if ($num > 0) {
+                $result .= " " . $ones[$num];
+            }
+        } elseif ($num >= 10) {
+            $result .= $teens[$num - 10];
+        } elseif ($num > 0) {
+            $result .= $ones[$num];
+        }
+    
+        return trim($result);
+    }
+    
+    
+}
+
 
 function actionHTML($action_button)
 {
