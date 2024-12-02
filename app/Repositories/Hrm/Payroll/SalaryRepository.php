@@ -505,7 +505,11 @@ class SalaryRepository
             }
 
             DB::commit();
-            return $this->responseWithSuccess(__('Salary generated successfully.'), ['salary' => $salary]);
+            return $this->responseWithSuccess(__('Salary generated successfully.'), [
+                'data' => [
+                    'salary' => $salary
+                ]
+            ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->responseExceptionError($th->getMessage(), [], 400);
@@ -539,7 +543,6 @@ class SalaryRepository
     }
 
     public function info($params)
-
     {
         try {
             $salary_info = $this->model($params)->first();
@@ -1312,8 +1315,6 @@ class SalaryRepository
             return response()->json(['error' => true, 'message' => 'Error calculating salary: ' . $th->getMessage()], 500);
         }
     }
-
-
 
     function pay($request, $salary)
     {
