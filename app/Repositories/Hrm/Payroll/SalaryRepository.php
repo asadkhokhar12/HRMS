@@ -505,7 +505,7 @@ class SalaryRepository
             }
 
             DB::commit();
-            return $this->responseWithSuccess(__('Salary generated successfully.'), []);
+            return $this->responseWithSuccess(__('Salary generated successfully.'), ['salary' => $salary]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->responseExceptionError($th->getMessage(), [], 400);
