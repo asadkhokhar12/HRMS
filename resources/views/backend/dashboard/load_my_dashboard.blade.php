@@ -10,7 +10,7 @@
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>
                         @if ($item['title'] === _trans('dashboard.Payslip'))
-                            <a href="{{ route('hrm.payroll_salary.invoice_print', $data['salary']->id ?? '0') }}"
+                            <a href="{{ route('hrm.payroll_salary.invoice_print', '0') }}"
                                 class="btn btn-primary mt-3">Download</a>
                         @else
                             <h1 class="custom"> {{ @$item['number'] }}</h1>
