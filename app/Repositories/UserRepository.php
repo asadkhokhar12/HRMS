@@ -398,7 +398,7 @@ class UserRepository
                 $delete = _trans('common.Delete');
                 $unBanned = _trans('common.Unbanned');
                 $banned = _trans('common.Banned');
-                $registerFace = _trans('common.Register Face');
+                // $registerFace = _trans('common.Register Face');
                 // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
 
                 if (hasPermission('profile_view')) {
@@ -408,9 +408,9 @@ class UserRepository
                     $action_button .= actionButton($edit, route('user.edit', $data->id), 'profile');
                 }
 
-                if (isModuleActive('FaceAttendance') && hasPermission('registerFace')) {
-                    $action_button .= actionButton($registerFace, route('user.RegisterFace', $data->id), 'registerFace');
-                }
+                // if (isModuleActive('FaceAttendance') && hasPermission('registerFace')) {
+                //     $action_button .= actionButton($registerFace, route('user.RegisterFace', $data->id), 'registerFace');
+                // }
                 if ($data->status_id == 3) {
                     if (hasPermission('user_banned')) {
                         $action_button .= actionButton($unBanned, 'ApproveOrReject(' . $data->id . ',' . "1" . ',`dashboard/user/change-status/`,`Approve`)', 'approve');
@@ -613,7 +613,7 @@ class UserRepository
             _trans('common.ID'),
             _trans('common.Name'),
             _trans('common.Image'),
-            _trans('common.Registered Face'),
+            // _trans('common.Registered Face'),
             _trans('common.Email'),
             _trans('common.Phone'),
             _trans('common.Designation'),
@@ -923,11 +923,11 @@ class UserRepository
                     }
                     $user_image = '';
                     $user_image .= '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->avatar_id) . '" class="staff-profile-image-small" >';
-                    $registered_face = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
+                    // $registered_face = '<img data-toggle="tooltip" data-placement="top" title="' . $data->name . '" src="' . uploaded_asset($data->face_image) . '" class="staff-profile-image-small" >';
                     return [
                         'name' => $data->name . '' . @$location . '' . @$hr,
                         'avatar' => $user_image,
-                        'registered_face' => $registered_face,
+                        // 'registered_face' => $registered_face,
                         'email' => $data->email,
                         'phone' => $data->phone,
                         'department' => @$data->department->title,
