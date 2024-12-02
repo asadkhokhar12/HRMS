@@ -133,7 +133,7 @@ function usersDatatable(...values) {
     "id",
     "name",
     "avatar",
-    "registered_face",
+    // "registered_face",
     "email",
     "phone",
     "designation",
