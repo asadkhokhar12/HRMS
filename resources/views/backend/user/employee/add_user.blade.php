@@ -396,11 +396,11 @@
                         <div class="col-md-12 ">
                             <div class="form-group mb-3">
                                 <label class="form-label  mt-3"
-                                    for="speak_language">{{ _trans('common.Speak Language') }}</label>
-                                <input type="text" name="speak_language" value=""
+                                    for="tax">{{ _trans('common.Tax') }}</label>
+                                <input type="text" name="tax"
                                     class="form-control ot-form-control ot-input">
-                                @if ($errors->has('speak_language'))
-                                    <div class="error text-danger">{{ $errors->first('speak_language') }}</div>
+                                @if ($errors->has('tax'))
+                                    <div class="error text-danger">{{ $errors->first('tax') }}</div>
                                 @endif
                             </div>
 
@@ -417,6 +417,19 @@
                                     <div class="error">{{ $errors->first('attendance_method') }}</div>
                                 @endif
                             </div>
+                        </div>
+
+                        <div class="col-md-12 ">
+                            <div class="form-group mb-3">
+                                <label class="form-label  mt-3"
+                                    for="speak_language">{{ _trans('common.Speak Language') }}</label>
+                                <input type="text" name="speak_language" value=""
+                                    class="form-control ot-form-control ot-input">
+                                @if ($errors->has('speak_language'))
+                                    <div class="error text-danger">{{ $errors->first('speak_language') }}</div>
+                                @endif
+                            </div>
+
                         </div>
 
                     </div>

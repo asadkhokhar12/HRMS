@@ -63,7 +63,7 @@ class User extends Authenticatable
         'visa_number', 'visa_file_id', 'visa_expire_date',
         'insurance_number', 'insurance_file_id', 'insurance_expire_date',
         'labour_card_number', 'labour_card_file_id', 'labour_card_expire_date',
-        'attendance_method','is_free_location'
+        'attendance_method','is_free_location','tax'
     ];
 
     /**
