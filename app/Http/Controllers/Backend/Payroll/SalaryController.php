@@ -89,7 +89,7 @@ class SalaryController extends Controller
             $data['url']           = (hasPermission('salary_generate')) ? route('hrm.payroll_salary.generate') : '';
             $data['button']        = _trans('common.Generate');
 
-            $data['departments'] = $this->department->getAll();
+            // $data['departments'] = $this->department->getAll();
             return view('backend.payroll.salary.generate_modal', compact('data'));
         } catch (\Throwable $e) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -128,10 +128,11 @@ class SalaryController extends Controller
             return response()->json('fail');
         }
     }
+
     public function calculate(Request $request, $id)
     {
         try {
-            $params                = [
+            $params = [
                 'id' => $id,
                 'company_id' => $this->companyRepository->company()->id,
             ];
@@ -322,12 +323,12 @@ class SalaryController extends Controller
             $data['salary'] = $this->salaryRepository->model($params)->first();
 
             // Check if the salary is calculated
-            if ($data['salary']->is_calculated == 0) {
-                // Log and show a user-friendly error message
-                \Log::warning("Attempted to generate payslip for an uncalculated salary. ID: $id");
-                Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
-                return redirect()->back(); // Redirect the user back
-            }
+            // if ($data['salary']->is_calculated == 0) {
+            //     // Log and show a user-friendly error message
+            //     \Log::warning("Attempted to generate payslip for an uncalculated salary. ID: $id");
+            //     Toastr::error('Payslip is not available right now. Please try again later.', 'Error');
+            //     return redirect()->back(); // Redirect the user back
+            // }
             $data['employee_info'] = $this->employeeRepository->getByIdWithDetails(['id' => $data['salary']->user_id]);
 
             // Generate PDF

@@ -81,7 +81,7 @@ class DashboardController extends Controller
             // Prepare the parameters for fetching salary and menus
             $request['month'] = date('Y-m');
             $params = [
-                'id' => $latestSalaryGenerate->id,
+                'id' => $latestSalaryGenerate->id ?? 0,
                 'company_id' => $this->companyRepository->company()->id,
             ];
     

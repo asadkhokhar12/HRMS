@@ -935,6 +935,7 @@ class DashboardRepository
                 'color_class' => 'circle-primary',
                 'number' => "Rs " . number_format($totalSalary, 2),
             ];
+            
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('payroll'),
                 'title' => _trans('dashboard.Payslip'),

@@ -88,7 +88,7 @@ class UserRepository
 
     public function save($request)
     {
-
+        // dd($request);
         DB::beginTransaction();
         try {
             if (empty($request->joining_date)) {
@@ -116,6 +116,7 @@ class UserRepository
             $request['password'] = Hash::make($request->password);
             $request['country_id'] = $request->country;
             $request['employee_id'] = $request->employee_id;
+            $request['tax'] = $request->tax;
             $request['is_free_location'] = $request->is_free_location ?? 1;
             if ($request->avatar) {
                 $this->deleteImage(asset_path($request->avatar_id));

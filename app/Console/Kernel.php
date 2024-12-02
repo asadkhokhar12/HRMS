@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\GenerateSalaries;
+use App\Console\Commands\CalculateSalaries;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // 
+        GenerateSalaries::class,
+        CalculateSalaries::class
     ];
 
     /**
@@ -24,6 +27,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+        $schedule->command('salary:generate')
+            ->monthlyOn(1, '00:00') // Run on the first of every month at midnight
+            ->sendOutputTo(storage_path('logs/salary_generate.log')); // Log output to this file
+
+        $schedule->command('salary:calculate')
+            ->dailyAt('12:10')
+            ->sendOutputTo(storage_path('logs/salary_calculate.log'));
+
         // $schedule->command('inspire')->hourly();
         $schedule->command('auto:checkout')->daily();
 
@@ -44,7 +56,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
