@@ -70,7 +70,7 @@
             font-weight: bold;
             /* border-left: none; */
             border: none
-            /* border-right: none; */
+                /* border-right: none; */
         }
 
         .table td.amount,
@@ -86,12 +86,12 @@
             font-size: 10px;
             color: #6c757d;
         }
-        .title{
+
+        .title {
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: bold;
         }
-        
     </style>
 </head>
 
@@ -122,7 +122,7 @@
         </div>
 
         <!-- Earnings Table -->
-        <table class="table" >
+        <table class="table">
             <thead>
                 <tr>
                     <th>Earnings</th>
@@ -132,7 +132,7 @@
             <tbody>
                 <tr>
                     <td>Basic Pay</td>
-                    <td class="amount">{{ $data['salary']->gross_salary}}</td>
+                    <td class="amount">{{ $data['salary']->gross_salary }}</td>
                 </tr>
                 {{-- <tr>
                     <td>Travel Allowance</td>
@@ -146,7 +146,7 @@
         </table>
 
         <!-- Deductions Table -->
-        <table class="table" >
+        <table class="table">
             <thead>
                 <tr>
                     <th>Deductions</th>
@@ -186,6 +186,22 @@
                 @endif
             </tbody>
         </table>
+        @if ($data['salary']->adjust > 0)
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Adjustment</th>
+                        <th class="amount">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Adjust Amount</td>
+                        <td class="amount">{{ $data['salary']->adjust }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        @endif
 
         <!-- Total Pay -->
         <table class="table">
@@ -194,7 +210,7 @@
                     <th colspan="12">Total Pay</th>
                     <th colspan="12" class="amount">PKR {{ number_format($data['salary']->net_salary, 2) }}</th>
                 </tr>
-                <tr >
+                <tr>
                     <th colspan="12">Total Pay in Words</th>
                     <th colspan="12" class="amount">
                         {{ Str::ucfirst(numberTowords_2(floor($data['salary']->net_salary))) }} <br> PKR</th>

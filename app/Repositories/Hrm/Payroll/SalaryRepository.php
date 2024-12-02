@@ -346,47 +346,166 @@ class SalaryRepository
     }
 
 
+    // public function generate($request)
+    // {
+    //     // dd($request);
+    //     $validator = Validator::make(\request()->all(), [
+    //         'month' => 'required',
+    //         'department' => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return $this->responseWithError(__('Required field missing'), $validator->errors(), 400);
+    //     }
+    //     DB::beginTransaction();
+    //     try {
+    //         $where  = [
+    //             'company_id' => auth()->user()->company_id
+    //         ];
+    //         if (@$request->department) {
+    //             $where[] = ['department_id', $request->department];
+    //         }
+    //         $users    = User::where($where)->pluck('id');
+    //         $salary = $this->model->where('company_id', auth()->user()->company_id)->whereMonth('date', date('m', strtotime($request->month)))->whereIn('user_id', $users)->get();
+    //         if (!blank($salary)) {
+    //             return $this->responseWithError(_trans('message.Salary already generated'), [], 400);
+    //         }
+
+    //         foreach ($users as $key => $value) {
+    //             $user = User::with('Leave')->where('id', $value)->first();
+    //             if (!blank($user)) {
+    //                 $salary                 = new SalaryGenerate();
+    //                 $salary->user_id = $user->id;
+    //                 $salary->company_id = auth()->user()->company_id;
+    //                 $salary->date = date('Y-m-d', strtotime($request->month));
+    //                 $salary->amount = $user->basic_salary;
+    //                 $salary->gross_salary = $user->basic_salary;
+    //                 $salary->created_by = auth()->user()->id;
+    //                 $salary->updated_by = auth()->user()->id;
+    //                 $salary->net_salary = $user->basic_salary;
+    //                 $salary->save();
+    //             }
+    //         }
+    //         DB::commit();
+    //         return $this->responseWithSuccess(_trans('message.Salary generated successfully.'), $salary);
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         return $this->responseExceptionError($th->getMessage(), [], 400);
+    //     }
+    // }
+
     public function generate($request)
     {
-        $validator = Validator::make(\request()->all(), [
-            'month' => 'required',
+        $validator = Validator::make($request->all(), [
+            'month' => 'required|date_format:Y-m', // Validate proper month format
             'department' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->responseWithError(__('Required field missing'), $validator->errors(), 400);
         }
+
         DB::beginTransaction();
         try {
-            $where  = [
+            $where = [
                 'company_id' => auth()->user()->company_id
             ];
-            if (@$request->department) {
+            if (!empty($request->department)) {
                 $where[] = ['department_id', $request->department];
             }
-            $users    = User::where($where)->pluck('id');
-            $salary = $this->model->where('company_id', auth()->user()->company_id)->whereMonth('date', date('m', strtotime($request->month)))->whereIn('user_id', $users)->get();
-            if (!blank($salary)) {
-                return $this->responseWithError(_trans('message.Salary already generated'), [], 400);
+
+            $users = User::where($where)->pluck('id');
+
+            // Get the last day of the selected month
+            $date = new \DateTime($request->month . '-01');
+            $lastDayOfMonth = $date->format('Y-m-t'); // Format: YYYY-MM-DD
+
+            $existingSalaries = $this->model->where('company_id', auth()->user()->company_id)
+                ->whereDate('date', $lastDayOfMonth) // Check if salary already generated for the exact date
+                ->whereIn('user_id', $users)
+                ->exists();
+
+            if ($existingSalaries) {
+                return $this->responseWithError(__('Salary already generated'), [], 400);
             }
 
-            foreach ($users as $key => $value) {
-                $user = User::with('Leave')->where('id', $value)->first();
-                if (!blank($user)) {
-                    $salary                 = new SalaryGenerate();
+            foreach ($users as $userId) {
+                $user = User::with('Leave')->find($userId);
+                if ($user) {
+                    $salary = new SalaryGenerate();
                     $salary->user_id = $user->id;
                     $salary->company_id = auth()->user()->company_id;
-                    $salary->date = date('Y-m-d', strtotime($request->month));
-                    $salary->amount = $user->basic_salary;
-                    $salary->gross_salary = $user->basic_salary;
+                    $salary->date = $lastDayOfMonth; // Save the last day of the month
+                    $salary->amount = $user->basic_salary ?? 0; // Default to 0 if null
+                    $salary->gross_salary = $user->basic_salary ?? 0;
+                    $salary->net_salary = $user->basic_salary ?? 0;
                     $salary->created_by = auth()->user()->id;
                     $salary->updated_by = auth()->user()->id;
-                    $salary->net_salary = $user->basic_salary;
                     $salary->save();
                 }
             }
+
             DB::commit();
-            return $this->responseWithSuccess(_trans('message.Salary generated successfully.'), $salary);
+            return $this->responseWithSuccess(__('Salary generated successfully.'), []);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->responseExceptionError($th->getMessage(), [], 400);
+        }
+    }
+
+    public function generateWithCronJob($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'month' => 'required|date_format:Y-m', // Validate proper month format
+            'department' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseWithError(__('Required field missing'), $validator->errors(), 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            $where = [
+                'company_id' => 1
+            ];
+            if (!empty($request->department)) {
+                $where[] = ['department_id', $request->department];
+            }
+
+            $users = User::where($where)->pluck('id');
+
+            // Get the last day of the selected month
+            $date = new \DateTime($request->month . '-01');
+            $lastDayOfMonth = $date->format('Y-m-t'); // Format: YYYY-MM-DD
+
+            $existingSalaries = $this->model->where('company_id', 1)
+                ->whereDate('date', $lastDayOfMonth) // Check if salary already generated for the exact date
+                ->whereIn('user_id', $users)
+                ->exists();
+
+            if ($existingSalaries) {
+                return $this->responseWithError(__('Salary already generated'), [], 400);
+            }
+
+            foreach ($users as $userId) {
+                $user = User::with('Leave')->find($userId);
+                if ($user) {
+                    $salary = new SalaryGenerate();
+                    $salary->user_id = $user->id;
+                    $salary->company_id = 1;
+                    $salary->date = $lastDayOfMonth; // Save the last day of the month
+                    $salary->amount = $user->basic_salary ?? 0; // Default to 0 if null
+                    $salary->gross_salary = $user->basic_salary ?? 0;
+                    $salary->net_salary = $user->basic_salary ?? 0;
+                    $salary->created_by = 1;
+                    $salary->updated_by = 1;
+                    $salary->save();
+                }
+            }
+
+            DB::commit();
+            return $this->responseWithSuccess(__('Salary generated successfully.'), []);
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->responseExceptionError($th->getMessage(), [], 400);
@@ -681,6 +800,161 @@ class SalaryRepository
         }
     }
 
+    public function infoCronJob($params)
+    {
+        try {
+            // Fetch salary information
+            $salary_info = $this->model($params)->first();
+            if (!$salary_info) {
+                throw new \Exception("Salary information not found.");
+            }
+
+            $date = $salary_info->date;
+            $user = $salary_info->employee;
+
+            // Determine weekends and holidays based on joining date
+            if (strtotime($user->joining_date) > strtotime($date)) {
+                $weekends = $this->join_weekends($user->joining_date);
+                $holiday = $this->holiday($date, $weekends['weekends']);
+            } else {
+                $weekends = $this->weekends($date);
+                $holiday = $this->holiday($date, $weekends['weekends']);
+            }
+
+            // Total working days and leaves
+            $total_leave = $this->approveLeaveOfMonth($user->id, date('Y-m', strtotime($date)));
+            $total_working_days = count($weekends['workdays']) - count($holiday) - $total_leave;
+            $workable_days = count($weekends['workdays']);
+
+            // Attendance data
+            $raw = DB::table('attendances')
+                ->where('user_id', $user->id)
+                ->whereMonth('date', date('m', strtotime($date)));
+
+            $checkinAtt = $raw->orderBy('id', 'asc')->groupBy('date')->get();
+            $total_present = $checkinAtt->count();
+            $total_absent = $total_working_days - $total_present;
+
+            // Modified Late and Half-day calculations using late_time field
+            $all_lates = $raw->where('in_status', 'L')->get();
+
+            // Filter half-days based on late_time (assuming late_time is in minutes)
+            $half_day_entries = $all_lates->filter(function ($entry) {
+                return $entry->late_time >= 60 && $entry->late_time < 240; // Between 1 to 4 hours
+            });
+
+            // Count half days
+            $half_day_count = $half_day_entries->count();
+
+            // Calculate remaining lates (excluding half days)
+            $remaining_lates = $all_lates->filter(function ($entry) {
+                return $entry->late_time < 60; // Less than 1 hour late
+            })->count();
+
+            // Calculate deductions
+            $late_deductions_floor = floor($remaining_lates / 3); // 3 lates = 1 day
+            $total_late_deductions = round($late_deductions_floor, 2);
+
+
+            $total_half_day_deductions = floor($half_day_count / 2);  // 2 half days = 1 full day deduction
+
+            // Early leave count (unchanged)
+            $total_late = $remaining_lates; // Update total_late to exclude half-days
+            $total_early = $raw->where('out_status', 'LE')->distinct('date')->count();
+
+            // Calculate salary deductions
+            $per_day_salary = $user->basic_salary / $total_working_days;
+
+            $late_deductions = $total_late_deductions * $per_day_salary;
+            $half_day_deductions = $total_half_day_deductions * $per_day_salary;
+
+            $total_deduction_days = $total_late_deductions + $total_half_day_deductions;
+
+            // Leave deductions
+            $leave_cuts = $this->getLeave($date, $user, $per_day_salary, $total_absent);
+
+            // Advance salary deductions
+            $advance_salary = AdvanceSalary::with('payment', 'advance_type')
+                ->where('status_id', 5)
+                ->where('user_id', $user->id)
+                ->whereMonth('recover_from', date('m', strtotime($date)));
+
+            $installment = $advance_salary->clone()->where('recovery_mode', 1)->sum('installment_amount');
+
+            //onetime salary
+            $onetime = $advance_salary->clone()->where('recovery_mode', 2)->sum('amount');
+
+            // Commission calculations
+            $commission = SalarySetupDetails::with('commission:id,type,name')
+                ->where('status_id', 1)
+                ->where('user_id', $user->id)
+                ->get();
+
+            $addition = 0;
+            $deduction = 0;
+            $addition_detail = [];
+            $deduction_detail = [];
+
+            foreach ($commission as $value) {
+                $amount = $value->amount_type == 1
+                    ? $value->amount
+                    : (($value->amount / 100) * $user->basic_salary);
+
+                if ($value->commission->type == 1) {
+                    $addition += $amount;
+                    $addition_detail[] = [
+                        'type' => $value->commission->type,
+                        'amount_type' => $value->amount_type,
+                        'amount' => $amount,
+                        'old_amount' => $value->amount,
+                        'name' => $value->commission->name,
+                    ];
+                } else {
+                    $deduction += $amount;
+                    $deduction_detail[] = [
+                        'type' => $value->commission->type,
+                        'amount_type' => $value->amount_type,
+                        'amount' => $amount,
+                        'old_amount' => $value->amount,
+                        'name' => $value->commission->name,
+                    ];
+                }
+            }
+
+            $tax = $user->tax;
+
+            // Final salary calculation
+            $net_salary = round(($user->basic_salary + $addition) - ($tax + $deduction + $leave_cuts + $installment + $onetime + $total_deduction_days * $per_day_salary), 2);
+
+            return [
+                'tax' => $tax,
+                'workable_days' => $workable_days,
+                'total_working_days' => $total_working_days,
+                'total_present' => $total_present,
+                'total_absent' => $total_absent,
+                'total_late' => $total_late,
+                'total_early' => $total_early,
+                'late_deductions' => $late_deductions,
+                'half_day_deductions' => $half_day_deductions,
+                'total_deduction_days' => $total_deduction_days,
+                'half_day_count' => $half_day_count,
+                'per_day_salary' => $per_day_salary,
+                'advance_salary' => $advance_salary->get(),
+                'total_leave' => $total_leave,
+                'total_holiday' => count($holiday),
+                'leave_cuts' => $leave_cuts,
+                'installment' => $installment,
+                'onetime' => $onetime,
+                'addition' => $addition,
+                'deduction' => $deduction,
+                'addition_detail' => $addition_detail,
+                'deduction_detail' => $deduction_detail,
+                'net_salary' => $net_salary,
+            ];
+        } catch (\Throwable $th) {
+            return $this->responseExceptionError($th->getMessage(), [], 400);
+        }
+    }
 
 
     // public function info($params)
@@ -885,7 +1159,7 @@ class SalaryRepository
             $salary_info->allowance_details = $info['addition_detail'];
             $salary_info->deduction_details = $info['deduction_detail'];
             $salary_info->absent_amount = $info['leave_cuts'];
-           
+
             $salary_info->net_salary = $salary_info->amount;
             $salary_info->adjust = floatval($request->adjust);
             $salary_info->is_calculated = 1;
@@ -931,6 +1205,115 @@ class SalaryRepository
             return $this->responseExceptionError($th->getMessage(), [], 400);
         }
     }
+
+    public function calculateWithCronjob($params)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Debugging: Check if the model is returning the correct data
+            $salary_info = $this->model($params)->first();
+            if (!$salary_info) {
+                return response()->json(['error' => true, 'message' => 'Salary info not found for user.'], 404);
+            }
+
+            // Debugging: Ensure that infoCronJob is returning valid data
+            $info = $this->infoCronJob($params);
+            if (empty($info)) {
+                return response()->json(['error' => true, 'message' => 'Invalid salary calculation data.'], 400);
+            }
+
+            // Debugging: Check the content of $info
+            Log::info('Salary calculation info:', $info->getData());
+
+            // Assign values from $info to $salary_info
+            $salary_info->tax = floatval($info['tax']);
+            $salary_info->late_deductions_amount = round($info['late_deductions'], 2);
+            $salary_info->half_day_deductions_amount = round($info['half_day_deductions'], 2);
+            $salary_info->amount = floatval($info['net_salary']);
+            $salary_info->due_amount = 0;
+            $salary_info->total_working_day = $info['total_working_days'];
+            $salary_info->present = $info['total_present'];
+            $salary_info->absent = $info['total_absent'];
+            $salary_info->late = $info['total_late'];
+            $salary_info->left_early = $info['total_early'];
+            $salary_info->allowance_amount = $info['addition'];
+            $salary_info->allowance_details = $info['addition_detail'];
+            $salary_info->deduction_details = $info['deduction_detail'];
+            $salary_info->absent_amount = $info['leave_cuts'];
+
+            $salary_info->net_salary = $salary_info->amount;
+            $salary_info->adjust = 0;
+            $salary_info->is_calculated = 0;
+            $salary_info->advance_amount = $info['installment'] + $info['onetime'];
+            $salary_info->advance_details = $info['advance_salary'];
+            $salary_info->deduction_amount = $salary_info->tax + $salary_info->late_deductions_amount + $salary_info->half_day_deductions_amount + $salary_info->absent_amount + $salary_info->advance_amount;
+
+            // Debugging: Check the salary info before saving
+            \Log::info('Salary Info to be saved:', $salary_info->toArray()); // Ensure this is an array for logging
+
+            // Save the salary information
+            $salary_info->save();
+
+            // Debugging: Check if the save operation was successful
+            if ($salary_info->wasChanged()) {
+                Log::info("Salary for user {$salary_info->id} has been saved.");
+            } else {
+                Log::warning("Salary for user {$salary_info->id} was not saved.");
+            }
+
+            // Handle advance salary deductions if any
+            if ($salary_info->advance_amount > 0) {
+                foreach ($salary_info->advance_details as $key => $value) {
+                    $advance = AdvanceSalary::find($value['id']);
+                    if (!$advance) {
+                        \Log::warning("Advance salary record not found for ID: {$value['id']}");
+                        continue;
+                    }
+
+                    $get_amount = $advance->recovery_mode == 1 ? $advance->installment_amount : $advance->amount;
+                    $advance->due_amount = $advance->due_amount - $get_amount;
+                    $advance->paid_amount = $advance->paid_amount + $get_amount;
+                    $advance->updated_by = 1;
+
+                    if ($advance->due_amount <= 0) {
+                        $advance->pay = 8;
+                        $advance->return_status = 23;
+                    } else {
+                        $advance->return_status = 21;
+                    }
+
+                    $advance->save();
+
+                    // Log the advance processing
+                    \Log::info("Advance processed for user {$advance->user_id}: {$get_amount}");
+
+                    // Log the advance salary details
+                    $advanceSalaryLog = new AdvanceSalaryLog();
+                    $advanceSalaryLog->advance_salary_id = $advance->id;
+                    $advanceSalaryLog->is_pay = 1;
+                    $advanceSalaryLog->amount = $get_amount;
+                    $advanceSalaryLog->due_amount = $advance->due_amount;
+                    $advanceSalaryLog->user_id = $advance->user_id;
+                    $advanceSalaryLog->payment_note = 'Payment';
+                    $advanceSalaryLog->created_by = 1;
+                    $advanceSalaryLog->updated_by = 1;
+                    $advanceSalaryLog->save();
+                }
+            }
+
+            // Commit the transaction
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Salary generated successfully', 'data' => $salary_info]);
+        } catch (\Throwable $th) {
+            // Rollback transaction on error
+            DB::rollBack();
+            \Log::error('Error calculating salary:', ['error' => $th->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Error calculating salary: ' . $th->getMessage()], 500);
+        }
+    }
+
+
 
     function pay($request, $salary)
     {

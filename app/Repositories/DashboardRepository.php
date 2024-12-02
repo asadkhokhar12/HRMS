@@ -935,12 +935,12 @@ class DashboardRepository
                 'color_class' => 'circle-primary',
                 'number' => "Rs " . number_format($totalSalary, 2),
             ];
-            $data['today'][] = [
-                'image' => $this->getNewStatisticsImage('payroll'),
-                'title' => _trans('dashboard.Payslip'),
-                'color_class' => 'circle-primary',
-                // 'number' => "Rs " . number_format($totalSalary, 2),
-            ];
+            // $data['today'][] = [
+            //     'image' => $this->getNewStatisticsImage('payroll'),
+            //     'title' => _trans('dashboard.Payslip'),
+            //     'color_class' => 'circle-primary',
+            //     // 'number' => "Rs " . number_format($totalSalary, 2),
+            // ];
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {

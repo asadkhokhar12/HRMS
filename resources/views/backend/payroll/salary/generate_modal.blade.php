@@ -13,18 +13,18 @@
                         <div class="col-md-12 form-group mb-3">
                             <label class="form-label">{{ _trans('common.Department') }}</label>
                             <select id="department" class="form-select mb-3 modal_select2">
-                                <option value="">{{ _trans('common.Department') }}</option>
-                                <option value="0">{{ _trans('common.All') }}</option>
-                                @foreach ($data['departments'] as $department)
+                                {{-- <option value="" disabled>{{ _trans('common.Department') }}</option> --}}
+                                <option value="0" selected>{{ _trans('common.All') }}</option>
+                                {{-- @foreach ($data['departments'] as $department)
                                     <option value="{{ $department->id }}">{{ $department->title }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                             <div class="error_show_department"></div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">{{ _trans('common.Date') }}</label>
-                            <input type="date" class="form-control ot-form-control ot-input" id="month" />
+                            <input type="month" class="form-control ot-form-control ot-input" id="month" />
                             <div class="error_show_month"></div>
 
                         </div>
