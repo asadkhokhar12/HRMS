@@ -27,7 +27,7 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
-        // return Role::where('company_id', auth()->user()->company_id)->get();
+        // return Role::where('company_id', 1)->get();
         // return $this->role->table($request);
         if ($request->ajax()) {
             return $this->role->table($request);

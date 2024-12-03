@@ -2,9 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Payroll\SalaryGenerate;
 use App\Repositories\Hrm\Payroll\SalaryRepository;
 
 class CalculateSalaries extends Command
@@ -36,52 +39,50 @@ class CalculateSalaries extends Command
      *
      * @return int
      */
+
     public function handle()
     {
-        try {
-            // Get all users
-            $users = DB::table('users')->get();
+        $hasErrors = false;
 
-            // Iterate over each user and process their salary
-            foreach ($users as $user) {
-                // Fetch the latest salary record for the user
-                $latestSalaryGenerate = DB::table('salary_generates')
-                    ->where('user_id', $user->id)
-                    ->latest()
-                    ->first();
+        // Get all users
+        $users = User::all();
 
-                // If no salary found for the user, skip this iteration (optional)
-                if (!$latestSalaryGenerate) {
-                    $this->info("No salary record found for user: {$user->id}");
-                    continue;
-                }
+        foreach ($users as $user) {
+            // Fetch the latest salary_generate record for this user
+            $latestSalaryGenerate = DB::table('salary_generates')->where('user_id', $user->id)
+                ->latest('id') // Sort by 'id' to get the latest record
+                ->first();
 
-                // Prepare the parameters for the salary calculation
-                $params = [
-                    'id' => $latestSalaryGenerate->id ?? 0,
-                    'company_id' => 1,
-                ];
+                Log::info($user->company_id); // or use dd($info);
 
-                // Handle the response properly
-                $response = $this->salaryRepository->calculateWithCronjob($params);
-
-                // Check if the response is a JsonResponse
-                if ($response instanceof \Illuminate\Http\JsonResponse) {
-                    
-                    $content = $response->getData(true); // Decode JSON response into an array
-                    if ($response->getStatusCode() === 200) {
-                        $this->info("Salaries calculated successfully for user: {$user->id}");
-                    } else {
-                        $this->error("Error calculating salary for user {$user->id}: " . $content['message']);
-                    }
-                } else {
-                    $this->error("Unexpected response format for user {$user->id}");
-                }
+            if (!$latestSalaryGenerate) {
+                $this->info("No salary record found for user: {$user->id}");
+                continue;
             }
-        } catch (\Exception $e) {
-            $this->error('An error occurred: ' . $e->getMessage());
+
+            // Prepare parameters for the salary calculation
+            $params = [
+                'id' => $latestSalaryGenerate->id,
+                'company_id' => $latestSalaryGenerate->company_id ?? 1, // Use the company_id from the record, fallback to 1
+            ];
+
+            // Call the calculateWithCronJob method and handle the response
+            $response = $this->salaryRepository->calculateWithCronJob($params);
+
+            if (is_array($response) && isset($response['message'])) {
+                if ($response['message'] === 'success') {
+                    $this->info("Salary calculated successfully for user: {$user->id}");
+                } else {
+                    $this->error("Error calculating salary for user {$user->id}: " . ($response['error'] ?? 'Unknown error'));
+                    $hasErrors = true;
+                }
+            } else {
+                $this->error("Unexpected response for user {$user->id}: " . json_encode($response));
+                $hasErrors = true;
+            }
         }
 
-        return 0;
+        // Return 0 for success or 1 for failure based on errors
+        return $hasErrors ? 1 : 0;
     }
 }

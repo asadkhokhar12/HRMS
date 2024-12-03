@@ -88,7 +88,7 @@ class DepositCategoryRepository
     {
         $category = $this->model([
             'name' => $request->name,
-            'company_id' => auth()->user()->company_id,
+            'company_id' => 1,
             'is_income' => intval($request->is_income) ? 1 : 0,
         ])->first();
         if ($category) {
@@ -96,7 +96,7 @@ class DepositCategoryRepository
         }
         try {
             $category             = new $this->model;
-            $category->company_id = auth()->user()->company_id;
+            $category->company_id = 1;
             $category->name       = $request->name;
             $category->is_income  = $request->is_income ? 1 : 0;
             $category->status_id  = $request->status;
@@ -199,11 +199,11 @@ class DepositCategoryRepository
     {
         try {
             if (@$request->action == 'active') {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Category activate successfully.'), $category);
             }
             if (@$request->action == 'inactive') {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Category inactivate successfully.'), $category);
             }
             return $this->responseWithError(_trans('message.Category failed'), [], 400);
@@ -217,7 +217,7 @@ class DepositCategoryRepository
     {
         try {
             if (@$request->ids) {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Category delete successfully.'), $category);
             } else {
                 return $this->responseWithError(_trans('message.Category not found'), [], 400);

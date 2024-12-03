@@ -26,7 +26,7 @@ class CompanyConfigRepository
                 if($value || $value == '0'){
                     CompanyConfig::updateOrCreate(
                         [
-                            'company_id' => auth()->user()->company_id,
+                            'company_id' => 1,
                             'key' => $key
                         ], [
                             'key' => $key,

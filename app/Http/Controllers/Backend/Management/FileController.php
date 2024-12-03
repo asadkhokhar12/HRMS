@@ -29,7 +29,7 @@ class FileController extends Controller
         try {
             $result       = $this->projectService->where([
                 'id' => $request->project_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Create File');
@@ -87,7 +87,7 @@ class FileController extends Controller
 
             $result       = $this->fileService->where([
                 'id' => $request->file_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
                 'project_id' => $request->project_id,
             ])->first();
             if (@$result) {

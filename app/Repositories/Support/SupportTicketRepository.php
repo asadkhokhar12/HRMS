@@ -240,7 +240,7 @@ class SupportTicketRepository
     }
 
     function table($request){
-        $data = $this->support->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->support->query()->where('company_id', 1);
 
         // individual support ticket
         if (!hasPermission('support_read_all') && hasPermission('support_read')) {
@@ -308,7 +308,7 @@ class SupportTicketRepository
     {
         try {
             if (@$request->ids) {
-                $support = $this->support->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $support = $this->support->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Support Ticket delete successfully.'), $support);
             } else {
                 return $this->responseWithError(_trans('message.Support Ticket not found'), [], 400);

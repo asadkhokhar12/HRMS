@@ -42,7 +42,7 @@ class AppraisalService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->from && $request->to) {
             $files = $files->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -112,7 +112,7 @@ class AppraisalService extends BaseService
                 $appraisal->name                     = $request->title;
                 $appraisal->date                     = $request->date ?? date('Y-m-d');
                 $appraisal->user_id                  = $request->user_id;
-                $appraisal->company_id               = auth()->user()->company_id;
+                $appraisal->company_id               = 1;
                 $appraisal->added_by                 = auth()->id();
                 if ($request->has('rating')) {
                     foreach ($request->get('rating') as $key => $value) {
@@ -140,7 +140,7 @@ class AppraisalService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $appraisal = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $appraisal = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$appraisal) {
                 return $this->responseWithError(_trans('message.Appraisal not found'), 'id', 404);
             }
@@ -175,7 +175,7 @@ class AppraisalService extends BaseService
 
     function delete($id)
     {
-        $appraisal = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $appraisal = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$appraisal) {
             return $this->responseWithError(_trans('message.Appraisal not found'), 'id', 404);
         }
@@ -192,7 +192,7 @@ class AppraisalService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->ids) {
-                $appraisal = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $appraisal = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 if ($appraisal) {
                     return $this->responseWithSuccess(_trans('message.Appraisal activate successfully.'), $appraisal);
                 } else {

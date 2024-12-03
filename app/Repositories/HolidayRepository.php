@@ -143,7 +143,7 @@ class HolidayRepository
     {
         try {
             if (@$request->ids) {
-                $holidays = $this->holiday->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $holidays = $this->holiday->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Holiday delete successfully.'), $holidays);
             }else {
                 return $this->responseWithError(_trans('message.Holiday not found'), [], 400);                

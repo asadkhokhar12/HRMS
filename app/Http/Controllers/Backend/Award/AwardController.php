@@ -61,7 +61,7 @@ class AwardController extends Controller
         try {
             $data['title']     = _trans('award.Create Award');
             $data['url']      = (hasPermission('award_store')) ? route('award.store') : '';
-            $data['award_types']  = dbTable('award_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['award_types']  = dbTable('award_types', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.award.create', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -104,7 +104,7 @@ class AwardController extends Controller
             $data['title']     = _trans('award.View Award');
             $data['view']      = $this->awardService->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (!$data['view']) {
                 Toastr::error(_trans('response.Award not found.'), 'Error');
@@ -129,14 +129,14 @@ class AwardController extends Controller
             $data['title']     = _trans('award.Edit Award');
             $data['edit']      = $this->awardService->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (!$data['edit']) {
                 Toastr::error(_trans('response.Award not found.'), 'Error');
                 return redirect()->back();
             }
             $data['url']      = (hasPermission('award_update')) ? route('award.update', $id) : '';
-            $data['award_types']  = dbTable('award_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['award_types']  = dbTable('award_types', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.award.edit', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');

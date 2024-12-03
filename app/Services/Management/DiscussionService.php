@@ -28,7 +28,7 @@ class DiscussionService extends BaseService
     function discussionDatatable($request, $id){
         $discussions =  $this->model->query()->with('comments')->where([
             'project_id' => $id,
-            'company_id' => auth()->user()->company_id,
+            'company_id' => 1,
         ]);
         if ($request->search) {
             $discussions = $discussions->where('subject', 'like', '%' . $request->search . '%');
@@ -96,7 +96,7 @@ class DiscussionService extends BaseService
                 return $this->responseWithError(__('Project not found'), [], 400);
             }
             $data = [
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
                 'project_id' => $request->project_id,
                 'subject' => $request->subject,
                 'description' => $request->description,
@@ -105,7 +105,7 @@ class DiscussionService extends BaseService
                 'last_activity' => date('Y-m-d H:i:s'),
             ];
             $discussion = $this->model->create($data);            
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Created Discussion')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Created Discussion')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Discussion created successfully.'), $discussion);
         } catch (\Throwable $th) {
@@ -129,7 +129,7 @@ class DiscussionService extends BaseService
         try {
             $discussion = $this->model->where([
                 'id' => $request->discussion_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (!$discussion) {
                 return $this->responseWithError(__('Discussion not found'), [], 400);
@@ -140,13 +140,13 @@ class DiscussionService extends BaseService
                 $comment_id = $request->comment_id;
             }
             $comment = new \App\Models\Management\DiscussionComment;
-            $comment->company_id = auth()->user()->company_id;
+            $comment->company_id = 1;
             $comment->discussion_id = $request->discussion_id;
             $comment->comment_id = $comment_id;
             $comment->description = $request->comment;
             $comment->user_id = auth()->user()->id;
             $comment->save();
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $discussion->project_id, auth()->id(), 'Created Discussion Comments')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $discussion->project_id, auth()->id(), 'Created Discussion Comments')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Comment created successfully.'), $comment);
         } catch (\Throwable $th) {
@@ -157,14 +157,14 @@ class DiscussionService extends BaseService
 
     function delete($id)
     {
-        $discussion = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $discussion = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$discussion) {
             return $this->responseWithError(_trans('message.Discussion not found'), 'id', 404);
         }
         try {
             $discussion->comments()->delete();
             $discussion->delete();            
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $discussion->project_id, auth()->id(), 'Deleted Discussion')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $discussion->project_id, auth()->id(), 'Deleted Discussion')->save();
             return $this->responseWithSuccess(_trans('message.Discussion Delete successfully.'), $discussion);
         } catch (\Throwable $th) {
             return $this->responseExceptionError($th->getMessage(), [], 400);
@@ -175,7 +175,7 @@ class DiscussionService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($category as $file){
                     $file->comments()->delete();
                     $file->delete(); 

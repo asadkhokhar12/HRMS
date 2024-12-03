@@ -183,7 +183,7 @@ class MeetingRepository
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->from && $request->to) {
             $files = $files->whereBetween('date', start_end_datetime($request->from, $request->to));
         }
@@ -526,7 +526,7 @@ class MeetingRepository
 
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             $meeting      = $this->model->where($params)->first();
             if (!$meeting) {
@@ -577,7 +577,7 @@ class MeetingRepository
 
     function delete($id)
     {
-        $meeting = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $meeting = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$meeting) {
             return $this->responseWithError(_trans('message.Data not found'), 'id', 404);
         }

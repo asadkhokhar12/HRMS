@@ -24,7 +24,7 @@ class NoteController extends Controller
         try {
             $result       = $this->projectService->where([
                 'id' => $request->project_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Create Note');
@@ -61,7 +61,7 @@ class NoteController extends Controller
         try {
             $result       = $this->noteService->where([
                 'id' => $request->note_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Update Note');

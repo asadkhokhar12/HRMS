@@ -98,7 +98,7 @@ class AdvanceTypeRepository
 
     public function datatable()
     {
-        $content = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->where('company_id', 1);
         return datatables()->of($content->latest()->get())
             ->addColumn('action', function ($data) {
                 $action_button = '';
@@ -179,7 +179,7 @@ class AdvanceTypeRepository
     {
 
         // Log::info($request);
-        $data = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->where('company_id', 1);
         if ($request->from && $request->to) {
             $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -230,11 +230,11 @@ class AdvanceTypeRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $advance_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $advance_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Advance type activate successfully.'), $advance_type);
             }
             if (@$request->action == 'inactive') {
-                $advance_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $advance_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Advance type inactivate successfully.'), $advance_type);
             }
             return $this->responseWithError(_trans('message.Advance type failed'), [], 400);
@@ -248,7 +248,7 @@ class AdvanceTypeRepository
     {
         try {
             if (@$request->ids) {
-                $advance_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $advance_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Advance type Delete successfully.'), $advance_type);
             } else {
                 return $this->responseWithError(_trans('message.Advance type not found'), [], 400);

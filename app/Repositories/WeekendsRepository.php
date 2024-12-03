@@ -154,7 +154,7 @@ class WeekendsRepository
     function newUpdate($request, $id)
     {
         try {
-            $weekendModel = $this->model->where('company_id', auth()->user()->company_id)->find($id);
+            $weekendModel = $this->model->where('company_id', 1)->find($id);
             if ($this->isExistsWhenUpdate($weekendModel,$this->model, 'name', $request->name)) {
                 $weekendModel->is_weekend = $request->is_weekend;
                 $weekendModel->status_id = $request->status;

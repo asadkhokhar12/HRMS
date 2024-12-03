@@ -108,7 +108,7 @@ class ExpenseRepository
     {
         $params = [];
 
-        $content = $this->model->query()->with('user:id,name', 'category:id,name', 'payment:id,name,class', 'status:id,name,class')->where('company_id', auth()->user()->company_id)
+        $content = $this->model->query()->with('user:id,name', 'category:id,name', 'payment:id,name,class', 'status:id,name,class')->where('company_id', 1)
             ->select('company_id', 'date', 'pay', 'status_id', 'income_expense_category_id', 'id', 'user_id', 'created_at', 'amount', 'request_amount');
         if ($request->date) {
             $rawDate = explode('-', $request->date);
@@ -325,7 +325,7 @@ class ExpenseRepository
     function table($request)
     {
         $params = [];
-        $data = $this->model->query()->with('user:id,name', 'category:id,name', 'payment:id,name,class', 'status:id,name,class')->where('company_id', auth()->user()->company_id)
+        $data = $this->model->query()->with('user:id,name', 'category:id,name', 'payment:id,name,class', 'status:id,name,class')->where('company_id', 1)
             ->select('company_id', 'date', 'pay', 'status_id', 'income_expense_category_id', 'id', 'user_id', 'created_at', 'amount', 'request_amount', 'attachment');
         if ($request->payment) {
             $params['pay'] = $request->payment;
@@ -402,7 +402,7 @@ class ExpenseRepository
         DB::beginTransaction();
         try {
             if (@$request->ids) {
-                $expenses = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $expenses = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($expenses as $expense) {
                     if ($expense->attachment) {
                         $this->deleteImage(asset_path($expense->attachment));
@@ -431,8 +431,8 @@ class ExpenseRepository
             foreach ($thisMonthArray as $key => $item) {
                 $day = Carbon::parse($item);
                 $date_array[$key] = $day->format('d');
-                $income[] = Expense::where('company_id', auth()->user()->company_id)->where('pay', 8)->where('status_id', 5)->whereDate('date', $item)->sum('amount');
-                $expense[] = Deposit::where('company_id', auth()->user()->company_id)->where('pay', 8)->where('status_id', 5)->whereDate('date', $item)->sum('amount');
+                $income[] = Expense::where('company_id', 1)->where('pay', 8)->where('status_id', 5)->whereDate('date', $item)->sum('amount');
+                $expense[] = Deposit::where('company_id', 1)->where('pay', 8)->where('status_id', 5)->whereDate('date', $item)->sum('amount');
             }
             $data['categories'] = [
                 [

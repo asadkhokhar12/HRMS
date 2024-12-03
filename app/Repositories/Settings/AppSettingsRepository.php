@@ -447,7 +447,7 @@ class AppSettingsRepository
     }
 
     public function getDocumentRequest(){
-        $query = $this->documentRequest->where(['company_id' => auth()->user()->company_id, 'user_id' => auth()->user()->id]);
+        $query = $this->documentRequest->where(['company_id' => 1, 'user_id' => auth()->user()->id]);
         $query = $query->latest()->get();
         $data['lists'] = $query;
         return $this->responseWithSuccess('All Document Request', $data, 200);
@@ -458,7 +458,7 @@ class AppSettingsRepository
             $new = new $this->documentRequest;
             $new->user_id = auth()->user()->id;
             $new->branch_id = auth()->user()->branch_id;
-            $new->company_id = auth()->user()->company_id;
+            $new->company_id = 1;
             $new->request_type = $request->request_type;
             $new->request_description = $request->request_description;
             $new->approved = 0;

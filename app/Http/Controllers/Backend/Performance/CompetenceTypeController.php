@@ -112,7 +112,7 @@ class CompetenceTypeController extends Controller
         try {
             $data['edit']      = $this->service->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (blank($data['edit'])) {
                 Toastr::error(_translate('response.Data not found!'), 'Error');

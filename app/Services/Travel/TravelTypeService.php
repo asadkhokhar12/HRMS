@@ -35,7 +35,7 @@ class TravelTypeService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->search) {
             $files = $files->where('name', 'like', '%' . $request->search . '%');
         }
@@ -84,7 +84,7 @@ class TravelTypeService extends BaseService
             $travel_type                           = new $this->model;
             $travel_type->name                     = $request->name;
             $travel_type->status_id                = $request->status;
-            $travel_type->company_id               = auth()->user()->company_id;
+            $travel_type->company_id               = 1;
             $travel_type->created_by               = auth()->id();
             $travel_type->updated_by               = auth()->id();
             $travel_type->save();
@@ -99,7 +99,7 @@ class TravelTypeService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $travel_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $travel_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$travel_type) {
                 return $this->responseWithError(_trans('message.Travel Type not found'), 'id', 404);
             }
@@ -116,7 +116,7 @@ class TravelTypeService extends BaseService
 
     function delete($id)
     {
-        $travel_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $travel_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$travel_type) {
             return $this->responseWithError(_trans('message.Travel type not found'), 'id', 404);
         }
@@ -135,11 +135,11 @@ class TravelTypeService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $travel = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $travel = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Travel type activate successfully.'), $travel);
             }
             if (@$request->action == 'inactive') {
-                $travel = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $travel = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Travel type inactivate successfully.'), $travel);
             }
             return $this->responseWithError(_trans('message.Travel type inactivate failed'), [], 400);
@@ -153,7 +153,7 @@ class TravelTypeService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $travel = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $travel = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Travel type delete successfully.'), $travel);
             } else {
                 return $this->responseWithError(_trans('message.Travel type not found'), [], 400);

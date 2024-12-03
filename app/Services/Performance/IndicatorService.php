@@ -41,7 +41,7 @@ class IndicatorService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->from && $request->to) {
             $files = $files->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -109,7 +109,7 @@ class IndicatorService extends BaseService
                 $indicator->department_id            = $request->department_id;
                 $indicator->designation_id           = $request->designation_id;
                 $indicator->shift_id                 = $request->shift_id;
-                $indicator->company_id               = auth()->user()->company_id;
+                $indicator->company_id               = 1;
                 $indicator->added_by                 = auth()->id();
                 if ($request->has('rating')) {
                     foreach ($request->get('rating') as $key => $value) {
@@ -137,7 +137,7 @@ class IndicatorService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $indicator = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $indicator = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$indicator) {
                 return $this->responseWithError(_trans('message.Indicator not found'), 'id', 404);
             }
@@ -173,7 +173,7 @@ class IndicatorService extends BaseService
 
     function delete($id)
     {
-        $indicator = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $indicator = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$indicator) {
             return $this->responseWithError(_trans('message.Indicator not found'), 'id', 404);
         }
@@ -190,7 +190,7 @@ class IndicatorService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->ids) {
-                $indicator = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $indicator = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 if ($indicator) {
                     return $this->responseWithSuccess(_trans('message.Indicator activate successfully.'), $indicator);
                 } else {
@@ -211,7 +211,7 @@ class IndicatorService extends BaseService
                 $designation = new $this->designation;
                 $designation->title = $request->title;
                 $designation->status_id = $request->status;
-                $designation->company_id = auth()->user()->company_id;
+                $designation->company_id = 1;
                 $designation->save();
                 $this->createdBy($designation);
                 return $this->responseWithSuccess(_trans('message.Designation store successfully.'), 200);

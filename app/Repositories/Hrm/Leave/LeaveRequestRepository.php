@@ -411,7 +411,7 @@ class LeaveRequestRepository
     public function dataTable($request)
     {
         $leaveRequest = $this->leaveRequest->query();
-        $leaveRequest = $leaveRequest->where('company_id', auth()->user()->company_id);
+        $leaveRequest = $leaveRequest->where('company_id', 1);
         if (auth()->user()->role->slug == 'staff') {
             $leaveRequest = $leaveRequest->where('user_id', auth()->id());
         } else {
@@ -1125,7 +1125,7 @@ class LeaveRequestRepository
     {
         try {
             // Log::info($request);
-            $leaveRequest = $this->leaveRequest->query()->where('company_id', auth()->user()->company_id);
+            $leaveRequest = $this->leaveRequest->query()->where('company_id', 1);
             if (auth()->user()->role->slug == 'staff') {
                 $leaveRequest = $leaveRequest->where('user_id', auth()->id());
             } else {
@@ -1192,7 +1192,7 @@ class LeaveRequestRepository
     function LeaveReportTable($request)
     {
         try {
-            $leaveRequest = $this->leaveRequest->query()->where('company_id', auth()->user()->company_id);
+            $leaveRequest = $this->leaveRequest->query()->where('company_id', 1);
             if (auth()->user()->role->slug == 'staff') {
                 $leaveRequest = $leaveRequest->where('user_id', auth()->id());
             } else {
@@ -1242,7 +1242,7 @@ class LeaveRequestRepository
     {
         try {
             // Log::info($request);
-            $leaveRequest = $this->leaveRequest->query()->where('company_id', auth()->user()->company_id);
+            $leaveRequest = $this->leaveRequest->query()->where('company_id', 1);
 
             if (auth()->user()->role->slug == 'staff') {
                 $staffMemberIDs = @auth()->user()->staffMembers()->pluck('id')->toArray() ?? [];
@@ -1373,11 +1373,11 @@ class LeaveRequestRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $leave_request = $this->leaveRequest->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $leave_request = $this->leaveRequest->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Leave request activate successfully.'), $leave_request);
             }
             if (@$request->action == 'inactive') {
-                $leave_request = $this->leaveRequest->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $leave_request = $this->leaveRequest->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Leave request inactivate successfully.'), $leave_request);
             }
             return $this->responseWithError(_trans('message.Leave request inactivate failed'), [], 400);
@@ -1390,7 +1390,7 @@ class LeaveRequestRepository
     {
         try {
             if (@$request->ids) {
-                $leave_request = $this->leaveRequest->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $leave_request = $this->leaveRequest->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Leave request delete successfully.'), $leave_request);
             } else {
                 return $this->responseWithError(_trans('message.Leave request inactivate failed'), [], 400);

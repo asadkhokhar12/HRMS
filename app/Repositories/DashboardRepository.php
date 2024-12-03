@@ -691,9 +691,9 @@ class DashboardRepository
         if (@$id) {
             $data = Project::join('project_membars', 'projects.id', '=', 'project_membars.project_id')
                 ->where('project_membars.user_id', auth()->id())
-                ->where('projects.company_id', auth()->user()->company_id);
+                ->where('projects.company_id', 1);
         } else {
-            $data = Project::where('company_id', auth()->user()->company_id);
+            $data = Project::where('company_id', 1);
         }
         return [
             [
@@ -725,9 +725,9 @@ class DashboardRepository
             $data = DB::table('tasks')
                 ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
                 ->where('task_members.user_id', auth()->id())
-                ->where('tasks.company_id', auth()->user()->company_id);
+                ->where('tasks.company_id', 1);
         } else {
-            $data = DB::table('tasks')->where('company_id', auth()->user()->company_id);
+            $data = DB::table('tasks')->where('company_id', 1);
         }
         return [
             [
@@ -761,7 +761,7 @@ class DashboardRepository
             if (@$id) {
                 $where['created_by'] = auth()->id();
             }
-            $appointment = $this->appointment->query()->where('company_id', auth()->user()->company_id)->where($where)->where('date', '>=', date('Y-m-d'))->latest()->take(6)->get()->map(function ($data) {
+            $appointment = $this->appointment->query()->where('company_id', 1)->where($where)->where('date', '>=', date('Y-m-d'))->latest()->take(6)->get()->map(function ($data) {
                 return [
                     'title' => $data->title,
                     'with' => $data->appoinmentWith->name,
@@ -778,7 +778,7 @@ class DashboardRepository
     {
 
         try {
-            $meeting = $this->meeting->where('company_id', auth()->user()->company_id)->where('date', '>=', date('Y-m-d'))->latest();
+            $meeting = $this->meeting->where('company_id', 1)->where('date', '>=', date('Y-m-d'))->latest();
 
             if (@$id) {
                 $meeting = $meeting->where('user_id', $id)->whereHas('meetingParticipants', function ($q) {
@@ -817,7 +817,7 @@ class DashboardRepository
     //         //     $project = DB::table('projects')
     //         //         ->join('project_membars', 'projects.id', '=', 'project_membars.project_id')
     //         //         ->where('project_membars.user_id', auth()->id())
-    //         //         ->where('projects.company_id', auth()->user()->company_id)
+    //         //         ->where('projects.company_id', 1)
     //         //         ->count(),
     //         //     'number' => (number_format_short($project)),
     //         // ];
@@ -828,7 +828,7 @@ class DashboardRepository
     //         //     $task  = DB::table('tasks')
     //         //         ->join('task_members', 'tasks.id', '=', 'task_members.task_id')
     //         //         ->where('task_members.user_id', auth()->id())
-    //         //         ->where('tasks.company_id', auth()->user()->company_id)
+    //         //         ->where('tasks.company_id', 1)
     //         //         ->count(),
     //         //     'number' => (number_format_short($task)),
 
@@ -837,13 +837,13 @@ class DashboardRepository
     //         //     'image' => $this->getNewStatisticsImage('visit'),
     //         //     'title' => _trans('dashboard.Total Visit'),
     //         //     'color_class' => 'circle-lightseagreen',
-    //         //     'number' => number_format_short(DB::table('visits')->where('company_id', auth()->user()->company_id)->where('user_id', auth()->id())->count()),
+    //         //     'number' => number_format_short(DB::table('visits')->where('company_id', 1)->where('user_id', auth()->id())->count()),
     //         // ];
     //         // $data['today'][] = [
     //         //     'image' => $this->getNewStatisticsImage('appointment'),
     //         //     'title' => _trans('dashboard.Total Appointments'),
     //         //     'color_class' => 'circle-danger',
-    //         //     'number' => number_format_short(DB::table('appoinments')->where('company_id', auth()->user()->company_id)->where('created_by', auth()->id())->count()),
+    //         //     'number' => number_format_short(DB::table('appoinments')->where('company_id', 1)->where('created_by', auth()->id())->count()),
     //         // ];
 
     //         $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummary(auth()->user(), $request);
@@ -977,38 +977,38 @@ class DashboardRepository
                 'image' => $this->getNewStatisticsImage('expense'),
                 'title' => _trans('dashboard.Total Expenses'),
                 'color_class' => 'circle-brown',
-                'number' => showAmount(number_format(Expense::where('company_id', auth()->user()->company_id)->where('pay', 8)->where('status_id', 5)->sum('amount'))),
+                'number' => showAmount(number_format(Expense::where('company_id', 1)->where('pay', 8)->where('status_id', 5)->sum('amount'))),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('deposit'),
                 'title' => _trans('dashboard.Total Deposits'),
                 'color_class' => 'circle-success',
-                'number' => showAmount(number_format(Deposit::where('company_id', auth()->user()->company_id)->where('pay', 8)->where('status_id', 5)->sum('amount'))),
+                'number' => showAmount(number_format(Deposit::where('company_id', 1)->where('pay', 8)->where('status_id', 5)->sum('amount'))),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('project'),
                 'title' => _trans('dashboard.Total Projects'),
                 'color_class' => 'circle-primary',
-                'number' => (number_format_short(Project::where('company_id', auth()->user()->company_id)->count())),
+                'number' => (number_format_short(Project::where('company_id', 1)->count())),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('tasks'),
                 'title' => _trans('dashboard.Total Tasks'),
                 'color_class' => 'circle-warning',
-                'number' => (number_format_short(Task::where('company_id', auth()->user()->company_id)->count())),
+                'number' => (number_format_short(Task::where('company_id', 1)->count())),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('visit'),
                 'title' => _trans('dashboard.Total Visit'),
                 'color_class' => 'circle-lightseagreen',
                 // 'number' => Visit::where('date', 'LIKE', '%' . $date . '%')->count(),
-                'number' => number_format_short(Visit::where('company_id', auth()->user()->company_id)->count()),
+                'number' => number_format_short(Visit::where('company_id', 1)->count()),
             ];
             $data['today'][] = [
                 'image' => $this->getNewStatisticsImage('appointment'),
                 'title' => _trans('dashboard.Total Appointments'),
                 'color_class' => 'circle-danger',
-                'number' => number_format_short(Appoinment::where('company_id', auth()->user()->company_id)->count()),
+                'number' => number_format_short(Appoinment::where('company_id', 1)->count()),
             ];
 
 

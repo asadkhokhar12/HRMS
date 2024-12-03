@@ -164,11 +164,11 @@ class ShiftRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $shift = $this->shift->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $shift = $this->shift->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Shift activate successfully.'), $shift);
             }
             if (@$request->action == 'inactive') {
-                $shift = $this->shift->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $shift = $this->shift->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Shift inactivate successfully.'), $shift);
             }
             return $this->responseWithError(_trans('message.Shift failed'), [], 400);
@@ -182,7 +182,7 @@ class ShiftRepository
     {
         try {
             if (@$request->ids) {
-                $shift = $this->shift->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $shift = $this->shift->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Shift Delete successfully.'), $shift);
             } else {
                 return $this->responseWithError(_trans('message.shift not found'), [], 400);
@@ -273,7 +273,7 @@ class ShiftRepository
                 $shiftModal = new $this->shift;
                 $shiftModal->name = $request->name;
                 $shiftModal->status_id = $request->status;
-                $shiftModal->company_id = auth()->user()->company_id;
+                $shiftModal->company_id = 1;
                 $shiftModal->save();
                 $this->createdBy($shiftModal);
                 return $this->responseWithSuccess(_trans('message.Shift store successfully.'), 200);
@@ -288,7 +288,7 @@ class ShiftRepository
     function newUpdate($request, $id)
     {
         try {
-            $shiftModel = $this->shift->where('company_id', auth()->user()->company_id)->where('id', $id)->first();
+            $shiftModel = $this->shift->where('company_id', 1)->where('id', $id)->first();
             if ($this->isExistsWhenUpdate($shiftModel,$this->shift, 'name', $request->name)) {
                 $shift = $shiftModel;
                 $shift->name = $request->name;

@@ -33,7 +33,7 @@ class CommissionRepository
 
     public function store($request)
     {
-        $commission = $this->model->where('name', $request->name)->where('company_id', auth()->user()->company_id)->first();
+        $commission = $this->model->where('name', $request->name)->where('company_id', 1)->first();
         if ($commission) {
             return $this->responseWithError(_trans('message.Data already exists'), 'name', 422);
         }
@@ -53,7 +53,7 @@ class CommissionRepository
 
     public function datatable()
     {
-        $content = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->where('company_id', 1);
         return datatables()->of($content->latest()->get())
             ->addColumn('action', function ($data) {
                 $action_button = '';
@@ -153,7 +153,7 @@ class CommissionRepository
     {
         // Log::info($request->all());
         $data =  $this->model->query()->with('status')
-            ->where('company_id', auth()->user()->company_id);
+            ->where('company_id', 1);
         $where = array();
         if ($request->search) {
             $where[] = ['name', 'like', '%' . $request->search . '%'];
@@ -207,11 +207,11 @@ class CommissionRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $commission = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $commission = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Commission activate successfully.'), $commission);
             }
             if (@$request->action == 'inactive') {
-                $commission = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $commission = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Commission inactivate successfully.'), $commission);
             }
             return $this->responseWithError(_trans('message.Commission failed'), [], 400);
@@ -225,7 +225,7 @@ class CommissionRepository
     {
         try {
             if (@$request->ids) {
-                $commission = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $commission = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Commission Delete successfully.'), $commission);
             } else {
                 return $this->responseWithError(_trans('message.Commission not found'), [], 400);

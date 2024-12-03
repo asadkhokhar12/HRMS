@@ -77,7 +77,7 @@ class TransactionRepository
     public function datatable($request, $transaction = null)
     {
         $params = [];
-        $content = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->where('company_id', 1);
         if ($request->date) {
             $rawDate = explode(' - ', $request->date);
             $content = $content->whereBetween('created_at', start_end_datetime(date('Y-m-d', strtotime($rawDate[0])), date('Y-m-d', strtotime($rawDate[1]))));
@@ -173,7 +173,7 @@ class TransactionRepository
     {
         // Log::info($request->all());
         $params = [];
-        $data = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->where('company_id', 1);
 
         if ($request->account) {
             $params['account_id'] = $request->account;

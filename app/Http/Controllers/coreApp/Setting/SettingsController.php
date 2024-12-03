@@ -55,7 +55,7 @@ class SettingsController extends Controller
         try {
             $data['title'] = _trans('settings.Settings');
             $data['databases'] = DatabaseBackup::orderByDesc('id')->get();
-            $data['settings'] = DB::table('settings')->where('company_id', auth()->user()->company_id)->get();
+            $data['settings'] = DB::table('settings')->where('company_id', 1)->get();
 
             return view('backend.settings.general.general_settings', compact('data'));
         } catch (\Exception $e) {

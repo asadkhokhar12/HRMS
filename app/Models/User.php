@@ -202,11 +202,11 @@ class User extends Authenticatable
     }
     public function myHr()
     {
-        $hr_info = $this->where('is_hr', 1)->where('company_id', auth()->user()->company_id)->first();
+        $hr_info = $this->where('is_hr', 1)->where('company_id', 1)->first();
         if ($hr_info) {
             return $hr_info;
         } else {
-            $admin_info = $this->where('is_admin', 1)->where('company_id', auth()->user()->company_id)->first();
+            $admin_info = $this->where('is_admin', 1)->where('company_id', 1)->first();
             if ($admin_info) {
                 return $admin_info;
             } else {

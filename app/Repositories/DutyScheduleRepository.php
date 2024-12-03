@@ -333,7 +333,7 @@ class DutyScheduleRepository
     {
         try {
             if (@$request->ids) {
-                $duty_schedule = $this->dutySchedule->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $duty_schedule = $this->dutySchedule->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Duty schedule delete successfully.'), $duty_schedule);
             } else {
                 return $this->responseWithError(_trans('message.Duty schedule not found'), [], 400);

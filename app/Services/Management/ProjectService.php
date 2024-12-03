@@ -44,7 +44,7 @@ class ProjectService extends BaseService
 
     function userDatatable($request, $user_id)
     {
-        $content = $this->model->query()->with('client:id,name', 'members')->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->with('client:id,name', 'members')->where('company_id', 1);
         $params = [];
         $content = $content->whereHas('members', function (Builder $query) use ($user_id) {
             $query->where('user_id', $user_id);
@@ -73,7 +73,7 @@ class ProjectService extends BaseService
     }
     function datatable($request)
     {
-        $content = $this->model->query()->with('client:id,name', 'members')->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->with('client:id,name', 'members')->where('company_id', 1);
         $params = [];
         if (@$request->status_id) {
             $params['status_id'] = $request->status_id;
@@ -186,7 +186,7 @@ class ProjectService extends BaseService
             $project->paid                     = 0;
             $project->notify_all_users         = @$request->notify_all_users??0;
             $project->notify_all_users_email   = @$request->notify_all_users_email??0;
-            $project->company_id               = auth()->user()->company_id;
+            $project->company_id               = 1;
             $project->created_by               = auth()->id();
             $project->invoice                  = @$this->model->query()->latest()->first()->id + 1;
             $project->save();
@@ -198,7 +198,7 @@ class ProjectService extends BaseService
 
                     DB::table('project_membars')->insert([
                         'project_id' => $project->id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                         'user_id' => $user_id,
                         'added_by' => auth()->id(),
                         'created_at' => date('Y-m-d H:i:s'),
@@ -222,7 +222,7 @@ class ProjectService extends BaseService
                     sendDatabaseNotification($member_info, $details);
                 }
             }
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Created the project')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Created the project')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Project created successfully.'), $project);
         } catch (\Throwable $th) {
@@ -236,7 +236,7 @@ class ProjectService extends BaseService
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             $project      = $this->model->where($params)->with('members')->first();
             if (!$project) {
@@ -267,7 +267,7 @@ class ProjectService extends BaseService
                 foreach ($request->new_members as $user_id) {
                     DB::table('project_membars')->insert([
                         'project_id' => $project->id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                         'added_by' => auth()->id(),
                         'user_id' => $user_id,
                         'created_at' => date('Y-m-d H:i:s'),
@@ -278,7 +278,7 @@ class ProjectService extends BaseService
             if (@$request->remove_members && $request->remove_members[0] != false) {
                 $project->members()->whereIn('user_id', @$request->remove_members)->delete();
             }
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Updated the project')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Updated the project')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Project Updated successfully.'), $project);
         } catch (\Throwable $th) {
@@ -288,7 +288,7 @@ class ProjectService extends BaseService
 
     function delete($id)
     {
-        $project = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $project = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$project) {
             return $this->responseWithError(_trans('message.Project not found'), 'id', 404);
         }
@@ -307,7 +307,7 @@ class ProjectService extends BaseService
     function member_delete($request, $id)
     {
         try {
-            $project = $this->model->with('members')->where(['id' => $request->project_id, 'company_id' => auth()->user()->company_id])->first();
+            $project = $this->model->with('members')->where(['id' => $request->project_id, 'company_id' => 1])->first();
             if (!$project) {
                 return $this->responseWithError(_trans('message.Project not found'), 'id', 404);
             }
@@ -315,7 +315,7 @@ class ProjectService extends BaseService
             if (!$membar) {
                 return $this->responseWithError(_trans('message.Member not found'), 'id', 404);
             }
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Deleted the member')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Deleted the member')->save();
             $membar->delete();
             return $this->responseWithSuccess(_trans('message.Member Delete successfully.'), $project);
         } catch (\Throwable $th) {
@@ -364,7 +364,7 @@ class ProjectService extends BaseService
     function view($id, $slug, $request)
     {
 
-        $project = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $project = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$project) {
             return $this->responseWithError(_trans('project.Project not found'), 'id', 404);
         }
@@ -388,7 +388,7 @@ class ProjectService extends BaseService
                     $data['sub_title']         =  _trans('project.Files Details');
                     $data['file'] = $this->fileService->where([
                         'id'         => $request->file_id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                     ])->with('comments')->first();
                     $data['is_table']   = false;
                     if (blank($data['file'])) {
@@ -413,7 +413,7 @@ class ProjectService extends BaseService
                 if (@$request->discussion_id) {
                     $data['discussion'] = $this->discussionService->where([
                         'id'         => $request->discussion_id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                     ])->with('comments')->first();
                     if (blank($data['discussion'])) {
                         return $this->responseWithError(_trans('message.Discussion not found'), 'id', 404);
@@ -432,12 +432,12 @@ class ProjectService extends BaseService
                 }
             } elseif ($slug == 'notes') {
                 $data['slug']          = _trans('project.Notes');
-                $data['notes']         = $this->noteService->where(['project_id' => $project->id, 'company_id' => auth()->user()->company_id])->get();
+                $data['notes']         = $this->noteService->where(['project_id' => $project->id, 'company_id' => 1])->get();
             } elseif ($slug == 'activity') {
                 $data['activity'] = DB::table('project_activities')
                     ->join('users', 'project_activities.user_id', '=', 'users.id')
                     ->select('users.name as username', 'users.avatar_id', 'project_activities.*')
-                    ->where(['project_activities.project_id' => $project->id, 'project_activities.company_id' => auth()->user()->company_id])
+                    ->where(['project_activities.project_id' => $project->id, 'project_activities.company_id' => 1])
                     ->orderBy('id', 'desc')
                     ->get();
             }
@@ -450,14 +450,14 @@ class ProjectService extends BaseService
     public function status($request)
     {
 
-        $project = $this->model->where(['id' => $request->project_id, 'company_id' => auth()->user()->company_id])->first();
+        $project = $this->model->where(['id' => $request->project_id, 'company_id' => 1])->first();
         if (!$project) {
             return $this->responseWithError(_trans('message.Project not found'), 'id', 404);
         }
         try {
             $project->status_id = 27;
             $project->save();
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Completed the project')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Completed the project')->save();
             return $this->responseWithSuccess(_trans('message.Project Completed successfully.'), $project);
         } catch (\Throwable $th) {
             return $this->responseWithError($th->getMessage(), [], 400);
@@ -541,7 +541,7 @@ class ProjectService extends BaseService
                 $project->status_id = 20;
             }
             $project->save();
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'Payment created')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'Payment created')->save();
 
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Project pay successfully.'), $project);
@@ -569,7 +569,7 @@ class ProjectService extends BaseService
     function table($request)
     {
         // Log::info($request->all());
-        $data = $this->model->query()->with('client:id,name', 'members')->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->with('client:id,name', 'members')->where('company_id', 1);
         $params = [];
         if (@$request->status) {
             $params['status_id'] = $request->status;
@@ -656,9 +656,9 @@ class ProjectService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'complete') {
-                $projects = $this->model->where('company_id', auth()->user()->company_id)->where('status_id', '!=', 27)->whereIn('id', $request->ids);
+                $projects = $this->model->where('company_id', 1)->where('status_id', '!=', 27)->whereIn('id', $request->ids);
                 foreach ($projects->get() as $project) {
-                    \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $project->id, auth()->id(), 'project Completed')->save();
+                    \App\Models\Management\ProjectActivity::CreateActivityLog(1, $project->id, auth()->id(), 'project Completed')->save();
                 }
                 $projects->update(['status_id' => 27]);
                 DB::commit();
@@ -676,7 +676,7 @@ class ProjectService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $projects = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->where('status_id', '!=', 27)->get();
+                $projects = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->where('status_id', '!=', 27)->get();
                 if (blank($projects)) {
                     return $this->responseWithError(_trans("message.Project can't not delete"), [], 400);
                 }

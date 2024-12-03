@@ -162,7 +162,7 @@ class RoleRepository
     public function table($request)
     { {
             $data = $this->role->query()->with('status')
-                ->where('company_id', auth()->user()->company_id);
+                ->where('company_id', 1);
             $where = array();
             if ($request->search) {
                 $where[] = ['name', 'like', '%' . $request->search . '%'];
@@ -226,11 +226,11 @@ class RoleRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $role = $this->role->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $role = $this->role->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Role activate successfully.'), $role);
             }
             if (@$request->action == 'inactive') {
-                $role = $this->role->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $role = $this->role->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Role inactivate successfully.'), $role);
             }
             return $this->responseWithError(_trans('message.Role inactivate failed'), [], 400);
@@ -243,7 +243,7 @@ class RoleRepository
     {
         try {
             if (@$request->ids) {
-                $role = $this->role->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $role = $this->role->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Role activate successfully.'), $role);
             } else {
                 return $this->responseWithError(_trans('message.Role not found'), [], 400);
@@ -317,7 +317,7 @@ class RoleRepository
                 $role->slug = Str::slug($request->name, '-');
                 $role->status_id = $request->status;
                 $role->upper_roles = json_encode($request->upper_roles);
-                $role->company_id = auth()->user()->company_id;
+                $role->company_id = 1;
                 $role->branch_id = userBranch();
 
                 $permissions = [];
@@ -343,7 +343,7 @@ class RoleRepository
     public function changeLogin($request)
     {
         try {
-            $role = $this->role->where('company_id', auth()->user()->company_id)->where('branch_id', auth()->user()->branch_id)->where('id', $request->id)->first();
+            $role = $this->role->where('company_id', 1)->where('branch_id', auth()->user()->branch_id)->where('id', $request->id)->first();
             if ($role) {
                 if ($request->type == 'web_login') {
                     $role->web_login = $role->web_login == 1 ? 4 : 1;

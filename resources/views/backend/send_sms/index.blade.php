@@ -50,7 +50,7 @@
     </div>
 
     <input type="text" hidden id="notice_data_url" value="{{ route('notice.dataTable') }}">
-    <input type="text" hidden id="company_id" value="{{ auth()->user()->company_id }}">
+    <input type="text" hidden id="company_id" value="{{ 1 }}">
 @endsection
 @section('script')
     @include('backend.partials.datatable')

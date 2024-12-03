@@ -25,7 +25,7 @@ class TaskNoteController extends Controller
         try {
             $result       = $this->taskService->where([
                 'id' => $request->task_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Create Note');
@@ -62,7 +62,7 @@ class TaskNoteController extends Controller
         try {
             $result       = $this->noteService->where([
                 'id' => $request->note_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Update Note');

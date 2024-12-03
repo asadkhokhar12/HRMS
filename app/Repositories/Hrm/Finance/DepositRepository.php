@@ -49,7 +49,7 @@ class DepositRepository
     public function datatable($request)
     {
 
-        $content = $this->model->query()->with('transaction', 'category', 'payment')->where('company_id', auth()->user()->company_id)
+        $content = $this->model->query()->with('transaction', 'category', 'payment')->where('company_id', 1)
             ->select('company_id', 'income_expense_category_id', 'date', 'payment_method_id', 'ref', 'id', 'transaction_id', 'created_at', 'amount');
         if ($request->account) {
             $content->whereHas('transaction', function ($query) use ($request) {
@@ -228,7 +228,7 @@ class DepositRepository
     function table($request){
         {
             // Log::info($request->all());
-            $data = $this->model->query()->with('transaction', 'category', 'payment')->where('company_id', auth()->user()->company_id)
+            $data = $this->model->query()->with('transaction', 'category', 'payment')->where('company_id', 1)
             ->select('company_id', 'income_expense_category_id', 'date', 'payment_method_id', 'ref', 'id', 'transaction_id', 'created_at', 'amount');
             if ($request->account) {
                 $data->whereHas('transaction', function ($query) use ($request) {
@@ -300,7 +300,7 @@ class DepositRepository
     {
         try {
             if (@$request->ids) {
-                $deposit = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $deposit = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Deposit delete successfully.'), $deposit);
             }else {
                 return $this->responseWithError(_trans('message.Deposit not found'), [], 400);                

@@ -17,7 +17,7 @@
                     <div class="col-lg-12">
                         <div class="visible-print text-center" id="qr_div">
                             @php
-                                $qr_value = encrypt(auth()->user()->company_id);
+                                $qr_value = encrypt(1);
                             @endphp
                             {!! QrCode::size(700)->style('square')->generate($qr_value) !!}
                             <p class="text-center" >{{ _trans('attendance.Scan me to checkin.') }}</p>

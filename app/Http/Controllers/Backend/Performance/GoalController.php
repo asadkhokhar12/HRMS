@@ -61,7 +61,7 @@ class GoalController extends Controller
         try {
             $data['title']         = _trans('performance.Create Goal');
             $data['url']           = (hasPermission('performance_goal_store')) ? route('performance.goal.store') : '';
-            $data['goal_types']             = dbTable('goal_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['goal_types']             = dbTable('goal_types', ['name', 'id'], ['company_id' => 1])->get();
             @$data['button']   = _trans('common.Save');
             return view('backend.performance.goal.createModal', compact('data'));
         } catch (\Throwable $th) {
@@ -95,7 +95,7 @@ class GoalController extends Controller
         try {
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.View Goal');
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
             return view('backend.performance.appraisal.viewModal', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');
@@ -114,7 +114,7 @@ class GoalController extends Controller
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.Edit Goal');
             $data['url']                = (hasPermission('performance_goal_update')) ? route('performance.goal.update', $id) : '';
-            $data['goal_types']             = dbTable('goal_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['goal_types']             = dbTable('goal_types', ['name', 'id'], ['company_id' => 1])->get();
             @$data['button']            = _trans('common.Update');
             return view('backend.performance.goal.editModal', compact('data'));
         } catch (\Throwable $th) {
@@ -164,7 +164,7 @@ class GoalController extends Controller
         try {
             return response()->json($this->service
             ->where([
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->select('id', 'subject as name')
             ->where('subject', 'LIKE', $request->term . '%')->take(10)->get());
         } catch (\Throwable $th) {

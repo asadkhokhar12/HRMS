@@ -33,7 +33,7 @@ class TaskFileController extends Controller
         try {
             $result       = $this->taskService->where([
                 'id' => $request->task_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Create File');
@@ -82,7 +82,7 @@ class TaskFileController extends Controller
         try {
             $result = $this->fileService->where([
                 'id' => $request->file_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
                 'task_id' => $request->task_id,
             ])->first();
             if (@$result) {

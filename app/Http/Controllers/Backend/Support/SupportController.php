@@ -129,7 +129,7 @@ class SupportController extends Controller
             $data['edit']               = $this->support->getById($id);
             $data['title']              = _trans('support.Assign Employee To Ticket');
             $data['url']                = (hasPermission('support_reply')) ? route('supportTicket.assign', $id) : '';
-            $data['users']              = dbTable('users', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['users']              = dbTable('users', ['name', 'id'], ['company_id' => 1])->get();
             @$data['button']            = _trans('support.Assign');
             return view('backend.support.assignModal', compact('data'));
         } catch (\Throwable $th) {

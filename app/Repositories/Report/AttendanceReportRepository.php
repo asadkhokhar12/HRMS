@@ -763,12 +763,12 @@ class AttendanceReportRepository
         $totalHoliday = 0;
         $totalWeekend = 0;
         //total users
-        $totalUsers = User::where(['company_id' => auth()->user()->company_id, 'status_id' => 1])->count();
+        $totalUsers = User::where(['company_id' => 1, 'status_id' => 1])->count();
         $day = Carbon::parse($request->date);
         $todayDateName = strtolower($day->format('l'));
         $todayDateInSqlFormat = $day->format('Y-m-d');
 
-        $weekEnds = Weekend::where(['company_id' => auth()->user()->company_id, 'is_weekend' => 'yes'])
+        $weekEnds = Weekend::where(['company_id' => 1, 'is_weekend' => 'yes'])
             ->pluck('name')->toArray();
         if (in_array($todayDateName, $weekEnds)) {
             $totalWeekend += 1;
@@ -776,7 +776,7 @@ class AttendanceReportRepository
             $workDayWithoutWeekend += 1;
         }
 
-        $holidays = Holiday::where('company_id', auth()->user()->company_id)
+        $holidays = Holiday::where('company_id', 1)
             ->where('start_date', '>=', $todayDateInSqlFormat)
             ->where('end_date', '<=', $todayDateInSqlFormat)
             ->select('start_date', 'end_date')
@@ -785,7 +785,7 @@ class AttendanceReportRepository
             $totalHoliday += 1;
         }
         $attendance_users = $this->attendance->query()->where(['company_id' => $this->companyInformation()->id, 'date' => $request->date])->pluck('user_id')->toArray();
-        $leaveDate = LeaveRequest::where(['company_id' => auth()->user()->company_id, 'status_id' => 1])
+        $leaveDate = LeaveRequest::where(['company_id' => 1, 'status_id' => 1])
             ->whereNotIn('user_id', $attendance_users)
             ->where('leave_from', '<=', $todayDateInSqlFormat)
             ->where('leave_to', '>=', $todayDateInSqlFormat)
@@ -1802,7 +1802,7 @@ class AttendanceReportRepository
                 $end_date = date('Y-m-t');
             }
             $attendance = $this->attendance->query();
-            $attendance = $attendance->where('company_id', auth()->user()->company_id);
+            $attendance = $attendance->where('company_id', 1);
             if (auth()->user()->role->slug == 'staff') {
                 $attendance = $attendance->where('user_id', auth()->id());
             } else {

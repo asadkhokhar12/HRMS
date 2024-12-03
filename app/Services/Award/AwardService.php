@@ -39,7 +39,7 @@ class AwardService extends BaseService
     }
     function userDatatable($request,$user_id)
     {
-        $award =  $this->model->with('user','status','type')->where(['company_id' => auth()->user()->company_id]);
+        $award =  $this->model->with('user','status','type')->where(['company_id' => 1]);
         
         $award = $award->where('user_id', $user_id)->paginate($request->limit ?? 10);
 
@@ -48,7 +48,7 @@ class AwardService extends BaseService
 
     function table($request)
     {
-        $award =  $this->model->query()->with('user','status','type')->where(['company_id' => auth()->user()->company_id]);
+        $award =  $this->model->query()->with('user','status','type')->where(['company_id' => 1]);
         if (!is_Admin()) {
             $award = $award->where('user_id', auth()->user()->id);
         }
@@ -124,7 +124,7 @@ class AwardService extends BaseService
             $award->description              = $request->content;
             $award->amount                   = $request->amount;
             $award->gift_info                = $request->award_info;
-            $award->company_id               = auth()->user()->company_id;
+            $award->company_id               = 1;
             $award->created_by               = auth()->id();
             if ($request->hasFile('attachment')) {
                 $award->attachment = $this->uploadImage($request->attachment, 'award/files')->id;
@@ -140,7 +140,7 @@ class AwardService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $award = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $award = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$award) {
                 return $this->responseWithError(_trans('message.Award not found'), 'id', 404);
             }
@@ -167,7 +167,7 @@ class AwardService extends BaseService
 
     function delete($id)
     {
-        $award = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $award = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$award) {
             return $this->responseWithError(_trans('message.Award not found'), 'id', 404);
         }
@@ -187,11 +187,11 @@ class AwardService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-               $award = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+               $award = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                return $this->responseWithSuccess(_trans('message.Award activate successfully.'), $award);
             }
             if (@$request->action == 'inactive') {
-                $award = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $award = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Award inactivate successfully.'), $award);
             }
             return $this->responseWithError(_trans('message.Award failed'), [], 400);
@@ -205,7 +205,7 @@ class AwardService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $awards = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $awards = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($awards as $award){
                     if (@$award->attachment) {
                         $this->deleteImage(asset_path($award->attachment));

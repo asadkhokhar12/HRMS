@@ -29,7 +29,7 @@ class Branch extends Model
                 $weekdays = [
                     'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
                 ];
-                $crated_company_id = auth()->check() ? auth()->user()->company_id : 1;
+                $crated_company_id = auth()->check() ? 1 : 1;
 
                 foreach ($weekdays as $day) {
                     $isWeekend = 'no';

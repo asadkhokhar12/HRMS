@@ -11,6 +11,8 @@ class SalaryGenerate extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'advance_details' => 'json',
         'allowance_details' => 'json',

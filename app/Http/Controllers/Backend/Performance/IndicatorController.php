@@ -64,10 +64,10 @@ class IndicatorController extends Controller
         try {
             $data['title']         = _trans('performance.Create Indicator');
             $data['url']           = (hasPermission('performance_indicator_store')) ? route('performance.indicator.store') : '';
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
-            $data['designations']  = dbTable('designations', ['title', 'id'], ['company_id' => auth()->user()->company_id])->get();
-            $data['shifts']        = dbTable('shifts', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
-            $data['departments']   = dbTable('departments', ['title', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
+            $data['designations']  = dbTable('designations', ['title', 'id'], ['company_id' => 1])->get();
+            $data['shifts']        = dbTable('shifts', ['name', 'id'], ['company_id' => 1])->get();
+            $data['departments']   = dbTable('departments', ['title', 'id'], ['company_id' => 1])->get();
             @$data['button']   = _trans('common.Save');
             return view('backend.performance.indicator.createModal', compact('data'));
         } catch (\Throwable $th) {
@@ -101,7 +101,7 @@ class IndicatorController extends Controller
         try {
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.View Indicator');
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
             return view('backend.performance.indicator.viewModal', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');
@@ -120,10 +120,10 @@ class IndicatorController extends Controller
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.Edit Indicator');
             $data['url']                = (hasPermission('performance_indicator_update')) ? route('performance.indicator.update', $id) : '';
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
-            $data['designations']       = dbTable('designations', ['title', 'id'], ['company_id' => auth()->user()->company_id])->get();
-            $data['shifts']             = dbTable('shifts', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
-            $data['departments']        = dbTable('departments', ['title', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
+            $data['designations']       = dbTable('designations', ['title', 'id'], ['company_id' => 1])->get();
+            $data['shifts']             = dbTable('shifts', ['name', 'id'], ['company_id' => 1])->get();
+            $data['departments']        = dbTable('departments', ['title', 'id'], ['company_id' => 1])->get();
             @$data['button']            = _trans('common.Update');
             return view('backend.performance.indicator.editModal', compact('data'));
         } catch (\Throwable $th) {

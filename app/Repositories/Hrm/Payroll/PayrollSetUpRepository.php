@@ -235,7 +235,7 @@ class PayrollSetUpRepository
             $params['department_id'] = $request->department;
         }
         $data = $this->model->query()->with('department', 'designation', 'role', 'shift', 'status')
-            ->where('company_id', auth()->user()->company_id)
+            ->where('company_id', 1)
             ->where('branch_id', userBranch())
             ->where($params)
             ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'name', 'employee_id', 'basic_salary', 'shift_id', 'status_id', 'is_hr','branch_id');
@@ -306,7 +306,7 @@ class PayrollSetUpRepository
         if (!is_Admin()) {
             $user_id = auth()->id();
         }
-        $data = SalarySetupDetails::where('company_id', auth()->user()->company_id)
+        $data = SalarySetupDetails::where('company_id', 1)
             ->where('user_id', $user_id);
 
         if ($request->search) {

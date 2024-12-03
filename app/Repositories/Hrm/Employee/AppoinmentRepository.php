@@ -154,7 +154,7 @@ class AppoinmentRepository
 
         $appoinment = new Appoinment;
         $appoinment->created_by = auth()->user()->id;
-        $appoinment->company_id = auth()->user()->company_id;
+        $appoinment->company_id = 1;
         $appoinment->date = $request->date;
         $appoinment->appoinment_with = $request->appoinment_with;
         $appoinment->title = $request->title;

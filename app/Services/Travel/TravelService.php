@@ -41,7 +41,7 @@ class TravelService extends BaseService
 
     function userDatatable($request, $user_id)
     {
-        $travel =  $this->model->with('user', 'status', 'type')->where(['company_id' => auth()->user()->company_id]);
+        $travel =  $this->model->with('user', 'status', 'type')->where(['company_id' => 1]);
 
         $travel = $travel->where('user_id', $user_id)->paginate($request->limit ?? 10);
 
@@ -49,7 +49,7 @@ class TravelService extends BaseService
     }
     function table($request)
     {
-        $travel =  $this->model->with('user', 'status', 'type')->where(['company_id' => auth()->user()->company_id]);
+        $travel =  $this->model->with('user', 'status', 'type')->where(['company_id' => 1]);
         if (!is_Admin()) {
             $travel = $travel->whereHas('user', function (Builder $query) {
                 $query->where('user_id', auth()->user()->id);
@@ -132,7 +132,7 @@ class TravelService extends BaseService
             $travel->description              = $request->content;
             $travel->amount                   = $request->actual_amount;
             $travel->status_id                = 2;
-            $travel->company_id               = auth()->user()->company_id;
+            $travel->company_id               = 1;
             $travel->created_by               = auth()->id();
             if ($request->hasFile('attachment')) {
                 $travel->attachment = $this->uploadImage($request->attachment, 'travel/files')->id;
@@ -173,7 +173,7 @@ class TravelService extends BaseService
     }
     function delete($id)
     {
-        $travel = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $travel = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$travel) {
             return $this->responseWithError(_trans('message.Travel not found'), 'id', 404);
         }
@@ -189,7 +189,7 @@ class TravelService extends BaseService
     }
     function approve($request, $id)
     {
-        $travel = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $travel = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$travel) {
             return $this->responseWithError(_trans('message.Travel not found'), 'id', 404);
         }
@@ -208,11 +208,11 @@ class TravelService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $travel = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $travel = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Travel activate successfully.'), $travel);
             }
             if (@$request->action == 'inactive') {
-                $travel = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $travel = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Travel inactivate successfully.'), $travel);
             }
             return $this->responseWithError(_trans('message.Travel failed'), [], 400);
@@ -226,7 +226,7 @@ class TravelService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $travels = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $travels = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($travels as $travel) {
                     if (@$travel->attachment) {
                         $this->deleteImage(asset_path($travel->attachment));

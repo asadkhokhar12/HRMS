@@ -36,7 +36,7 @@ class HrmExpenseRepository
 
     public function expenseCategory()
     {
-        return IncomeExpenseCategory::where('company_id', auth()->user()->company_id)->where('is_income', 0)->get();
+        return IncomeExpenseCategory::where('company_id', 1)->where('is_income', 0)->get();
     }
 
     public function expenseList(): \Illuminate\Http\JsonResponse

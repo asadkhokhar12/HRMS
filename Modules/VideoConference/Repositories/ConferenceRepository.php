@@ -42,7 +42,7 @@ class ConferenceRepository extends BaseRepository
 
     public function table($request)
     {
-        $award =  $this->model->query()->with('members')->where(['company_id' => auth()->user()->company_id]);
+        $award =  $this->model->query()->with('members')->where(['company_id' => 1]);
       
         if ($request->from && $request->to) {
             $award = $award->whereBetween('created_at', start_end_datetime($request->from, $request->to));
@@ -145,7 +145,7 @@ class ConferenceRepository extends BaseRepository
             $conference->start_at=$request->date.' '.$request->start_at.':00';
             $conference->end_at=$request->date.' '.$request->end_at.':00';
             $conference->created_by=auth()->user()->id;
-            $conference->company_id=auth()->user()->company_id;
+            $conference->company_id=1;
             $conference->save();
 
             $this->addConferenceMember($request,$conference->id);
@@ -165,7 +165,7 @@ class ConferenceRepository extends BaseRepository
             $conference->start_at=$request->date.' '.$request->start_at.':00';
             $conference->end_at=$request->date.' '.$request->end_at.':00';
             $conference->created_by=auth()->user()->id;
-            $conference->company_id=auth()->user()->company_id;
+            $conference->company_id=1;
             $conference->save();
 
             $conference->members()->delete();
@@ -182,7 +182,7 @@ class ConferenceRepository extends BaseRepository
     }
     function myMeeting(){
         return $this->model->query()->with('members')
-        ->where(['company_id' => auth()->user()->company_id])
+        ->where(['company_id' => 1])
         // ->where('start_at','>',date('Y-m-d H:i:s'))
         // ->where('end_at','<',date('Y-m-d H:i:s'))
         //skip if end_at not equal to current date

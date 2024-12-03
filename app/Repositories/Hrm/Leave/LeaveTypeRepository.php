@@ -112,7 +112,7 @@ class LeaveTypeRepository
     {
         try {
             $data =  $this->leaveType->query()->with('status')
-            ->where('company_id', auth()->user()->company_id);
+            ->where('company_id', 1);
         $where = array();
         if ($request->search) {
             $where[] = ['name', 'like', '%' . $request->search . '%'];
@@ -167,11 +167,11 @@ class LeaveTypeRepository
     {
         try {
             if (@$request->action == 'active') {
-                $leave_type = $this->leaveType->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $leave_type = $this->leaveType->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Leave Type activate successfully.'), $leave_type);
             }
             if (@$request->action == 'inactive') {
-                $leave_type = $this->leaveType->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $leave_type = $this->leaveType->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Leave Type inactivate successfully.'), $leave_type);
             }
             return $this->responseWithError(_trans('message.Leave Type inactivate failed'), [], 400);
@@ -185,7 +185,7 @@ class LeaveTypeRepository
     {
         try {
             if (@$request->ids) {
-                $leave_type = $this->leaveType->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $leave_type = $this->leaveType->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Leave type delete successfully.'), $leave_type);
             } else {
                 return $this->responseWithError(_trans('message.Leave type not found'), [], 400);
@@ -279,7 +279,7 @@ class LeaveTypeRepository
                 $leaveType = new $this->leaveType;
                 $leaveType->name = $request->name;
                 $leaveType->status_id = $request->status;
-                $leaveType->company_id = auth()->user()->company_id;
+                $leaveType->company_id = 1;
                 $leaveType->save();
                 return $this->responseWithSuccess(_trans('message.Leave type store successfully.'), 200);
             } else {
@@ -292,7 +292,7 @@ class LeaveTypeRepository
     function newUpdate($request, $id)
     {
         try {
-            $leaveTypeModel = $this->leaveType->where('company_id', auth()->user()->company_id)->find($id);
+            $leaveTypeModel = $this->leaveType->where('company_id', 1)->find($id);
             if ($this->isExistsWhenUpdate($leaveTypeModel, $this->leaveType, 'name', $request->name)) {
                 $this->leaveType->where('id', $id)->update([
                     'name' => $request->name,

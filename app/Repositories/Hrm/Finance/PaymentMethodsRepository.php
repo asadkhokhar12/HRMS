@@ -89,14 +89,14 @@ class PaymentMethodsRepository
     {
         $payment = $this->model([
             'name' => $request->name,
-            'company_id' => auth()->user()->company_id
+            'company_id' => 1
         ])->first();
         if ($payment) {
             return $this->responseWithError(_trans('message.Payment method already exists'), 'name', 422);
         }
         try {
             $payment             = new $this->model;
-            $payment->company_id = auth()->user()->company_id;
+            $payment->company_id = 1;
             $payment->name       = $request->name;
             $payment->status_id  = $request->status;
             $payment->save();
@@ -116,7 +116,7 @@ class PaymentMethodsRepository
 
         $payment = $this->model([
             'id' => $id,
-            'company_id' => auth()->user()->company_id
+            'company_id' => 1
         ])->first();
         if (!$payment) {
             return $this->responseWithError(_trans('message.Payment method not found'), 'name', 422);
@@ -203,11 +203,11 @@ class PaymentMethodsRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Payment method activate successfully.'), $category);
             }
             if (@$request->action == 'inactive') {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Payment method inactivate successfully.'), $category);
             }
             return $this->responseWithError(_trans('message.Payment method failed'), [], 400);
@@ -221,7 +221,7 @@ class PaymentMethodsRepository
     {
         try {
             if (@$request->ids) {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Payment method delete successfully.'), $category);
             } else {
                 return $this->responseWithError(_trans('message.Payment method not found'), [], 400);

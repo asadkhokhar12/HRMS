@@ -39,7 +39,7 @@ class CompetenceTypeService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->search) {
             $files = $files->where('name', 'like', '%' . $request->search . '%');
         }
@@ -88,7 +88,7 @@ class CompetenceTypeService extends BaseService
             $competence_type                           = new $this->model;
             $competence_type->name                     = $request->name;
             $competence_type->status_id                = $request->status;
-            $competence_type->company_id               = auth()->user()->company_id;
+            $competence_type->company_id               = 1;
             $competence_type->created_by               = auth()->id();
             $competence_type->updated_by               = auth()->id();
             $competence_type->save();
@@ -103,7 +103,7 @@ class CompetenceTypeService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $competence_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $competence_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$competence_type) {
                 return $this->responseWithError(_trans('message.Competence Type not found'), 'id', 404);
             }
@@ -120,7 +120,7 @@ class CompetenceTypeService extends BaseService
 
     function delete($id)
     {
-        $competence_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $competence_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$competence_type) {
             return $this->responseWithError(_trans('message.Competence type not found'), 'id', 404);
         }
@@ -139,11 +139,11 @@ class CompetenceTypeService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $award_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $award_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Competence type activate successfully.'), $award_type);
             }
             if (@$request->action == 'inactive') {
-                $award_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $award_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Competence type inactivate successfully.'), $award_type);
             }
             return $this->responseWithError(_trans('message.Competence type failed'), [], 400);
@@ -157,7 +157,7 @@ class CompetenceTypeService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $award_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $award_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Competence type delete successfully.'), $award_type);
             } else {
                 return $this->responseWithError(_trans('message.Competence type not found'), [], 400);
