@@ -109,22 +109,22 @@
                                 @endif
                             </tbody>
                         </table>
-                        <table class="table table-bordered">
-                            <thead class="bg-gray">
-                                <tr>
-                                    <th style="width:50%">Adjustment</th>
-                                    <th style="width:50%" class="text-end">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($data['salary']->adjust > 0)
+                        @if ($data['salary']->adjust > 0)
+                            <table class="table table-bordered">
+                                <thead class="bg-gray">
+                                    <tr>
+                                        <th style="width:50%">Adjustment</th>
+                                        <th style="width:50%" class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <tr>
                                         <td>{{ _trans('common.Adjust Amount') }}</td>
                                         <td class="text-end">{{ @$data['salary']->adjust }}</td>
                                     </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        @endif
 
                         <table class="table table-bordered">
                             <thead class="bg-gray">

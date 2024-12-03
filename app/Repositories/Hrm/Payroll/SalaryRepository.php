@@ -497,7 +497,7 @@ class SalaryRepository
                     $salary->date = $lastDayOfMonth; // Save the last day of the month
                     $salary->amount = $user->basic_salary ?? 0; // Default to 0 if null
                     $salary->gross_salary = $user->basic_salary ?? 0;
-                    $salary->net_salary = $user->basic_salary ?? 0;
+                    $salary->net_salary = $user->basic_salary - $user->tax;
                     $salary->created_by = 1;
                     $salary->updated_by = 1;
                     $salary->save();
