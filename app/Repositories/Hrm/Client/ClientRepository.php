@@ -42,7 +42,7 @@ class ClientRepository extends BaseRepository
             $client->zip = $request->zip;
             $client->country = $request->country_id;
             $client->status_id = $request->status;
-            $client->company_id = auth()->user()->company_id;
+            $client->company_id = 1;
             $client->date = date('Y-m-d');
             $client->save();
 
@@ -99,7 +99,7 @@ class ClientRepository extends BaseRepository
 
     function dataTable($request)
     {
-        $clients = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $clients = $this->model->query()->where('company_id', 1);
 
         if (@$request->daterange) {
             $dateRange = explode(' - ', $request->daterange);
@@ -192,7 +192,7 @@ class ClientRepository extends BaseRepository
     function table($request)
     {
         // Log::info($request->all());
-        $data = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->where('company_id', 1);
         if (@$request->from && @$request->to) {
             $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -247,11 +247,11 @@ class ClientRepository extends BaseRepository
           try {
               // Log::info($request->all());
               if (@$request->action == 'active') {
-                  $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                  $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                   return $this->responseWithSuccess(_trans('message.Payment method activate successfully.'), $category);
               }
               if (@$request->action == 'inactive') {
-                  $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                  $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                   return $this->responseWithSuccess(_trans('message.Payment method inactivate successfully.'), $category);
               }
               return $this->responseWithError(_trans('message.Payment method failed'), [], 400);
@@ -265,7 +265,7 @@ class ClientRepository extends BaseRepository
       {
           try {
               if (@$request->ids) {
-                  $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                  $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                   return $this->responseWithSuccess(_trans('message.Payment method delete successfully.'), $category);
               } else {
                   return $this->responseWithError(_trans('message.Payment method not found'), [], 400);

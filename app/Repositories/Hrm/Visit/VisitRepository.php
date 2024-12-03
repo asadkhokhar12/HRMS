@@ -147,7 +147,7 @@ class VisitRepository
         $visit->title = $request->title;
         $visit->description = $request->description;
         $visit->user_id = auth()->id();
-        $visit->company_id = auth()->user()->company_id;
+        $visit->company_id = 1;
         $visit->save();
         $result = $visit->makeHidden(['created_at', 'updated_at']);
         return $this->responseWithSuccess(__('Visit created successfully'), $result, 200);
@@ -403,7 +403,7 @@ class VisitRepository
 
     function table($request)
     {
-        $data = $this->visit->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->visit->query()->where('company_id', 1);
 
         if ($request->from && $request->to) {
             $data = $data->whereBetween('date', start_end_datetime($request->from, $request->to));

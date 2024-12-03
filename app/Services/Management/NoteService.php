@@ -41,7 +41,7 @@ class NoteService extends BaseService
                 return $this->responseWithError(__('Project not found'), [], 400);
             }
             $data = [
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
                 'project_id' => $request->project_id,
                 'description' => $request->description,
                 'user_id' => auth()->user()->id,
@@ -49,7 +49,7 @@ class NoteService extends BaseService
                 'last_activity' => date('Y-m-d H:i:s'),
             ];
             $note = $this->model->create($data);            
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $request->project_id, auth()->id(), 'Created Notes')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $request->project_id, auth()->id(), 'Created Notes')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Note created successfully.'), $note);
         } catch (\Throwable $th) {
@@ -70,7 +70,7 @@ class NoteService extends BaseService
         }
         DB::beginTransaction();
         try {
-            $note = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $note = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$note) {
                 return $this->responseWithError(_trans('message.Note not found'), 'id', 404);
             }
@@ -78,7 +78,7 @@ class NoteService extends BaseService
             $note->show_to_customer  = @$request->show_to_customer == 1  ? 33 : 22;
             $note->last_activity     = date('Y-m-d H:i:s', time());
             $note->save();            
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $note->project_id, auth()->id(), 'Updated Notes')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $note->project_id, auth()->id(), 'Updated Notes')->save();
             DB::commit();
             return $this->responseWithSuccess(_trans('message.Note Updated successfully.'), $note);
         } catch (\Throwable $th) {
@@ -90,12 +90,12 @@ class NoteService extends BaseService
 
     function delete($id)
     {
-        $note = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $note = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$note) {
             return $this->responseWithError(_trans('message.Note not found'), 'id', 404);
         }
         try {
-            \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $note->project_id, auth()->id(), 'Deleted Notes')->save();
+            \App\Models\Management\ProjectActivity::CreateActivityLog(1, $note->project_id, auth()->id(), 'Deleted Notes')->save();
             $note->delete();            
             return $this->responseWithSuccess(_trans('message.Note Delete successfully.'), $note);
         } catch (\Throwable $th) {

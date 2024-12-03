@@ -96,7 +96,7 @@ class LocationController extends Controller
         try {
             $data['location'] = $this->locationRepository->model([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             $data['title'] = _trans('settings.Edit Location Binding');
             $data['url'] = (hasPermission('location_update')) ? route('company.settings.locationUpdate', $id) : '';

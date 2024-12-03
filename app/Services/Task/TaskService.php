@@ -55,7 +55,7 @@ class TaskService extends BaseService
         if ($request->project_id) {
             $where = ['type' => 1, 'project_id' => $request->project_id];
         }
-        $content =  $this->model->with('members', 'status')->where(['company_id' => auth()->user()->company_id])->where($where);
+        $content =  $this->model->with('members', 'status')->where(['company_id' => 1])->where($where);
 
         $content = $content->whereHas('members', function (Builder $query) use ($user_id) {
             $query->where('user_id', $user_id);
@@ -72,7 +72,7 @@ class TaskService extends BaseService
             if ($request->project_id) {
                 $where = ['type' => 1, 'project_id' => $request->project_id];
             }
-            $content =  $this->model->with('members', 'status')->where(['company_id' => auth()->user()->company_id])->where($where);
+            $content =  $this->model->with('members', 'status')->where(['company_id' => 1])->where($where);
             if (!is_Admin()) {
                 $content = $content->whereHas('members', function (Builder $query) {
                     $query->where('user_id', auth()->user()->id);
@@ -287,13 +287,13 @@ class TaskService extends BaseService
 
     function delete($id)
     {
-        $task = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $task = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$task) {
             return $this->responseWithError(_trans('message.Task not found'), 'id', 404);
         }
         try {
             if (@$task->project_id) {
-                \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $task->project_id, auth()->id(), 'Delete the Task')->save();
+                \App\Models\Management\ProjectActivity::CreateActivityLog(1, $task->project_id, auth()->id(), 'Delete the Task')->save();
             }
             $task->files()->delete();
             $task->notes()->delete();
@@ -309,7 +309,7 @@ class TaskService extends BaseService
     function member_delete($request, $id)
     {
         try {
-            $task = $this->model->with('members')->where(['id' => $request->task_id, 'company_id' => auth()->user()->company_id])->first();
+            $task = $this->model->with('members')->where(['id' => $request->task_id, 'company_id' => 1])->first();
             if (!$task) {
                 return $this->responseWithError(_trans('message.Task not found'), 'id', 404);
             }
@@ -317,7 +317,7 @@ class TaskService extends BaseService
             if (!$membar) {
                 return $this->responseWithError(_trans('message.Member not found'), 'id', 404);
             }
-            \App\Models\TaskManagement\TaskActivity::CreateActivityLog(auth()->user()->company_id, $task->id, auth()->id(), 'Deleted the member')->save();
+            \App\Models\TaskManagement\TaskActivity::CreateActivityLog(1, $task->id, auth()->id(), 'Deleted the member')->save();
             $membar->delete();
             return $this->responseWithSuccess(_trans('message.Member Delete successfully.'), $task);
         } catch (\Throwable $th) {
@@ -361,7 +361,7 @@ class TaskService extends BaseService
     {
 
 
-        $task = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $task = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$task) {
             return $this->responseWithError(_trans('task.Task not found'), 'id', 404);
         }
@@ -377,7 +377,7 @@ class TaskService extends BaseService
                     $data['sub_title']         =  _trans('project.Files Details');
                     $data['file'] = $this->fileService->where([
                         'id'         => $request->file_id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                     ])->with('comments')->first();
                     if (blank($data['file'])) {
                         return $this->responseWithError(_trans('message.File not found'), 'id', 404);
@@ -401,7 +401,7 @@ class TaskService extends BaseService
                     $data['sub_title']         =  _trans('project.Discussions Details');
                     $data['discussion'] = $this->discussionService->where([
                         'id'         => $request->discussion_id,
-                        'company_id' => auth()->user()->company_id,
+                        'company_id' => 1,
                     ])->with('comments')->first();
                     if (blank($data['discussion'])) {
                         return $this->responseWithError(_trans('message.Discussion not found'), 'id', 404);
@@ -419,12 +419,12 @@ class TaskService extends BaseService
                 }
             } elseif ($slug == 'notes') {
                 $data['slug']          = _trans('project.Notes');
-                $data['notes']         = $this->noteService->where(['task_id' => $task->id, 'company_id' => auth()->user()->company_id])->get();
+                $data['notes']         = $this->noteService->where(['task_id' => $task->id, 'company_id' => 1])->get();
             } elseif ($slug == 'activity') {
                 $data['activity'] = DB::table('task_activities')
                     ->join('users', 'task_activities.user_id', '=', 'users.id')
                     ->select('users.name as username', 'users.avatar_id', 'task_activities.*')
-                    ->where(['task_activities.task_id' => $task->id, 'task_activities.company_id' => auth()->user()->company_id])
+                    ->where(['task_activities.task_id' => $task->id, 'task_activities.company_id' => 1])
                     ->orderBy('id', 'desc')
                     ->get();
             }
@@ -437,7 +437,7 @@ class TaskService extends BaseService
     public function status($request)
     {
 
-        $task = $this->model->where(['id' => $request->task_id, 'company_id' => auth()->user()->company_id])->first();
+        $task = $this->model->where(['id' => $request->task_id, 'company_id' => 1])->first();
         if (!$task) {
             return $this->responseWithError(_trans('message.Task not found'), 'id', 404);
         }
@@ -445,7 +445,7 @@ class TaskService extends BaseService
 
             $task->status_id = 27;
             $task->save();
-            \App\Models\TaskManagement\TaskActivity::CreateActivityLog(auth()->user()->company_id, $task->id, auth()->id(), 'Task Completed')->save();
+            \App\Models\TaskManagement\TaskActivity::CreateActivityLog(1, $task->id, auth()->id(), 'Task Completed')->save();
             return $this->responseWithSuccess(_trans('message.Task completed successfully.'), $task);
         } catch (\Throwable $th) {
             return $this->responseWithError($th->getMessage(), [], 400);
@@ -460,9 +460,9 @@ class TaskService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'complete') {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->where('status_id', '!=', 27)->whereIn('id', $request->ids);
+                $category = $this->model->where('company_id', 1)->where('status_id', '!=', 27)->whereIn('id', $request->ids);
                 foreach ($category->get() as $task) {
-                    \App\Models\TaskManagement\TaskActivity::CreateActivityLog(auth()->user()->company_id, $task->id, auth()->id(), 'Task Completed')->save();
+                    \App\Models\TaskManagement\TaskActivity::CreateActivityLog(1, $task->id, auth()->id(), 'Task Completed')->save();
                 }
                 $category->update(['status_id' => 27]);
                 DB::commit();
@@ -480,10 +480,10 @@ class TaskService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $category = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $category = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($category as $task) {
                     if (@$task->project_id) {
-                        \App\Models\Management\ProjectActivity::CreateActivityLog(auth()->user()->company_id, $task->project_id, auth()->id(), 'Delete the Task')->save();
+                        \App\Models\Management\ProjectActivity::CreateActivityLog(1, $task->project_id, auth()->id(), 'Delete the Task')->save();
                     }
                     $task->files()->delete();
                     $task->notes()->delete();

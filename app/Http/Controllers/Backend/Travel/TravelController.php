@@ -62,7 +62,7 @@ class TravelController extends Controller
         try {
             $data['title']     = _trans('travel.Create Travel');
             $data['url']      = (hasPermission('travel_store')) ? route('travel.store') : '';
-            $data['types']  = dbTable('travel_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['types']  = dbTable('travel_types', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.travel.create', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -106,7 +106,7 @@ class TravelController extends Controller
             $data['title']     = _trans('award.View Travel');
             $data['view']      = $this->service->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (!$data['view']) {
                 Toastr::error(_trans('response.Travel not found.'), 'Error');
@@ -131,14 +131,14 @@ class TravelController extends Controller
             $data['title']     = _trans('travel.Edit Travel');
             $data['edit']      = $this->service->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (!$data['edit']) {
                 Toastr::error(_trans('response.Travel not found.'), 'Error');
                 return redirect()->back();
             }
             $data['url']      = (hasPermission('travel_update')) ? route('travel.update', $id) : '';
-            $data['travel_types']  = dbTable('travel_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['travel_types']  = dbTable('travel_types', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.travel.edit', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -198,7 +198,7 @@ class TravelController extends Controller
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             if (!is_Admin()) {
                 $params['user_id'] = auth()->user()->id;

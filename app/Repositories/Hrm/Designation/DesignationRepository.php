@@ -63,7 +63,7 @@ class DesignationRepository
     {
         // Log::info($request->all());
         $data = $this->designation->query()->with('status')
-            ->where('company_id', auth()->user()->company_id);
+            ->where('company_id', 1);
         $where = array();
 
         if ($request->search) {
@@ -171,11 +171,11 @@ class DesignationRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $designation = $this->designation->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $designation = $this->designation->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Designation activate successfully.'), $designation);
             }
             if (@$request->action == 'inactive') {
-                $designation = $this->designation->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $designation = $this->designation->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Designation inactivate successfully.'), $designation);
             }
             return $this->responseWithError(_trans('message.Designation failed'), [], 400);
@@ -188,7 +188,7 @@ class DesignationRepository
     {
         try {
             if (@$request->ids) {
-                $designation = $this->designation->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $designation = $this->designation->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Designation delete successfully.'), $designation);
             } else {
                 return $this->responseWithError(_trans('message.Designation not found'), [], 400);
@@ -280,7 +280,7 @@ class DesignationRepository
                 $designation = new $this->designation;
                 $designation->title = $request->title;
                 $designation->status_id = $request->status;
-                $designation->company_id = auth()->user()->company_id;
+                $designation->company_id = 1;
                 $designation->save();
                 $this->createdBy($designation);
                 return $this->responseWithSuccess(_trans('message.Designation store successfully.'), 200);
@@ -295,13 +295,13 @@ class DesignationRepository
     function newUpdate($request, $designationModel)
     {
         try {
-            $designationModel = $this->designation->where('company_id', auth()->user()->company_id)->where('id', $designationModel)->first();
+            $designationModel = $this->designation->where('company_id', 1)->where('id', $designationModel)->first();
 
             if ($this->isExistsWhenUpdate($designationModel, $this->designation, 'title', $request->title)) {
                 $designation = $designationModel;
                 $designation->title = $request->title;
                 $designation->status_id = $request->status;
-                $designation->company_id = auth()->user()->company_id;
+                $designation->company_id = 1;
                 $designation->save();
                 $this->updatedBy($designation);
                 return $this->responseWithSuccess(_trans('message.Designation update successfully.'), 200);

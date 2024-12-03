@@ -67,7 +67,7 @@ class CompetenceController extends Controller
         try {
             $data['title']         = _trans('performance.Create Competence');
             $data['url']           = (hasPermission('performance_competence_store')) ? route('performance.competence.store') : '';
-            $data['competence_types']             = dbTable('competence_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']             = dbTable('competence_types', ['name', 'id'], ['company_id' => 1])->get();
             @$data['button']   = _trans('common.Save');
             return view('backend.performance.competence.createModal', compact('data'));
         } catch (\Throwable $th) {
@@ -122,7 +122,7 @@ class CompetenceController extends Controller
         try {
             $data['edit']      = $this->service->where([
                 'id' => $id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ])->first();
             if (blank($data['edit'])) {
                 Toastr::error(_translate('response.Data not found!'), 'Error');
@@ -130,7 +130,7 @@ class CompetenceController extends Controller
             }
             $data['title']         = _trans('performance.Create Competence');
             $data['url']           = (hasPermission('performance_competence_update')) ? route('performance.competence.update', $id) : '';
-            $data['competence_types']             = dbTable('competence_types', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']             = dbTable('competence_types', ['name', 'id'], ['company_id' => 1])->get();
             @$data['button']   = _trans('common.Save');
             return view('backend.performance.competence.createModal', compact('data'));
         } catch (\Throwable $th) {

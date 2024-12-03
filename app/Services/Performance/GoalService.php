@@ -41,7 +41,7 @@ class GoalService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->from && $request->to) {
             $files = $files->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -102,7 +102,7 @@ class GoalService extends BaseService
             $goal->start_date               = $request->start_date;
             $goal->end_date                 = $request->end_date;
             $goal->goal_type_id             = $request->goal_type_id;
-            $goal->company_id               = auth()->user()->company_id;
+            $goal->company_id               = 1;
             $goal->created_by               = auth()->id();
             $goal->save();
             return $this->responseWithSuccess(_trans('message.Goal created successfully.'), $goal);
@@ -115,7 +115,7 @@ class GoalService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $goal = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $goal = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$goal) {
                 return $this->responseWithError(_trans('message.Goal not found'), 'id', 404);
             }
@@ -138,7 +138,7 @@ class GoalService extends BaseService
 
     function delete($id)
     {
-        $goal = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $goal = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$goal) {
             return $this->responseWithError(_trans('message.Goal not found'), 'id', 404);
         }
@@ -155,7 +155,7 @@ class GoalService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->ids) {
-                $goal = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $goal = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 if ($goal) {
                     return $this->responseWithSuccess(_trans('message.Goal activate successfully.'), $goal);
                 }else{

@@ -73,7 +73,7 @@ class EloquentDailyLeaveRepository implements DailyLeaveRepositoryInterface
     {
         try {
             // Log::info($request);
-            $dailyLeave = $this->dailyLeave->query()->where('company_id', auth()->user()->company_id);
+            $dailyLeave = $this->dailyLeave->query()->where('company_id', 1);
             // if (auth()->user()->role->slug == 'staff') {
             //     $dailyLeave = $dailyLeave->where('user_id', auth()->id());
             // } else {
@@ -341,11 +341,11 @@ class EloquentDailyLeaveRepository implements DailyLeaveRepositoryInterface
         {
             try {
                 if (@$request->action == 'active') {
-                    $leave_request = $this->dailyLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                    $leave_request = $this->dailyLeave->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                     return $this->responseWithSuccess(_trans('message.Daily leave request activate successfully.'), $leave_request);
                 }
                 if (@$request->action == 'inactive') {
-                    $leave_request = $this->dailyLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                    $leave_request = $this->dailyLeave->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                     return $this->responseWithSuccess(_trans('message.Daily leave request inactivate successfully.'), $leave_request);
                 }
                 return $this->responseWithError(_trans('message.Daily leave request inactivate failed'), [], 400);
@@ -358,7 +358,7 @@ class EloquentDailyLeaveRepository implements DailyLeaveRepositoryInterface
         {
             try {
                 if (@$request->ids) {
-                    $leave_request = $this->dailyLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                    $leave_request = $this->dailyLeave->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                     return $this->responseWithSuccess(_trans('message.Daily leave request delete successfully.'), $leave_request);
                 } else {
                     return $this->responseWithError(_trans('message.Daily leave request inactivate failed'), [], 400);

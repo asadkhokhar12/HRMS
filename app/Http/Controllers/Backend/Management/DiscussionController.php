@@ -33,7 +33,7 @@ class DiscussionController extends Controller
         try {
             $result       = $this->projectService->where([
                 'id' => $request->project_id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ])->first();
             if (@$result) {
                 $data['title']    = _trans('project.Create Discussion');
@@ -63,7 +63,7 @@ class DiscussionController extends Controller
             $data['title']     = _trans('payroll.Discussion View');
             $params                = [
                 'id' => $request->discussion_id,
-                'company_id' => auth()->user()->company_id
+                'company_id' => 1
             ];
             $data['discussion']       = $this->discussionService->where($params)->first();
             if (@$data['discussion']) {

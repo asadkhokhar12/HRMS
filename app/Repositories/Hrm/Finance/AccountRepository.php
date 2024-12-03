@@ -66,7 +66,7 @@ class AccountRepository
 
     public function datatable()
     {
-        $content = $this->model->with('status')->where('company_id', auth()->user()->company_id);
+        $content = $this->model->with('status')->where('company_id', 1);
         return datatables()->of($content->latest()->get())
             ->addColumn('action', function ($data) {
                 $action_button = '';
@@ -147,7 +147,7 @@ class AccountRepository
             $params['department_id'] = $request->department;
         }
         $data = $this->model->with('status')
-            ->where('company_id', auth()->user()->company_id)
+            ->where('company_id', 1)
             ->where($params);
         if (@$request->from && @$request->to) {
             $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
@@ -205,11 +205,11 @@ class AccountRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $accounts = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $accounts = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Account activate successfully.'), $accounts);
             }
             if (@$request->action == 'inactive') {
-                $accounts = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $accounts = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Account inactivate successfully.'), $accounts);
             }
             return $this->responseWithError(_trans('message.Account inactivate failed'), [], 400);
@@ -223,7 +223,7 @@ class AccountRepository
     {
         try {
             if (@$request->ids) {
-                $accounts = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $accounts = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Account Delete successfully.'), $accounts);
             } else {
                 return $this->responseWithError(_trans('message.Account not found'), [], 400);

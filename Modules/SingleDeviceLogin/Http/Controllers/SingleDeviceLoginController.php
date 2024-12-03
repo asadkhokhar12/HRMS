@@ -29,7 +29,7 @@ class SingleDeviceLoginController extends Controller
             $data = User::where('branch_id', userBranch())
                 ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id',
                     'name', 'device_id', 'device_info')
-                ->where('company_id', auth()->user()->company_id);
+                ->where('company_id', 1);
             $where = array();
             if ($request->search) {
                 $where[] = ['name', 'like', '%' . $request->search . '%'];

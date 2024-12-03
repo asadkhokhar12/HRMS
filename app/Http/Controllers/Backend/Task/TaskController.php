@@ -59,7 +59,7 @@ class TaskController extends Controller
         try {
             $data['title']    = _trans('task.Task Create');
             $data['url']      = (hasPermission('task_store')) ? route('task.store') : '';
-            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.task.create', compact('data', 'request'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -98,7 +98,7 @@ class TaskController extends Controller
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             $data['edit']       = $this->taskService->where($params)->with('members')->first();
             if (!$data['edit']) {

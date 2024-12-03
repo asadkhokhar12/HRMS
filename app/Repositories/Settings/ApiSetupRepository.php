@@ -42,7 +42,7 @@ class ApiSetupRepository extends BaseRepository
             $current_setup->key=$request['api_key'];
             $current_setup->secret=@$request['secret'] ?? null;
             $current_setup->endpoint=@$request['api_endpoint'];
-            $current_setup->company_id=auth()->user()->company_id;
+            $current_setup->company_id=1;
 
             $current_setup->save();
         }

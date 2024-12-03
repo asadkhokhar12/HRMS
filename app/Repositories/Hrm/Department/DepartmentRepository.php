@@ -135,7 +135,7 @@ class DepartmentRepository
     { 
             // Log::info($request->all());
             $data =  $this->department->query()->with('status')
-                ->where('company_id', auth()->user()->company_id);
+                ->where('company_id', 1);
             $where = array();
             if ($request->search) {
                 $where[] = ['title', 'like', '%' . $request->search . '%'];
@@ -187,11 +187,11 @@ class DepartmentRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $department = $this->department->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $department = $this->department->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Department activate successfully.'), $department);
             }
             if (@$request->action == 'inactive') {
-                $department = $this->department->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $department = $this->department->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Department inactivate successfully.'), $department);
             }
             return $this->responseWithError(_trans('message.Department failed'), [], 400);
@@ -205,7 +205,7 @@ class DepartmentRepository
     {
         try {
             if (@$request->ids) {
-                $department = $this->department->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $department = $this->department->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Department Delete successfully.'), $department);
             } else {
                 return $this->responseWithError(_trans('message.Department not found'), [], 400);
@@ -298,7 +298,7 @@ class DepartmentRepository
                 $department = new $this->department;
                 $department->title = $request->title;
                 $department->status_id = $request->status;
-                $department->company_id = auth()->user()->company_id;
+                $department->company_id = 1;
                 $department->save();
                 $this->createdBy($department);
                 return $this->responseWithSuccess(_trans('message.Department store successfully.'), 200);
@@ -312,12 +312,12 @@ class DepartmentRepository
     function newUpdate($request, $id)
     {
         try {
-            $departmentModel = $this->department->where('company_id', auth()->user()->company_id)->find($id);
+            $departmentModel = $this->department->where('company_id', 1)->find($id);
             if ($this->isExistsWhenUpdate($departmentModel,$this->department, 'title', $request->title)) {
                 $department = $departmentModel;
                 $department->title = $request->title;
                 $department->status_id = $request->status;
-                $department->company_id = auth()->user()->company_id;
+                $department->company_id = 1;
                 $department->save();
                 $this->updatedBy($department);
                 return $this->responseWithSuccess(_trans('message.Department update successfully.'), 200);
@@ -330,7 +330,7 @@ class DepartmentRepository
     }
 
     function getDepartmentStaff(){
-        $department = $this->department->where('company_id', auth()->user()->company_id)->get();
+        $department = $this->department->where('company_id', 1)->get();
         $departmentStaff = [];
         foreach ($department as $key => $value) {
             $departmentStaff[$key]['name'] = $value->title;

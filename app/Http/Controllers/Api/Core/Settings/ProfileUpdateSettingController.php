@@ -41,7 +41,7 @@ class ProfileUpdateSettingController extends Controller
             $department_id = $request->input('department_id');
             $search = $request->input('search');
 
-            $query = DB::table('users')->where('company_id', auth()->user()->company_id);
+            $query = DB::table('users')->where('company_id', 1);
             $query->select('id', 'name', 'phone', 'designation_id', 'avatar_id');
 
             if ($designation_id) {

@@ -129,7 +129,7 @@ class MeetingWebController extends Controller
         try {
             $data['view']       = $this->meeting->getModel([
                 'id' => $id,
-                'company_id' =>  auth()->user()->company_id
+                'company_id' =>  1
             ])->first();
             if (!blank($data['view'])) {
                 $data['title']    = _trans('common.Meeting View');

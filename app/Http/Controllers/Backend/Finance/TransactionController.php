@@ -34,7 +34,7 @@ class TransactionController extends Controller
         $data['title']          = _trans('common.Transaction History');
         $data['fields']         = $this->transactionRepository->fields('transaction');
         $data['accounts']       = $this->accountRepository->model([
-            'company_id' => auth()->user()->company_id,
+            'company_id' => 1,
         ])->get();
         return view('backend.finance.transaction.index', compact('data'));
     }

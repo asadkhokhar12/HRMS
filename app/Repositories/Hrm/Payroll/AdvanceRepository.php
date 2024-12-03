@@ -36,7 +36,7 @@ class AdvanceRepository
     
     function userDataTable($request, $user_id)
     {
-        $content = $this->model->query()->with('employee:id,department_id,name')->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->with('employee:id,department_id,name')->where('company_id', 1);
         $params = [];
         if (@$request->status_id) {
             $params['status_id'] = $request->status_id;
@@ -64,7 +64,7 @@ class AdvanceRepository
 
     public function dataTable($request)
     {
-        $content = $this->model->query()->with('employee:id,department_id,name')->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->with('employee:id,department_id,name')->where('company_id', 1);
         $params = [];
         if (auth()->user()->role->slug == 'staff') {
             $params['user_id'] = auth()->user()->id;
@@ -186,7 +186,7 @@ class AdvanceRepository
             $advance->recover_from = $request->recover_from;
             $advance->remarks = $request->reason;
             $advance->due_amount = $request->amount;
-            $advance->company_id = auth()->user()->company_id;
+            $advance->company_id = 1;
             $advance->created_by = auth()->id();
             $advance->updated_by = auth()->id();
             $advance->save();
@@ -349,7 +349,7 @@ class AdvanceRepository
     function table($request)
     {
         // Log::info($request->all());
-        $data = $this->model->query()->with('employee:id,department_id,name')->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->with('employee:id,department_id,name')->where('company_id', 1);
         $params = [];
         if (auth()->user()->role->slug == 'staff') {
             $params['user_id'] = auth()->user()->id;

@@ -81,7 +81,7 @@ class BranchRepository
     public function destroy($id)
     {
         try{
-            $branch = $this->branch->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $branch = $this->branch->where(['id' => $id, 'company_id' => 1])->first();
             $branch->delete();
             return $this->responseWithSuccess(_trans('message.Branch Delete successfully.'), $branch);
         } catch (\Throwable $th) {
@@ -111,7 +111,7 @@ class BranchRepository
     function table($request)
     {
         $data =  $this->branch->query()->with('status')
-            ->where('company_id', auth()->user()->company_id)
+            ->where('company_id', 1)
             ->where('name','!=','Head Office');
         $where = array();
         if ($request->search) {
@@ -167,11 +167,11 @@ class BranchRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $branch = $this->branch->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $branch = $this->branch->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Branch activate successfully.'), $branch);
             }
             if (@$request->action == 'inactive') {
-                $branch = $this->branch->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $branch = $this->branch->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Branch inactivate successfully.'), $branch);
             }
             return $this->responseWithError(_trans('message.branch inactivate failed'), [], 400);
@@ -185,7 +185,7 @@ class BranchRepository
     {
         try {
             if (@$request->ids) {
-                $branch = $this->branch->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $branch = $this->branch->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Branch activate successfully.'), $branch);
             } else {
                 return $this->responseWithError(_trans('message.Branch not found'), [], 400);
@@ -339,7 +339,7 @@ class BranchRepository
                 $branch->email = $request->email;
                 $branch->address = $request->address;
                 $branch->status_id = $request->status;
-                $branch->company_id = auth()->user()->company_id;
+                $branch->company_id = 1;
                 $branch->save();
                 $this->createdBy($branch);
                 return $this->responseWithSuccess(_trans('message.Branch Created successfully.'), 200);

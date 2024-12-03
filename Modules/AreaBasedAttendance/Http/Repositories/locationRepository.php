@@ -43,7 +43,7 @@ class locationRepository
 
     public function datatable()
     {
-        $content = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $content = $this->model->query()->where('company_id', 1);
         return datatables()->of($content->latest()->get())
             ->addColumn('action', function ($data) {
                 $action_button = '';
@@ -80,7 +80,7 @@ class locationRepository
             $where = [
                 'latitude'  => $request->latitude,
                 'longitude' => $request->longitude,
-                'company_id'=> auth()->user()->company_id,
+                'company_id'=> 1,
             ];
             // Log::info($where);
             $location_bind = $this->model->where($where)->first();
@@ -104,7 +104,7 @@ class locationRepository
     function update($request, $id)
     {
         try {
-            $location_bind = $this->model(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $location_bind = $this->model(['id' => $id, 'company_id' => 1])->first();
             if (!$location_bind) {
                 return $this->responseWithError(_trans('message.Location not found'), 'id', 422);
             }
@@ -124,7 +124,7 @@ class locationRepository
 
     function delete($id)
     {
-        $location = $this->model(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $location = $this->model(['id' => $id, 'company_id' => 1])->first();
         if (!$location) {
             return $this->responseWithError(_trans('message.Location not found'), 'id', 404);
         }
@@ -140,7 +140,7 @@ class locationRepository
     function table($request)
     {
         // Log::info($request);
-        $data = $this->model->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->model->query()->where('company_id', 1);
         if ($request->from && $request->to) {
             $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -195,11 +195,11 @@ class locationRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $location = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $location = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Location activate successfully.'), $location);
             }
             if (@$request->action == 'inactive') {
-                $location = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $location = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Location inactivate successfully.'), $location);
             }
             return $this->responseWithError(_trans('message.Location failed'), [], 400);
@@ -213,7 +213,7 @@ class locationRepository
     {
         try {
             if (@$request->ids) {
-                $location = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $location = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Location Delete successfully.'), $location);
             } else {
                 return $this->responseWithError(_trans('message.Location not found'), [], 400);

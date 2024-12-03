@@ -31,7 +31,7 @@ class ProfileUpdateSettingRepository
     {
         // $designation_id= $request->get('designation_id');
         // $designation = $this->designation->query()->where('id', $designation_id)->first();
-        $users = $this->user->query()->where('company_id', auth()->user()->company_id);
+        $users = $this->user->query()->where('company_id', 1);
         $users->when(\request()->get('designation_id'),function(Builder $builder){
                 return $builder->where('designation_id',\request()->get('designation_id'));
         });
@@ -51,7 +51,7 @@ class ProfileUpdateSettingRepository
     }
 
     public function getUserInfo($request){
-        $user = $this->user->query()->where(['id' => $request['id'] , 'company_id' => auth()->user()->company_id]);
+        $user = $this->user->query()->where(['id' => $request['id'] , 'company_id' => 1]);
         $user->select('id', 'name', 'phone', 'designation_id', 'avatar_id');
         $array = $user->paginate(10);
         $data = new UserCollection($array);
@@ -62,7 +62,7 @@ class ProfileUpdateSettingRepository
     {
         $department_id = $request->get('department_id');
         $designation = $this->designation->query()->where('id', $department_id)->first();
-        $users = $this->user->query()->where('company_id', auth()->user()->company_id);
+        $users = $this->user->query()->where('company_id', 1);
         $users->when(\request()->get('department_id'), function (Builder $builder) {
             return $builder->where('department_id', \request()->get('department_id'));
         });
@@ -83,7 +83,7 @@ class ProfileUpdateSettingRepository
     
     public function getSearchUser($request)
     {
-        $users = $this->user->query()->where('company_id', auth()->user()->company_id);
+        $users = $this->user->query()->where('company_id', 1);
         $users->select('id', 'name', 'phone', 'designation_id', 'avatar_id');
 
         $data = $users->when(\request('search'), function (Builder $builder) {
@@ -97,7 +97,7 @@ class ProfileUpdateSettingRepository
     }
     public function getAllUserInfo($request)
     {
-        $users = $this->user->query()->where('company_id', auth()->user()->company_id);
+        $users = $this->user->query()->where('company_id', 1);
         $users->select('id', 'name', 'phone', 'designation_id', 'avatar_id');
         $array = $users->paginate(10);
         $data = new UserCollection($array);
@@ -131,7 +131,7 @@ class ProfileUpdateSettingRepository
     public function getDepartmentWiseUsers($request)
     {
         $designation = $this->designation->query()->where('id', $designation_id)->first();
-        $users = $this->user->query()->where('company_id', auth()->user()->company_id);
+        $users = $this->user->query()->where('company_id', 1);
         $users->when(\request()->get('designation_id'),function(Builder $builder){
                 return $builder->where('designation_id',\request()->get('designation_id'));
         });

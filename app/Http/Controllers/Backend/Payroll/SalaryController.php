@@ -427,10 +427,10 @@ class SalaryController extends Controller
 
             $data['last_day'] = date('t', strtotime($request->month));
             $data['sub_title'] = 'From 1 ' . $data['month'] . ' to ' . $data['last_day'] . ' ' . $data['month'] . ' ' . $year;
-            $data['commissions'] = $commission = Commission::where('status_id', 1)->where('company_id', auth()->user()->company_id)->get();
+            $data['commissions'] = $commission = Commission::where('status_id', 1)->where('company_id', 1)->get();
             $salarySheet = $this->salaryRepository->salarySheet($request);
             $data['salarySheet'] = $salarySheet;
-            SalarySheetReport::where('company_id', auth()->user()->company_id)->delete();
+            SalarySheetReport::where('company_id', 1)->delete();
             foreach ($data['salarySheet'] as $key => $salarySheet) {
                 try {
                     $db_salary_sheet = new SalarySheetReport();

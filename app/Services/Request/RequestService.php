@@ -40,7 +40,7 @@ class RequestService extends BaseService
 
     public function userDatatable($request, $user_id)
     {
-        $request = $this->model->with('user', 'status', 'type')->where(['company_id' => auth()->user()->company_id]);
+        $request = $this->model->with('user', 'status', 'type')->where(['company_id' => 1]);
 
         $request = $request->where('user_id', $user_id)->paginate($request->limit ?? 10);
 
@@ -58,7 +58,7 @@ class RequestService extends BaseService
          */
 
         try {
-            $query = $this->model->with('user', 'status')->where(['company_id' => auth()->user()->company_id]);
+            $query = $this->model->with('user', 'status')->where(['company_id' => 1]);
          
 
             if (!is_Admin()) {
@@ -144,7 +144,7 @@ class RequestService extends BaseService
             $request->description = $request->content;
             $request->amount = $request->actual_amount;
             $request->status_id = 2;
-            $request->company_id = auth()->user()->company_id;
+            $request->company_id = 1;
             $request->created_by = auth()->id();
             if ($request->hasFile('attachment')) {
                 $request->attachment = $this->uploadImage($request->attachment, 'request/files')->id;
@@ -189,7 +189,7 @@ class RequestService extends BaseService
     }
     public function delete($id)
     {
-        $request = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $request = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$request) {
             return $this->responseWithError(_trans('message.Request not found'), 'id', 404);
         }
@@ -205,7 +205,7 @@ class RequestService extends BaseService
     }
     public function approve($request, $id)
     {
-        $request = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $request = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$request) {
             return $this->responseWithError(_trans('message.Request not found'), 'id', 404);
         }
@@ -224,11 +224,11 @@ class RequestService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $request = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $request = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Request activate successfully.'), $request);
             }
             if (@$request->action == 'inactive') {
-                $request = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $request = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Request inactivate successfully.'), $request);
             }
             return $this->responseWithError(_trans('message.Request failed'), [], 400);
@@ -241,7 +241,7 @@ class RequestService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $requests = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $requests = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($requests as $request) {
                     if (@$request->attachment) {
                         $this->deleteImage(asset_path($request->attachment));

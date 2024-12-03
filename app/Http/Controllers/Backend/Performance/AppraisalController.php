@@ -65,9 +65,9 @@ class AppraisalController extends Controller
         try {
             $data['title']         = _trans('performance.Create Appraisal');
             $data['url']           = (hasPermission('performance_appraisal_store')) ? route('performance.appraisal.store') : '';
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
             @$data['button']   = _trans('common.Save');
-            $data['users']    = User::where('status_id', 1)->where('company_id', auth()->user()->company_id)->select('id', 'name')->get();
+            $data['users']    = User::where('status_id', 1)->where('company_id', 1)->select('id', 'name')->get();
             return view('backend.performance.appraisal.createModal', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');
@@ -100,7 +100,7 @@ class AppraisalController extends Controller
         try {
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.View Appraisal');
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
             return view('backend.performance.appraisal.viewModal', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');
@@ -119,9 +119,9 @@ class AppraisalController extends Controller
             $data['edit']               = $this->service->find($id);
             $data['title']              = _trans('performance.Edit Appraisal');
             $data['url']                = (hasPermission('performance_appraisal_update')) ? route('performance.appraisal.update', $id) : '';
-            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => auth()->user()->company_id])->get();
+            $data['competence_types']   = CompetenceType::with('competencies')->where(['company_id' => 1])->get();
             @$data['button']            = _trans('common.Update');
-            $data['users']    = User::where('status_id', 1)->where('company_id', auth()->user()->company_id)->select('id', 'name')->get();
+            $data['users']    = User::where('status_id', 1)->where('company_id', 1)->select('id', 'name')->get();
             return view('backend.performance.appraisal.editModal', compact('data'));
         } catch (\Throwable $th) {
             return response()->json('fail');

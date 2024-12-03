@@ -53,7 +53,7 @@ class DepositController extends Controller
 
         $data['accounts']      = $this->accountRepository->model(
             [
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ]
         )->get();
         return view('backend.finance.deposit.index', compact('data'));

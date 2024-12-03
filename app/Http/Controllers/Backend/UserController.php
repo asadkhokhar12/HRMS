@@ -577,7 +577,7 @@ class UserController extends Controller
             $new = new UserDocumentRequest();
             $new->user_id = auth()->id();
             $new->branch_id = auth()->user()->branch_id;
-            $new->company_id = auth()->user()->company_id;
+            $new->company_id = 1;
             $new->request_type = $request->request_type;
             $new->request_description = $request->request_description;
             $new->approved = 0;

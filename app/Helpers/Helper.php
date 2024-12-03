@@ -2246,7 +2246,7 @@ function allUnreadNotificationCount()
 
 function getNotifiableIds()
 {
-    $company_id = auth()->user()->company_id ?? 2;
+    $company_id = 1;
     $cacheKey = 'notifiable_users_' . $company_id;
 
     // Check if the data is already cached

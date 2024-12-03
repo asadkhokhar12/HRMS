@@ -86,7 +86,7 @@ class AssignLeaveRepository
     //                 $assign_leave->days = $request->days;
     //                 $assign_leave->type_id = $request->type_id;
     //                 $assign_leave->user_id = $request->user_id;
-    //                 $assign_leave->company_id = auth()->user()->company_id;
+    //                 $assign_leave->company_id = 1;
     //                 $assign_leave->status_id = $request->status_id;
     //                 $assign_leave->save();
 
@@ -114,7 +114,7 @@ class AssignLeaveRepository
     //                 $assign_leave->days = $request->days;
     //                 $assign_leave->type_id = $request->type_id;
     //                 $assign_leave->department_id = $request->department_id;
-    //                 $assign_leave->company_id = auth()->user()->company_id;
+    //                 $assign_leave->company_id = 1;
     //                 $assign_leave->status_id = $request->status_id;
     //                 $assign_leave->save();
 
@@ -168,7 +168,7 @@ class AssignLeaveRepository
                     $assign_leave->days = $request->days;
                     $assign_leave->type_id = $request->type_id;
                     $assign_leave->user_id = $request->user_id;
-                    $assign_leave->company_id = auth()->user()->company_id;
+                    $assign_leave->company_id = 1;
                     $assign_leave->status_id = $request->status_id;
                     $assign_leave->save();
     
@@ -201,7 +201,7 @@ class AssignLeaveRepository
     
                 if ($request->department_id === 'all') {
                     // Fetch all departments
-                    $departmentIds = Department::where('company_id', auth()->user()->company_id)
+                    $departmentIds = Department::where('company_id', 1)
                         ->where('status_id', 1)
                         ->pluck('id')
                         ->toArray();
@@ -218,7 +218,7 @@ class AssignLeaveRepository
                                 $assign_leave->days = $request->days;
                                 $assign_leave->type_id = $request->type_id;
                                 $assign_leave->department_id = $department_id;
-                                $assign_leave->company_id = auth()->user()->company_id;
+                                $assign_leave->company_id = 1;
                                 $assign_leave->status_id = $request->status_id;
                                 $assign_leave->save();
     
@@ -282,7 +282,7 @@ class AssignLeaveRepository
 
     public function pre_update($request, $id)
     {
-        $assignLeaveModel = $this->assignLeave->where('company_id', auth()->user()->company_id)->where('id', $id)->first();
+        $assignLeaveModel = $this->assignLeave->where('company_id', 1)->where('id', $id)->first();
         // $assign_leave = $assignLeaveModel;
         if (!empty($assignLeaveModel)) {
             $assignLeaveModel->days = $request->days;
@@ -297,7 +297,7 @@ class AssignLeaveRepository
     public function update($request, $id)
     {
         try {
-            $assignLeaveModel = $this->assignLeave->where('company_id', auth()->user()->company_id)->where('id', $id)->first();
+            $assignLeaveModel = $this->assignLeave->where('company_id', 1)->where('id', $id)->first();
             if (!empty($assignLeaveModel)) {
                 $oldTypeID = $assignLeaveModel->type_id;
                 if (settings('leave_assign') == 1) {  // employee
@@ -312,7 +312,7 @@ class AssignLeaveRepository
 
                         // Leave year (employee)
                         if (settings('leave_carryover')) {
-                            $leaveYearData = $this->leaveYear->where(['type_id' => $oldTypeID, 'user_id' => $assignLeaveModel->user_id, 'year' => now()->format('Y'), 'company_id' => auth()->user()->company_id])->first();
+                            $leaveYearData = $this->leaveYear->where(['type_id' => $oldTypeID, 'user_id' => $assignLeaveModel->user_id, 'year' => now()->format('Y'), 'company_id' => 1])->first();
                             $leaveYearData->type_id             = $request->type_id;
                             $leaveYearData->leave_days          = $request->days;
                             $leaveYearData->leave_available     = $request->days - $leaveYearData->leave_used;
@@ -333,7 +333,7 @@ class AssignLeaveRepository
 
                         // Leave year (department)
                         if (settings('leave_carryover')) {
-                            $leaveYearData = $this->leaveYear->where(['type_id' => $oldTypeID, 'department_id' => $request->department_id, 'year' => now()->format('Y'), 'company_id' => auth()->user()->company_id])->first();
+                            $leaveYearData = $this->leaveYear->where(['type_id' => $oldTypeID, 'department_id' => $request->department_id, 'year' => now()->format('Y'), 'company_id' => 1])->first();
                             $leaveYearData->type_id             = $request->type_id;
                             $leaveYearData->leave_days          = $request->days;
                             $leaveYearData->leave_available     = $request->days - $leaveYearData->leave_used;
@@ -399,7 +399,7 @@ class AssignLeaveRepository
     function table($request)
     {
         Log::info($request->all());
-        $data =  $this->assignLeave->query()->where('company_id', auth()->user()->company_id);
+        $data =  $this->assignLeave->query()->where('company_id', 1);
 
         // leave assign 1 = employee
         if (settings('leave_assign') == 1) {
@@ -483,7 +483,7 @@ class AssignLeaveRepository
     {
         //dd($request);
         Log::info($request->all());
-        $data =  $this->leaveYear->query()->where(['company_id' => auth()->user()->company_id, 'type_id' => $request->leave_type])->latest();
+        $data =  $this->leaveYear->query()->where(['company_id' => 1, 'type_id' => $request->leave_type])->latest();
 
         // leave assign 1 = employee
         if (settings('leave_assign') == 1) {
@@ -541,7 +541,7 @@ class AssignLeaveRepository
 
     public function updateAnnualLeaveCount($request, $days)
     {
-        $update = $this->leaveYear->where(['type_id' => $request->type_id, 'user_id' => $request->user_id, 'year' => now()->format('Y'), 'company_id' => auth()->user()->company_id])->first();
+        $update = $this->leaveYear->where(['type_id' => $request->type_id, 'user_id' => $request->user_id, 'year' => now()->format('Y'), 'company_id' => 1])->first();
         if ($update) {
             $update->leave_available    = $update->leave_available - $days;
             $update->leave_used         = $update->leave_used + $days;
@@ -560,7 +560,7 @@ class AssignLeaveRepository
                 'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                 'col' => 'col-md-12 form-group mb-3 ',
                 'label' => _trans('common.Year From'),
-                'options' => DB::table('leave_years')->where(['company_id' => auth()->user()->company_id, 'type_id' => @$updateModel->type_id, 'user_id' => @$updateModel->user_id])->get()->map(function ($data) use ($updateModel) {
+                'options' => DB::table('leave_years')->where(['company_id' => 1, 'type_id' => @$updateModel->type_id, 'user_id' => @$updateModel->user_id])->get()->map(function ($data) use ($updateModel) {
                     return [
                         'text' => $data->year,
                         'value' => $data->year,
@@ -597,7 +597,7 @@ class AssignLeaveRepository
             DB::beginTransaction();
             $leaveYearData = $this->leaveYear->where('id', $id)->first();
 
-            $transferred = $this->leaveYear->where(['type_id' => $leaveYearData->type_id, 'user_id' => $leaveYearData->user_id, 'year' => $request->year_from,  'company_id' => auth()->user()->company_id])->first();
+            $transferred = $this->leaveYear->where(['type_id' => $leaveYearData->type_id, 'user_id' => $leaveYearData->user_id, 'year' => $request->year_from,  'company_id' => 1])->first();
 
             if ($request->days === "") {
                 return $this->responseWithError(_trans('message.Enter days'), [], 400);
@@ -639,11 +639,11 @@ class AssignLeaveRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $assign_leave = $this->assignLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $assign_leave = $this->assignLeave->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Leave Assign activate successfully.'), $assign_leave);
             }
             if (@$request->action == 'inactive') {
-                $assign_leave = $this->assignLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $assign_leave = $this->assignLeave->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Leave Assign inactivate successfully.'), $assign_leave);
             }
             return $this->responseWithError(_trans('message.Leave Assign inactivate failed'), [], 400);
@@ -657,7 +657,7 @@ class AssignLeaveRepository
     {
         try {
             if (@$request->ids) {
-                $assign_leave = $this->assignLeave->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $assign_leave = $this->assignLeave->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.Assign leave delete successfully.'), $assign_leave);
             } else {
                 return $this->responseWithError(_trans('message.Assign leave not found'), [], 400);
@@ -687,7 +687,7 @@ class AssignLeaveRepository
     //             'class' => 'form-select select2-input ot-input mb-3 modal_select2',
     //             'col' => 'col-md-12 form-group mb-3 ',
     //             'label' => _trans('common.Department'),
-    //             'options' => Department::where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) {
+    //             'options' => Department::where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) {
     //                 return [
     //                     'text' => $data->title,
     //                     'value' => $data->id,
@@ -703,7 +703,7 @@ class AssignLeaveRepository
     //             'class' => 'form-select select2-input ot-input mb-3 modal_select2',
     //             'col' => 'col-md-12 form-group mb-3 ',
     //             'label' => _trans('leave.Leave Type'),
-    //             'options' => LeaveType::where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) {
+    //             'options' => LeaveType::where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) {
     //                 return [
     //                     'text' => $data->name,
     //                     'value' => $data->id,
@@ -764,7 +764,7 @@ class AssignLeaveRepository
                             'active' => false
                         ]
                     ],
-                    Department::where('company_id', auth()->user()->company_id)
+                    Department::where('company_id', 1)
                         ->where('status_id', 1)
                         ->get()
                         ->map(function ($data) {
@@ -785,7 +785,7 @@ class AssignLeaveRepository
                 'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                 'col' => 'col-md-12 form-group mb-3',
                 'label' => _trans('leave.Leave Type'),
-                'options' => LeaveType::where('company_id', auth()->user()->company_id)
+                'options' => LeaveType::where('company_id', 1)
                     ->where('status_id', 1)
                     ->get()
                     ->map(function ($data) {
@@ -841,7 +841,7 @@ class AssignLeaveRepository
                 'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                 'col' => 'col-md-12 form-group mb-3 ',
                 'label' => _trans('common.Employee'),
-                'options' => User::where('company_id', auth()->user()->company_id)->where('branch_id', userBranch())->where('status_id', 1)->get()->map(function ($data) {
+                'options' => User::where('company_id', 1)->where('branch_id', userBranch())->where('status_id', 1)->get()->map(function ($data) {
                     return [
                         'text' => $data->name,
                         'value' => $data->id,
@@ -857,7 +857,7 @@ class AssignLeaveRepository
                 'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                 'col' => 'col-md-12 form-group mb-3 ',
                 'label' => _trans('leave.Leave Type'),
-                'options' => LeaveType::where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) {
+                'options' => LeaveType::where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) {
                     return [
                         'text' => $data->name,
                         'value' => $data->id,
@@ -912,7 +912,7 @@ class AssignLeaveRepository
                     'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                     'col' => 'col-md-12 form-group mb-3 ',
                     'label' => _trans('common.Department'),
-                    'options' => DB::table('departments')->where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
+                    'options' => DB::table('departments')->where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
                         return [
                             'text' => $data->title,
                             'value' => $data->id,
@@ -928,7 +928,7 @@ class AssignLeaveRepository
                     'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                     'col' => 'col-md-12 form-group mb-3',
                     'label' => _trans('leave.Leave Type'),
-                    'options' => DB::table('leave_types')->where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
+                    'options' => DB::table('leave_types')->where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
                         return [
                             'text' => $data->name,
                             'value' => $data->id,
@@ -978,7 +978,7 @@ class AssignLeaveRepository
                     'class' => 'form-select select2-input ot-input mb-3 modal_select2',
                     'col' => 'col-md-12 form-group mb-3',
                     'label' => _trans('leave.Leave Type'),
-                    'options' => DB::table('leave_types')->where('company_id', auth()->user()->company_id)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
+                    'options' => DB::table('leave_types')->where('company_id', 1)->where('status_id', 1)->get()->map(function ($data) use ($updateModel) {
                         return [
                             'text' => $data->name,
                             'value' => $data->id,

@@ -42,9 +42,9 @@ class CompanyRepository implements BaseInterface
         // }
 
         if (auth()->user()->role_id != 1) {
-            $company = $company->where('id', auth()->user()->company_id);
+            $company = $company->where('id', 1);
         }else {
-            $company = $company->where('id', '!=', auth()->user()->company_id);
+            $company = $company->where('id', '!=', 1);
         }
 
 

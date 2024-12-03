@@ -303,7 +303,7 @@ class AttendanceRepository
             try {
                 $company_id = decrypt($request->qr_scan);
 
-                if (auth()->user()->company_id != $company_id) {
+                if (1 != $company_id) {
                     return $this->responseWithError('Invalid QR Code', [], 400);
                 }
                 return $this->responseWithSuccess('QR Matched');
@@ -448,13 +448,13 @@ class AttendanceRepository
     {
         // $date='2022-05-10';
         // $date=date('Y-m-d');
-        $attendance = $this->attendance->where('company_id', auth()->user()->company_id)
+        $attendance = $this->attendance->where('company_id', 1)
             ->where('date', $date)
             ->select('user_id', 'date')
             ->groupBy('user_id', 'date')
             ->get()
             ->count();
-        $total_employee = $this->user->where('company_id', auth()->user()->company_id)->where('status_id', 1)->count();
+        $total_employee = $this->user->where('company_id', 1)->where('status_id', 1)->count();
         $today_leave = $this->leave_request_repo->dateWiseLeaveCount($date);
         $data = [
             'Present' => $attendance,
@@ -948,7 +948,7 @@ class AttendanceRepository
                 $locationLog->address = $location['address'];
                 $locationLog->countryCode = $location['countryCode'];
                 $locationLog->user_id = auth()->id();
-                $locationLog->company_id = auth()->user()->company_id;
+                $locationLog->company_id = 1;
                 $locationLog->save();
                 break;
             }
@@ -1016,13 +1016,13 @@ class AttendanceRepository
     // new functions for
     public function getTodayAttendanceDashboard($date)
     {
-        $attendance = $this->attendance->where('company_id', auth()->user()->company_id)
+        $attendance = $this->attendance->where('company_id', 1)
             ->where('date', $date)
             ->select('user_id', 'date')
             ->groupBy('user_id', 'date')
             ->get()
             ->count();
-        $total_employee = $this->user->where('company_id', auth()->user()->company_id)->where('status_id', 1)->count();
+        $total_employee = $this->user->where('company_id', 1)->where('status_id', 1)->count();
         $today_leave = $this->leave_request_repo->dateWiseLeaveCount($date);
         $data = [
             [

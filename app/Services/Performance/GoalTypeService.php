@@ -40,7 +40,7 @@ class GoalTypeService extends BaseService
 
     function table($request)
     {
-        $files =  $this->model->where(['company_id' => auth()->user()->company_id]);
+        $files =  $this->model->where(['company_id' => 1]);
         if ($request->search) {
             $files = $files->where('name', 'like', '%' . $request->search . '%');
         }
@@ -89,7 +89,7 @@ class GoalTypeService extends BaseService
             $goal_type                           = new $this->model;
             $goal_type->name                     = $request->name;
             $goal_type->status_id                = $request->status;
-            $goal_type->company_id               = auth()->user()->company_id;
+            $goal_type->company_id               = 1;
             $goal_type->created_by               = auth()->id();
             $goal_type->updated_by               = auth()->id();
             $goal_type->save();
@@ -104,7 +104,7 @@ class GoalTypeService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $goal_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+            $goal_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
             if (!$goal_type) {
                 return $this->responseWithError(_trans('message.Goal Type not found'), 'id', 404);
             }
@@ -121,7 +121,7 @@ class GoalTypeService extends BaseService
 
     function delete($id)
     {
-        $goal_type = $this->model->where(['id' => $id, 'company_id' => auth()->user()->company_id])->first();
+        $goal_type = $this->model->where(['id' => $id, 'company_id' => 1])->first();
         if (!$goal_type) {
             return $this->responseWithError(_trans('message.Goal type not found'), 'id', 404);
         }
@@ -141,11 +141,11 @@ class GoalTypeService extends BaseService
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $goal_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $goal_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Goal type activate successfully.'), $goal_type);
             }
             if (@$request->action == 'inactive') {
-                $goal_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $goal_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Goal type inactivate successfully.'), $goal_type);
             }
             return $this->responseWithError(_trans('message.Goal type failed'), [], 400);
@@ -159,7 +159,7 @@ class GoalTypeService extends BaseService
     {
         try {
             if (@$request->ids) {
-                $goal_type = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $goal_type = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Goal type delete successfully.'), $goal_type);
             } else {
                 return $this->responseWithError(_trans('message.Goal type not found'), [], 400);

@@ -26,7 +26,7 @@ class TeamRepository implements TeamInterface
 
     public function dataTable($request, $id = null)
     {
-        $team = $this->team->query()->where('company_id', auth()->user()->company_id);
+        $team = $this->team->query()->where('company_id', 1);
         if (@$request->from && @$request->to) {
             $team = $team->whereBetween('created_at', [$request->from, $request->to]);
         }
@@ -92,7 +92,7 @@ class TeamRepository implements TeamInterface
         $team->team_lead_id=$request->team_lead_id;
         $team->status_id=$request->status_id;
         $team->user_id=auth()->user()->id;
-        $team->company_id=auth()->user()->company_id;
+        $team->company_id=1;
         if ($request->hasFile('file')) {
             $team->attachment_file_id = $this->uploadImage($request->file, 'uploads/employeeDocuments')->id;
         }

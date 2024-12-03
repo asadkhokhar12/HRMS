@@ -126,7 +126,7 @@ class IpRepository
     {
 
         // Log::info($request);
-        $data = $this->ipSetup->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->ipSetup->query()->where('company_id', 1);
         if ($request->from && $request->to) {
             $data = $data->whereBetween('created_at', start_end_datetime($request->from, $request->to));
         }
@@ -178,11 +178,11 @@ class IpRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $shift = $this->ipSetup->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $shift = $this->ipSetup->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.Ip activate successfully.'), $shift);
             }
             if (@$request->action == 'inactive') {
-                $shift = $this->ipSetup->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $shift = $this->ipSetup->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.Ip inactivate successfully.'), $shift);
             }
             return $this->responseWithError(_trans('message.Ip failed'), [], 400);
@@ -196,7 +196,7 @@ class IpRepository
     {
         try {
             if (@$request->ids) {
-                $shift = $this->ipSetup->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->delete();
+                $shift = $this->ipSetup->where('company_id', 1)->whereIn('id', $request->ids)->delete();
                 return $this->responseWithSuccess(_trans('message.Ip Delete successfully.'), $shift);
             } else {
                 return $this->responseWithError(_trans('message.Ip not found'), [], 400);

@@ -686,7 +686,7 @@ class NoticeRepository
     function table($request)
     {
         // Log::info($request->all());
-        $data = $this->notice->query()->where('company_id', auth()->user()->company_id);
+        $data = $this->notice->query()->where('company_id', 1);
         if ($request->from && $request->to) {
             $data = $data->whereBetween('date', start_end_datetime($request->from, $request->to));
         }
@@ -754,7 +754,7 @@ class NoticeRepository
     {
         try {
             if (@$request->ids) {
-                $notices = $this->notice->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->get();
+                $notices = $this->notice->where('company_id', 1)->whereIn('id', $request->ids)->get();
                 foreach ($notices as $notice) {
                     if (@$notice->attachment_file_id) {
                         $this->deleteImage(asset_path($notice->attachment_file_id));

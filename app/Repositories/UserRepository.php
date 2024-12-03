@@ -630,7 +630,7 @@ class UserRepository
     { {
             $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
                 ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
-                ->where('company_id', auth()->user()->company_id);
+                ->where('company_id', 1);
             $where = array();
             if ($request->search) {
                 $where[] = ['name', 'like', '%' . $request->search . '%'];
@@ -817,7 +817,7 @@ class UserRepository
             $data = $this->model->query()->where('company_id', $this->companyInformation()->id)->where('branch_id', userBranch())
                 // ->where('status_id', 1)
                 ->select('id', 'company_id', 'role_id', 'department_id', 'designation_id', 'avatar_id', 'name', 'email', 'phone', 'status_id', 'shift_id', 'is_free_location', 'is_hr', 'is_admin')
-                ->where('company_id', auth()->user()->company_id);
+                ->where('company_id', 1);
             $where = [];
             if ($request->search) {
                 $where[] = ['name', 'like', "%{$request->search}%"];
@@ -991,11 +991,11 @@ class UserRepository
         try {
             // Log::info($request->all());
             if (@$request->action == 'active') {
-                $userI = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 1]);
+                $userI = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 1]);
                 return $this->responseWithSuccess(_trans('message.User activate successfully.'), $userI);
             }
             if (@$request->action == 'inactive') {
-                $userI = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['status_id' => 4]);
+                $userI = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['status_id' => 4]);
                 return $this->responseWithSuccess(_trans('message.User inactivate successfully.'), $userI);
             }
             return $this->responseWithError(_trans('message.User status change failed'), [], 400);
@@ -1008,7 +1008,7 @@ class UserRepository
     {
         try {
             if (@$request->ids) {
-                $user = $this->model->where('company_id', auth()->user()->company_id)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
+                $user = $this->model->where('company_id', 1)->whereIn('id', $request->ids)->update(['deleted_at' => now()]);
                 return $this->responseWithSuccess(_trans('message.User activate successfully.'), $user);
             } else {
                 return $this->responseWithError(_trans('message.User not found'), [], 400);

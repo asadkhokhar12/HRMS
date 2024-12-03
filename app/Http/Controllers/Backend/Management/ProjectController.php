@@ -69,7 +69,7 @@ class ProjectController extends Controller
         try {
             $data['title']    = _trans('project.Projects Create');
             $data['url']      = (hasPermission('project_store')) ? route('project.store') : '';
-            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.project.create', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -125,7 +125,7 @@ class ProjectController extends Controller
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             $data['edit']       = $this->projectService->where($params)->with('members')->first();
             if (!$data['edit']) {
@@ -134,7 +134,7 @@ class ProjectController extends Controller
             }
             $data['title']    = _trans('project.Projects Edit');
             $data['url']      = (hasPermission('project_update')) ? route('project.update', [$data['edit']->id]) : '';
-            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => auth()->user()->company_id])->get();
+            $data['clients']  = dbTable('clients', ['name', 'id'], ['company_id' => 1])->get();
             return view('backend.project.edit', compact('data'));
         } catch (\Throwable $th) {
             Toastr::error(_trans('response.Something went wrong.'), 'Error');
@@ -249,7 +249,7 @@ class ProjectController extends Controller
             $data['title']         = _trans('payroll.Make Payment');
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
 
             $data['project']       = $this->projectService->where($params)->first();
@@ -258,12 +258,12 @@ class ProjectController extends Controller
                 [
                     'is_income' => 1,
                     'status_id' => 1,
-                    'company_id' => auth()->user()->company_id,
+                    'company_id' => 1,
                 ]
             )->get();
             $data['payment_method'] = DB::table('payment_methods')->where(
                 [
-                    'company_id' => auth()->user()->company_id,
+                    'company_id' => 1,
                 ]
             )->get();
             $data['url']           = (hasPermission('project_payment')) ? route('project.payment', $id) : '';
@@ -272,7 +272,7 @@ class ProjectController extends Controller
             }
             $data['accounts']      = $this->accountRepository->model(
                 [
-                    'company_id' => auth()->user()->company_id,
+                    'company_id' => 1,
                     'status_id' => 1,
                 ]
             )->get();
@@ -296,7 +296,7 @@ class ProjectController extends Controller
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             $project       = $this->projectService->where($params)->first();
             if (!$project) {
@@ -323,7 +323,7 @@ class ProjectController extends Controller
         try {
             $params                = [
                 'id' => $id,
-                'company_id' => auth()->user()->company_id,
+                'company_id' => 1,
             ];
             if (!is_Admin()) {
                 $params['client_id'] = auth()->user()->id;
