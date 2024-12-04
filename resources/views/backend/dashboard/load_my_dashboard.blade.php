@@ -5,16 +5,15 @@
             <div class="card summery-card ot-card h-100">
                 <div class="card-heading d-flex align-items-center">
                     <div class="card-icon {{ @$item['color_class'] }} dashboard-card-icon">
-                        <i class="{{ $item['image'] }}"></i>
+                        @if ($item['title'] === _trans('dashboard.Salary'))
+                            <img style="max-height: 42px; max-width: 38px;" src="{{ @$item['image'] }}" alt="">
+                        @else
+                            <i class="{{ $item['image'] }}"></i>
+                        @endif
                     </div>
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>
-                        @if ($item['title'] === _trans('dashboard.Payslip'))
-                            <a href="{{ route('hrm.payroll_salary.invoice_print', '0') }}"
-                                class="btn btn-primary mt-3">Download</a>
-                        @else
-                            <h1 class="custom"> {{ @$item['number'] }}</h1>
-                        @endif
+                        <h1 class="custom"> {{ @$item['number'] }}</h1>
                     </div>
                 </div>
             </div>
