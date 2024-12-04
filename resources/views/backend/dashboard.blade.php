@@ -6,7 +6,7 @@
     @endphp
     <div class="d-flex justify-content-between flex-wrap dashboard-heading  align-items-center pb-24 gap-3">
         <h1 class="mb-0">{{ _trans('common.Welcome to') }} {{ config('settings.app.company_name') }}
-            [{{ Auth::user()->name }}]</h1>
+            {{ Auth::user()->name }}</h1>
         {{-- dropdown menu --}}
         <div>
             <a href="{{ route('hrm.payroll_salary.invoice_print', $data['salary']->id ?? 0) }}"
