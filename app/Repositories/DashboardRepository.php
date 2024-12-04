@@ -930,12 +930,12 @@ class DashboardRepository
             ];
 
             $data['today'][] = [
-                'image' => $this->getNewStatisticsImage('project'),
+                'image' => $this->getNewStatisticsImage('payroll'),
                 'title' => _trans('dashboard.Salary'),
                 'color_class' => 'circle-primary',
                 'number' => "Rs " . number_format($totalSalary, 2),
             ];
-
+            // <i class=""></i>
             // $data['today'][] = [
             //     'image' => $this->getNewStatisticsImage('payroll'),
             //     'title' => _trans('dashboard.Payslip'),
