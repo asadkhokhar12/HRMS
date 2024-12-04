@@ -1,7 +1,7 @@
 <div class="row">
     @foreach ($data['dashboardMenus']['today'] as $key => $item)
         <!-- Single Dashboard Summery Card Start -->
-        <div class="col-12 col-md-6 col-lg-6 col-xl-6 pb-24">
+        <div class="col-12 col-md-4 col-lg-4 col-xl-4 pb-24">
             <div class="card summery-card ot-card h-100">
                 <div class="card-heading d-flex align-items-center">
                     <div class="card-icon {{ @$item['color_class'] }} dashboard-card-icon">

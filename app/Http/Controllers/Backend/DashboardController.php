@@ -66,40 +66,39 @@ class DashboardController extends Controller
         try {
             // Get the authenticated user's ID
             $userId = auth()->user()->id;
-    
+
             // Fetch the latest record for the user from salary_generates
             $latestSalaryGenerate = DB::table('salary_generates')
                 ->where('user_id', $userId)
-                ->latest() // Orders by 'created_at' in descending order
+                ->latest()
                 ->first();
-    
-            // Check if a record exists
-            // if (!$latestSalaryGenerate) {
-            //     throw new \Exception('No salary generate records found for this user.');
-            // }
-    
+
             // Prepare the parameters for fetching salary and menus
             $request['month'] = date('Y-m');
             $params = [
                 'id' => $latestSalaryGenerate->id ?? 0,
                 'company_id' => $this->companyRepository->company()->id,
             ];
-    
+
             // Fetch dashboard menus
             $menus = $this->dashboardRepository->getNewDashboardStatistics($request);
-    
+
             // Prepare the data for the view
             $data['dashboardMenus'] = @$menus->original['data'];
-            $data['salary'] = $this->salaryRepository->model($params)->first();
-    
+            $data['salary'] = $this->salaryRepository->model($params)->first() ?? null;
+
+            // Debugging log
+            Log::info('Salary Data:', ['salary' => $data['salary']]);
+
             // Render the view and return the HTML
             return view('backend.dashboard.load_my_dashboard', compact('data'))->render();
         } catch (\Throwable $th) {
-            // Return the error message for debugging
+            // Log error for debugging
+            Log::error('Error loading dashboard: ' . $th->getMessage());
             return $th->getMessage();
         }
     }
-    
+
 
     public function loadCompanyDashboard($request)
     {
@@ -213,7 +212,23 @@ class DashboardController extends Controller
             } else {
                 if (!config('settings.app')['site_under_maintenance']) {
 
+                    $userId = auth()->user()->id;
+
+                    // Fetch the latest record for the user from salary_generates
+                    $latestSalaryGenerate = DB::table('salary_generates')
+                        ->where('user_id', $userId)
+                        ->latest()
+                        ->first();
+
+                    // Prepare the parameters for fetching salary and menus
+                    $request['month'] = date('Y-m');
+                    $params = [
+                        'id' => $latestSalaryGenerate->id ?? 0,
+                        'company_id' => 1,
+                    ];
                     $data = $this->companyDashboard();
+                    $data['salary'] = $this->salaryRepository->model($params)->first() ?? null;
+
                     return view('backend.dashboard', compact('data'));
                 } else {
                     return redirect('/');
