@@ -736,7 +736,4 @@
 
                 @endif
             </ul>
-            <!-- parent menu list end  -->
-        </div>
-    </div>
-</aside>
+    

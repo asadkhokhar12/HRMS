@@ -4,12 +4,12 @@
         <div class="col-12 col-md-4 col-lg-4 col-xl-4 pb-24">
             <div class="card summery-card ot-card h-100">
                 <div class="card-heading d-flex align-items-center">
-                    <div class="card-icon {{ @$item['color_class'] }} dashboard-card-icon">
-                        @if ($item['title'] === _trans('dashboard.Salary'))
+                    <div class="card-icon dashboard-card-icon">
+                        {{-- @if ($item['title'] === _trans('dashboard.Salary')) --}}
                             <img style="max-height: 42px; max-width: 38px;" src="{{ @$item['image'] }}" alt="">
-                        @else
+                        {{-- @else
                             <i class="{{ $item['image'] }}"></i>
-                        @endif
+                        @endif --}}
                     </div>
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>

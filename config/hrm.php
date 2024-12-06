@@ -89,7 +89,13 @@ return [
             'path'=>'las la-calendar-check'
         ],
         'payroll'=>[
-            'path'=>'assets/app/dashboard/salary-2.png'
+            'path'=>'assets/app/dashboard/salary-3.png'
+        ],
+        'hours'=>[
+            'path'=>'assets/app/dashboard/hours.png'
+        ],
+        'calendar'=>[
+            'path'=>'assets/app/dashboard/calendar.png'
         ],
     ],
     'employee_type' => [

@@ -916,14 +916,14 @@ class DashboardRepository
 
             // Prepare data for response
             $data['today'][] = [
-                'image' => $this->getNewStatisticsImage('project'),
+                'image' => $this->getNewStatisticsImage('calendar'),
                 'title' => _trans('dashboard.Present Days'),
                 'color_class' => 'circle-primary',
                 'number' => "$present / $workingDays",
             ];
 
             $data['today'][] = [
-                'image' => $this->getNewStatisticsImage('project'),
+                'image' => $this->getNewStatisticsImage('hours'),
                 'title' => _trans('dashboard.Total Working Hours'),
                 'color_class' => 'circle-primary',
                 'number' => "{$totalWorkedHours} H {$totalWorkedMinutes} min / {$totalWorkingHours} H",
@@ -935,7 +935,6 @@ class DashboardRepository
                 'color_class' => 'circle-primary',
                 'number' => "Rs " . number_format($totalSalary, 2),
             ];
-            // <i class=""></i>
             // $data['today'][] = [
             //     'image' => $this->getNewStatisticsImage('payroll'),
             //     'title' => _trans('dashboard.Payslip'),
