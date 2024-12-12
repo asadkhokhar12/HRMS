@@ -32,8 +32,6 @@
             selectable: false,
             selectHelper: false,
             hiddenDays: [0, 6], // Hides Sundays (0) and Saturdays (6)
-
-           
         });
 
     });
