@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Hrm\Employee;
 
+use App\Models\FullCalenderEvent;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Visit\VisitImage;
@@ -150,10 +151,19 @@ class AppoinmentRepository
             return $this->responseWithError(__('Participant already scheduled, Please try after ' . $this->dateFormatInPlainText($request->date . ' ' . $appoinment_participant_schedules->appoinment_end_at)), [], 200);
         }
 
+        // Process the input and format the dates.
+        $start = Carbon::parse("{$request->date} {$request->appoinment_start_at}")->format('Y-m-d H:i:s');
+        $end = Carbon::parse("{$request->date} {$request->appoinment_end_at}")->format('Y-m-d H:i:s');
 
+        $fullCalenderEvent = new FullCalenderEvent();
+        $fullCalenderEvent->title = $request->title;
+        $fullCalenderEvent->start = $start; // Use the same formatted datetime.
+        $fullCalenderEvent->end = $end; // Use the same formatted datetime.
+        $fullCalenderEvent->save();
 
         $appoinment = new Appoinment;
         $appoinment->created_by = auth()->user()->id;
+        $appoinment->full_calender_id = $fullCalenderEvent->id ?? null;
         $appoinment->company_id = 1;
         $appoinment->date = $request->date;
         $appoinment->appoinment_with = $request->appoinment_with;
@@ -163,6 +173,8 @@ class AppoinmentRepository
         $appoinment->appoinment_start_at = $request->appoinment_start_at;
         $appoinment->appoinment_end_at = $request->appoinment_end_at;
         $appoinment->save();
+
+
 
         //Creator Participant
         $appoinment_participant = new AppoinmentParticipant;
@@ -204,7 +216,7 @@ class AppoinmentRepository
         if ($appoinment->appoinment_with != null) {
             // $this->sendFirebaseNotification($leaveRequest->user->manager_id, 'leave_approved', $leaveRequest->id, route('leaveRequest.index'));
             // $this->sendFirebaseNotification($appoinment->appoinment_with, 'appointment_request', $appoinment->id, null);
-            $this->sendChannelFirebaseNotification('user'.$appoinment->appoinment_with, 'appointment_request', null, route('leaveRequest.index'),$details['title'],$details['body'],null);
+            $this->sendChannelFirebaseNotification("user{$appoinment->appoinment_with}", 'appointment_request', null, route('leaveRequest.index'), $details['title'], $details['body'], null);
 
             sendDatabaseNotification($appoinment->appoinmentWith, $details);
         }
@@ -239,6 +251,16 @@ class AppoinmentRepository
         $appoinment->appoinment_start_at = $request->appoinment_start_at;
         $appoinment->appoinment_end_at = $request->appoinment_end_at;
         $appoinment->update();
+
+        // Process the input and format the dates.
+        $start = Carbon::parse("{$request->date} {$request->appoinment_start_at}")->format('Y-m-d H:i:s');
+        $end = Carbon::parse("{$request->date} {$request->appoinment_end_at}")->format('Y-m-d H:i:s');
+
+        $fullCalenderEvent = FullCalenderEvent::find($appoinment->full_calender_id);
+        $fullCalenderEvent->title = $request->title;
+        $fullCalenderEvent->start = $start; // Use the same formatted datetime.
+        $fullCalenderEvent->end = $end; // Use the same formatted datetime.
+        $fullCalenderEvent->update();
 
         //check appoinment participant exist or not
         $appoinment_participant = AppoinmentParticipant::where('appoinment_id', $appoinment->id)->where('participant_id', $appoinment->appoinment_with)->first();

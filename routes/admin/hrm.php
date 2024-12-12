@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FullCalenderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -203,6 +204,10 @@ Route::group(['prefix' => 'hrm', 'middleware' => ['xss', 'admin', 'MaintenanceMo
             Route::get('delete/{appointment}', [AppointmentController::class, 'delete'])->name('appointment.delete')->middleware('PermissionCheck:appointment_delete');
             //appointment request
             Route::get('table', [AppointmentController::class, 'table'])->name('appointment.table');
+
+            //Full Calender Route
+            Route::get('full-calender', [FullCalenderController::class, 'index'])->name('full.calender');
+            Route::post('full-calender/action', [FullCalenderController::class, 'action'])->name('full.calender.action');
         });
     });
 
