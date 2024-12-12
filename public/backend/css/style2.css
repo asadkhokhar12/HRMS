@@ -397,3 +397,8 @@ textarea.form-control:focus  {
 .min-height-500 {
 	min-height: 500px;
 }
+
+
+.fc-event, .fc-event-dot {
+  background-color: #003eff !important;
+}
