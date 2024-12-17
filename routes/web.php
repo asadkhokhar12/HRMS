@@ -10,6 +10,7 @@ use App\Http\Controllers\ValidationMessageController;
 use App\Http\Controllers\ExpireNotificationController;
 use App\Http\Controllers\Frontend\NavigatorController;
 use App\Http\Controllers\Frontend\Auth\LoginController;
+use App\Http\Controllers\FullCalenderController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -27,7 +28,6 @@ Route::get('face-register', function(){
 // Route::get('face-attendance', function(){
 //     return view('face_attendance');
 // });
-
 
 Route::get('tt',function(){
     return User::find(1)->all_shifts;

@@ -215,7 +215,7 @@
                                     </li>
                                 @endif
                                 <!-- @if (Auth::user()->role)
-                                    @if (Auth::user()->role->name === 'Staff')
+@if (Auth::user()->role->name === 'Staff')
 <li
                                             class="nav-item {{ menu_active_by_route('user.authProfile', ['leave_request']) }}">
                                             <a href="{{ route('user.authProfile', ['leave_request']) }}"
@@ -224,7 +224,7 @@
                                             </a>
                                         </li>
 @endif
-                                @endif -->
+@endif -->
 
 
 
@@ -529,11 +529,11 @@
                     {{-- Start meeting Routes --}}
                     {{-- @include('backend.meeting.sidebar') --}}
                     {{-- End meeting Routes --}}
-                    {{-- @if (hasPermission('appointment_menu') && hasFeature('appointment'))
+                    @if (hasPermission('appointment_menu') && hasFeature('appointment'))
                         <li
-                            class="sidebar-menu-item {{ set_menu([route('appointment.index', 'appointment.create')]) }}">
+                            class="sidebar-menu-item {{ set_menu([route('appointment.index', 'appointment.create', 'full.calender')]) }}">
                             <a href="javascript:void(0)"
-                                class="parent-item-content has-arrow  {{ menu_active_by_route(['appointment.index', 'appointment.create']) }}">
+                                class="parent-item-content has-arrow  {{ menu_active_by_route(['appointment.index', 'appointment.create', 'full.calender']) }}">
                                 <i class="las la-calendar-check"></i>
                                 <span class="on-half-expanded">
                                     {{ _trans('appointment.Appointment') }}
@@ -549,10 +549,17 @@
                                         <span>{{ _trans('common.List') }}</span>
                                     </a>
                                 </li>
+
+                                <li class="nav-item {{ menu_active_by_route(['full.calender']) }}">
+                                    <a href="{{ route('full.calender') }}"
+                                        class="  {{ set_active(route('full.calender')) }}">
+                                        <span>{{ _trans('common.calendar') }}</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif
-
+                    {{--   
                     @if (hasPermission('visit_menu') && hasFeature('visit'))
                         <li class="sidebar-menu-item {{ set_menu([route('visit.index')]) }}">
                             <a href="javascript:void(0)"

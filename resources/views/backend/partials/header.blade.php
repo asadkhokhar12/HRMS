@@ -29,3 +29,5 @@
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
     <link rel="stylesheet" href="{{ url('backend/css/c-ui.css') }}">
     <link rel="stylesheet" href="{{ url('backend/css/style2.css') }}">
+
+  
