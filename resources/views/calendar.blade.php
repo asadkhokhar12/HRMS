@@ -3,6 +3,24 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+            <div class="row my-3 mb-5">
+                <div class="col-md-12">
+                    <div class="">
+                        <label class="label">Employee:</label>
+                        <select id="userDropdown" name="userDropdown" class="form-select form-select-sm">
+                            <option hidden value="">Select employee</option>
+                            @foreach($employee as $user)
+                                <option value="{{ $user->id }}" class="fw-bold">{{ $user->name }} [ {{ $user->email}} ] </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="loader text-center my-4">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="calendar"></div>
         </div>
     </div>
@@ -21,19 +39,50 @@
             }
         });
 
+        $('.loader').hide();
+
         var calendar = $('#calendar').fullCalendar({
             editable: false,
+            initialView: 'dayGridMonth',
             header: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,listWeek'
             },
-            events: "{{ route('full.calender') }}", // Ensure the route is correctly evaluated
+            events: function(start, end, timezone, callback) {
+                
+                // Fetch events dynamically based on selected user
+                var userId = $('#userDropdown').val(); // Get selected user ID
+                $.ajax({
+                    url: "{{ route('full.calender') }}",
+                    data: { 
+                        user_id: userId,
+                        start: start.format(), // Format start date
+                        end: end.format()      // Format end date 
+                    },
+                    beforeSend:function(){
+                        $('.loader').show();
+                    },
+                    complete:function(){
+                        $('.loader').hide();
+                    },
+                    success: function(data) {
+                        callback(data); // Pass events to the calendar
+                    },
+                    error: function(error) {
+                        console.error('Error fetching events:', error);
+                    }
+                });
+            },
             selectable: false,
             selectHelper: false,
-            hiddenDays: [0, 6], // Hides Sundays (0) and Saturdays (6)
+            // hiddenDays: [0, 6], // Hides Sundays (0) and Saturdays (6)
         });
 
+        // User Dropdown Change Event
+        $('#userDropdown').on('change', function() {
+            $('#calendar').fullCalendar('refetchEvents'); // Reload events for selected user
+        });
     });
 </script>
 @endsection

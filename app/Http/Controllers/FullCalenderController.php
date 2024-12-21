@@ -3,19 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\FullCalenderEvent;
+use App\Models\Hrm\Appoinment\Appoinment;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 
 class FullCalenderController extends Controller
 {
+    protected $user;
+    public function __construct(
+        UserRepository $user,
+       
+    ) {
+        $this->user = $user;
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = FullCalenderEvent::whereDate('start', '>=', $request->start)
-                ->whereDate('end',   '<=', $request->end)
-                ->get(['id', 'title', 'start', 'end']);
-            return response()->json($data);
+
+            $userId = $request->user_id? $request->user_id: auth()->user()->id;
+
+            $data = Appoinment::whereDate('date', '>=', $request->start)
+                ->whereDate('date',   '<=', $request->end)
+                ->where('created_by', $userId)
+                ->get(['id', 'title', 'date', 'appoinment_start_at', 'appoinment_end_at']);
+
+            $events = [];
+
+            foreach($data as $event)
+            {
+                $events[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'start' => date('Y-m-d H:i a', strtotime($event->date.' '.$event->appoinment_start_at)),
+                    'end' => date('Y-m-d H:i a', strtotime($event->date.' '.$event->appoinment_end_at)),
+                ]; 
+            }
+
+            return response()->json($events);
         }
-        return view('calendar');
+
+        $employee = $this->user->getActiveAll();
+
+        return view('calendar', compact('employee'));
     }
 
     public function action(Request $request)
