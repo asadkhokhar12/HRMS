@@ -19,11 +19,11 @@
         {{-- <x-company-dropdown /> --}}
      
         
-        @if (config('app.mood')==="Saas" && isModuleActive("Saas") && (@auth()->user()->is_admin == 1 || @auth()->user()->role->slug == 'admin' || @auth()->user()->role->slug=="superadmin"))
+        {{-- @if (config('app.mood')==="Saas" && isModuleActive("Saas") && (@auth()->user()->is_admin == 1 || @auth()->user()->role->slug == 'admin' || @auth()->user()->role->slug=="superadmin"))
             @includeIf('MultiBranch::select_branch')
         @elseif (isModuleActive("MultiBranch") && env('APP_BRANCH') == 'MultiBranch' && hasPermission('branch_read'))
             @includeIf('MultiBranch::select_branch')
-        @endif
+        @endif --}}
 
 
         {{-- <x-branch-dropdown /> --}}
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <div class="header-control-item d-none d-lg-block">
+            {{-- <div class="header-control-item d-none d-lg-block">
                 <div class="item-content">
                     <button class="mt-0 noti-color sm-btn-with-radius position-relative " type="button" id="topbar_notifications"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -181,7 +181,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         @endif
         
 
