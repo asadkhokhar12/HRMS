@@ -493,8 +493,8 @@ class AppoinmentRepository
                     return [
                         'id' => $data->id,
                         'title' => $data->title,
-                        'appoinment_with' => $data->appoinmentWith->name,
-                        'date' => @$data->createdBy->name,
+                        'appoinment_with' => $data->appoinmentWith->name ?? 'N/A',
+                        'date' => @$data->createdBy->name ?? 'N/A',
                         'start_at' => showDate($data->appoinment_start_at),
                         'end_at' => showDate($data->appoinment_end_at),
                         'location' => $data->location,
