@@ -468,47 +468,53 @@ class AppoinmentRepository
 
     public function table($request)
     {
-        // Log::info($request->all());
-        $appoinment = $this->appoinment->with('participants');
+        try {
+            // Log::info($request->all());
+            $appoinment = $this->appoinment->with('participants');
 
-        if (!is_Admin()) {
-            $user_id = auth()->user()->id;
-        } else {
-            $user_id = @$request->user_id;
+            if (!is_Admin()) {
+                $user_id = auth()->user()->id;
+            } else {
+                $user_id = @$request->user_id;
+            }
+            if (@$user_id) {
+                $appoinment = $appoinment->orWhere('created_by', $user_id)->orWhere('appoinment_with', $user_id);
+            }
+            if ($request->search) {
+                $appoinment = $appoinment->where('title', 'like', '%' . $request->search . '%');
+            }
+            $files = $appoinment->orderBy('created_by', 'desc')->paginate($request->limit ?? 10);
+            return [
+                'data' => $files->map(function ($data) {
+                    // $files_array = '';
+                    // foreach ($data->visitImages as $key => $image) {
+                    //     $files_array .= '<a href="' . uploaded_asset($image->file_id) . '" target="_blank"> <img height="40px" width="40px" src="' . uploaded_asset($image->file_id) . '"/> </a>';
+                    // }
+                    return [
+                        'id' => $data->id,
+                        'title' => $data->title,
+                        'appoinment_with' => $data->appoinmentWith->name,
+                        'date' => @$data->createdBy->name,
+                        'start_at' => showDate($data->appoinment_start_at),
+                        'end_at' => showDate($data->appoinment_end_at),
+                        'location' => $data->location,
+                        // 'file' => $files_array,
+                        'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                    ];
+                }),
+                'pagination' => [
+                    'total' => $files->total(),
+                    'count' => $files->count(),
+                    'per_page' => $files->perPage(),
+                    'current_page' => $files->currentPage(),
+                    'total_pages' => $files->lastPage(),
+                    'pagination_html' => $files->links('backend.pagination.custom')->toHtml(),
+                ],
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Error in appointment table: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong!'], 500);
         }
-        if (@$user_id) {
-            $appoinment = $appoinment->orWhere('created_by', $user_id)->orWhere('appoinment_with', $user_id);
-        }
-        if ($request->search) {
-            $appoinment = $appoinment->where('title', 'like', '%' . $request->search . '%');
-        }
-        $files = $appoinment->orderBy('created_by', 'desc')->paginate($request->limit ?? 10);
-        return [
-            'data' => $files->map(function ($data) {
-                // $files_array = '';
-                // foreach ($data->visitImages as $key => $image) {
-                //     $files_array .= '<a href="' . uploaded_asset($image->file_id) . '" target="_blank"> <img height="40px" width="40px" src="' . uploaded_asset($image->file_id) . '"/> </a>';
-                // }
-                return [
-                    'id' => $data->id,
-                    'title' => $data->title,
-                    'appoinment_with' => $data->appoinmentWith->name,
-                    'date' => @$data->createdBy->name,
-                    'start_at' => showDate($data->appoinment_start_at),
-                    'end_at' => showDate($data->appoinment_end_at),
-                    'location' => $data->location,
-                    // 'file' => $files_array,
-                    'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                ];
-            }),
-            'pagination' => [
-                'total' => $files->total(),
-                'count' => $files->count(),
-                'per_page' => $files->perPage(),
-                'current_page' => $files->currentPage(),
-                'total_pages' => $files->lastPage(),
-                'pagination_html' =>  $files->links('backend.pagination.custom')->toHtml(),
-            ],
-        ];
     }
 }
