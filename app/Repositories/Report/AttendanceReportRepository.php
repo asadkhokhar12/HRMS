@@ -975,6 +975,7 @@ class AttendanceReportRepository
 
 
     public function singleAttendanceSummaryEmployee($user, $request)
+    
     {
         $data = [];
         $totalPresent = 0;
@@ -1020,30 +1021,17 @@ class AttendanceReportRepository
                 ->where(['company_id' => $user->company->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])
                 ->first();
     
-            // if ($attendance) {
-            //     $totalPresent += 1;
-    
-            //     // Calculate work time if check-out exists
-            //     if ($attendance->check_out) {
-            //         $workTime = $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
-            //         $totalWorkTime += $workTime;
-            //     Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
-
-            //     }
-            // }
-
             if ($attendance) {
                 $totalPresent += 1;
-            
+    
                 // Calculate work time if check-out exists
                 if ($attendance->check_out) {
                     $workTime = $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out);
                     Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$workTime}");
-            
+    
                     $totalWorkTime += $workTime;
                 }
             }
-            
         }
     
         // Calculate total working days excluding weekends and holidays
@@ -1058,8 +1046,6 @@ class AttendanceReportRepository
         return $data;
     }
     
-
-
 
     public function monthlyAttendanceSummary($user, $request)
     {
