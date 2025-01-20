@@ -1,12 +1,15 @@
 <div class="row">
-    {{-- @foreach ($data['dashboardMenus']['today'] as $key => $item)
+    @foreach ($data['dashboardMenus']['today'] as $key => $item)
         <!-- Single Dashboard Summery Card Start -->
         <div class="col-12 col-md-4 col-lg-4 col-xl-4 pb-24">
             <div class="card summery-card ot-card h-100">
                 <div class="card-heading d-flex align-items-center">
                     <div class="card-icon dashboard-card-icon">
+                        {{-- @if ($item['title'] === _trans('dashboard.Salary')) --}}
                             <img style="max-height: 42px; max-width: 38px;" src="{{ @$item['image'] }}" alt="">
-                        
+                        {{-- @else
+                            <i class="{{ $item['image'] }}"></i>
+                        @endif --}}
                     </div>
                     <div class="card-content">
                         <h4> {{ @$item['title'] }}</h4>
@@ -16,19 +19,12 @@
             </div>
         </div>
         <!-- Single Dashboard Summery Card End -->
-    @endforeach --}}
+    @endforeach
 </div>
 
 <div class="row">
-    <div class="col-12 col-md-4 col-lg-4 col-xl-4 pb-24">
-        <div class="card summery-card ot-card h-100">
-            <div class="card-heading d-flex align-items-center">
-                <h1>Work In progress...</h1>
-            </div>
-        </div>
-    </div>
     <!-- Dashboard Summery Card Start -->
-    {{-- <div class="col-md-6 pb-30">
+    <div class="col-md-6 pb-30">
         <div class="card ot-card">
             <div class="card-header d-flex flex-row justify-content-between align-items-baseline">
                 <div class="card-title">
@@ -51,7 +47,7 @@
                 <div id="task_summary_chart" class="custom-chart"></div>
             </div>
         </div>
-    </div> --}}
+    </div>
     {{-- <div class="col-md-6 pb-30">
         <div class="card ot-card">
             <div class="card-header d-flex flex-row justify-content-between align-items-baseline">

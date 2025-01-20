@@ -50,27 +50,31 @@ trait TimeDurationTrait
         return $hours;
     }
 
-    public function totalTimeDifferenceEmployee($start, $end): int
-    {
-        $startTime = Carbon::parse($start);
-        $endTime = Carbon::parse($end);
-        $diffInMinutes = $endTime->diffInMinutes($startTime);
-        return $diffInMinutes;
-    }
-
     // public function totalTimeDifferenceEmployee($start, $end): int
     // {
     //     $startTime = Carbon::parse($start);
     //     $endTime = Carbon::parse($end);
-
-    //     // Ensure that check-out time is later than check-in time
-    //     if ($endTime > $startTime) {
-    //         return $startTime->diffInMinutes($endTime);
-    //     }
-
-    //     // If check-out time is earlier than check-in, return 0 minutes
-    //     return 0;
+    //     $diffInMinutes = $endTime->diffInMinutes($startTime);
+    //     return $diffInMinutes;
     // }
+
+    public function totalTimeDifferenceEmployee($start, $end): int
+    {
+        // Parse the start and end times
+        $startTime = Carbon::parse($start);
+        $endTime = Carbon::parse($end);
+
+        // Check if the end time is earlier than the start time (crosses over midnight)
+        if ($endTime->lt($startTime)) {
+            // If the check-out time is earlier than the check-in time, we add one day to the end time
+            $endTime->addDay();
+        }
+
+        // Calculate the difference in minutes
+        $diffInMinutes = $endTime->diffInMinutes($startTime);
+
+        return $diffInMinutes;
+    }
 
 
     public function overTimeCount($attendance)

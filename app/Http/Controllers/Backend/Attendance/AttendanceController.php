@@ -58,10 +58,10 @@ class AttendanceController extends Controller
         if ($request->ajax()) {
             return $this->attendanceReportRepository->table($request);
         }
-        $data['class']  = 'attendance_table';
+        $data['class'] = 'attendance_table';
         $data['fields'] = $this->attendance_repo->fields();
-        $data['table']     = route('attendance.index');
-        $data['url_id']    = 'attendance_table_url';
+        $data['table'] = route('attendance.index');
+        $data['url_id'] = 'attendance_table_url';
         $data['checkbox'] = true;
         $data['title'] = _trans('attendance.Attendance History');
         $data['departments'] = $this->departmentRepository->getAll();
@@ -74,10 +74,10 @@ class AttendanceController extends Controller
         if ($request->ajax()) {
             return $this->machineAttendanceReportRepository->table($request);
         }
-        $data['class']  = 'attendance_table';
+        $data['class'] = 'attendance_table';
         $data['fields'] = $this->machine_attendance_repo->fields();
-        $data['table']     = route('machine.attendance');
-        $data['url_id']    = 'attendance_table_url';
+        $data['table'] = route('machine.attendance');
+        $data['url_id'] = 'attendance_table_url';
         $data['checkbox'] = true;
         $data['title'] = _trans('attendance.Machine Attendance History');
         $data['departments'] = $this->departmentRepository->getAll();
@@ -206,7 +206,6 @@ class AttendanceController extends Controller
     }
     public function dashboardAjaxCheckin(Request $request)
     {
-
         try {
             $request['user_id'] = auth()->user()->id;
             $request['check_in'] = date('H:i');
@@ -336,7 +335,7 @@ class AttendanceController extends Controller
     public function showImageInModal($attendance_id, $type)
     {
         try {
-            $data['title'] = $type == 'check_in' ?  _trans('common.Check in Image') :  _trans('common.Check out Image');
+            $data['title'] = $type == 'check_in' ? _trans('common.Check in Image') : _trans('common.Check out Image');
             $attendance = Attendance::find($attendance_id);
             if ($type == 'check_in') {
                 $data['image'] = uploaded_asset(@$attendance->check_in_image);
