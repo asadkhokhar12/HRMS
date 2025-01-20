@@ -55,7 +55,7 @@ class CheckInController extends Controller
     {
         try {
             $user = auth()->user();
-            dd($user);
+            // dd($user);
             // Check location validation before proceeding
             if ($user->is_free_location === 1) {
                 $distance = $this->calculateDistance(
