@@ -559,7 +559,7 @@
                             </ul>
                         </li>
                     @endif
-                    @if (hasPermission('visit_menu') && hasFeature('visit'))
+                    {{-- @if (hasPermission('visit_menu') && hasFeature('visit'))
                         <li class="sidebar-menu-item {{ set_menu([route('visit.index')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['visit.index']) }}">
@@ -653,10 +653,9 @@
                                 </span>
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
 
-
-                    @if (hasPermission('report_menu') && hasFeature('report'))
+                    {{-- @if (hasPermission('report_menu') && hasFeature('report'))
                         <li class="sidebar-menu-item {{ set_menu([route('attendanceReport.index')]) }}">
                             <a href="javascript:void(0)"
                                 class="parent-item-content has-arrow {{ menu_active_by_route(['live_trackingReport.index', 'attendanceReport.index', 'breakReport.index', 'payment.index', 'report_visit.index', 'report_leave']) }}">
@@ -738,7 +737,7 @@
 
                     @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar')
+                    @include('backend.partials.settings-sidebar') --}}
 
                 @endif
             </ul>
