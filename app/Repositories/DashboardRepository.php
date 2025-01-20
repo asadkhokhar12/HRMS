@@ -941,6 +941,7 @@ class DashboardRepository
             //     'color_class' => 'circle-primary',
             //     // 'number' => "Rs " . number_format($totalSalary, 2),
             // ];
+            dd($data);
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {
