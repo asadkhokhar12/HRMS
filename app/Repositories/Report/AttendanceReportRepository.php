@@ -30,7 +30,7 @@ class AttendanceReportRepository
     protected $attendanceRepository;
 
     public function __construct(
-        Attendance           $attendance,
+        Attendance $attendance,
         AttendanceRepository $attendanceRepository
     ) {
         $this->attendance = $attendance;
@@ -905,7 +905,7 @@ class AttendanceReportRepository
                 $leaveCountedAlready = 1;
                 $totalLeave += 1;
             }
-            if($leaveCountedAlready < 1){
+            if ($leaveCountedAlready < 1) {
                 $attendance = $this->attendance->query()->where(['company_id' => $this->companyInformation()->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])->first();
                 if ($attendance) {
                     $totalPresent += 1;
@@ -922,7 +922,7 @@ class AttendanceReportRepository
                     } else {
                         $totalOnTimeIn += 1;
                     }
-    
+
                     if ($attendance->check_out) {
                         //                    $todayOutTimeStatus = $this->checkOutStatus($attendance->user_id, $attendance->check_out);
                         if ($attendance->out_status == 'LT' || $attendance->out_status_approve == 'LT') {
@@ -1024,7 +1024,8 @@ class AttendanceReportRepository
                 if ($attendance->check_out) {
                     $totalWorkTime += $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
                 }
-                Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
+                // Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
+
             }
         }
 
@@ -1552,7 +1553,7 @@ class AttendanceReportRepository
         $type_sign = "";
         $search_column = "";
         switch ($request->type) {
-                //IN
+            //IN
             case 'late_in':
                 $search_column = "in_status";
                 $type_sign = "L";
@@ -1565,7 +1566,7 @@ class AttendanceReportRepository
                 $search_column = "in_status";
                 $type_sign = "EI";
                 break;
-                //OUT
+            //OUT
             case 'left_timely':
                 $search_column = "out_status";
                 $type_sign = "LT";
@@ -1669,7 +1670,7 @@ class AttendanceReportRepository
     function attendanceDetails($request)
     {
 
-        return  $this->attendance->query()
+        return $this->attendance->query()
             // ->with('lateInReason', 'earlyOutReason', 'lateInOutReason')
             ->where('user_id', $request->user_id)
             ->where('date', $request->date)
@@ -1825,7 +1826,7 @@ class AttendanceReportRepository
             if ($request->search) {
                 $attendance->where(function ($query) use ($request) {
                     $query->whereHas('user', function ($query) use ($request) {
-                        $query->where('name', 'like', '%' .  request()->get('search') . '%');
+                        $query->where('name', 'like', '%' . request()->get('search') . '%');
                     })
                         ->orWhereHas('user.department', function ($query) use ($request) {
                             $query->where('title', 'like', '%' . $request->search . '%');
@@ -1857,43 +1858,43 @@ class AttendanceReportRepository
 
                     if (isModuleActive('SelfieBasedAttendance')) {
                         // selfie based attendance routes
-                        $checkInImageModalRoute =  route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_in']);
-                        $checkInImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkInImageModalRoute . '`)">
+                        $checkInImageModalRoute = route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_in']);
+                        $checkInImage = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkInImageModalRoute . '`)">
                                             <div class="user-img"><img data-toggle="tooltip" data-placement="top" src="' . uploaded_asset($data->check_in_image) . '" class="img-cover"></div>
                                         </a>';
 
 
-                        $checkOutImageModalRoute =  route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_out']);
-                        $checkOutImage  = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkOutImageModalRoute . '`)">
+                        $checkOutImageModalRoute = route("attendance.show-image-in-modal", ['attendance_id' => $data->id, 'type' => 'check_out']);
+                        $checkOutImage = '<a href="javascript:;" class="dropdown-item" onclick="mainModalOpen(`' . $checkOutImageModalRoute . '`)">
                                             <div class="user-img"><img data-toggle="tooltip" data-placement="top" src="' . uploaded_asset($data->check_out_image) . '" class="img-cover"></div>
                                         </a>';
                     }
 
 
                     return [
-                        'id'         => $data->id,
-                        'name'       => $data->user ? '<a href="' . route('employeeAttendance', @$data->user->id) . '" target="_blank">' . @$data->user->name . '</a>' : '',
-                        'department'       => @$data->user->department->title,
-                        'totalBreak'       =>  RawTable('employee_breaks')->where(['date' => $data->date, 'user_id' => $data->user_id])->count(),
-                        'breakDuration'  => breakDuration($data->date, $data->user_id),
-                        'checkin'      => $this->CheckInTable($data),
+                        'id' => $data->id,
+                        'name' => $data->user ? '<a href="' . route('employeeAttendance', @$data->user->id) . '" target="_blank">' . @$data->user->name . '</a>' : '',
+                        'department' => @$data->user->department->title,
+                        'totalBreak' => RawTable('employee_breaks')->where(['date' => $data->date, 'user_id' => $data->user_id])->count(),
+                        'breakDuration' => breakDuration($data->date, $data->user_id),
+                        'checkin' => $this->CheckInTable($data),
 
                         //'checkInImage'   => $checkInImage,
                         'checkInImage' => isModuleActive('SelfieBasedAttendance') ? $checkInImage : "",
 
-                        'face_image'   => $face_image,
-                        'checkinLocation'      => $this->checkInLocation($data),
-                        'checkout'      => $this->checkOutTable($data) ?? '',
+                        'face_image' => $face_image,
+                        'checkinLocation' => $this->checkInLocation($data),
+                        'checkout' => $this->checkOutTable($data) ?? '',
 
                         //'checkOutImage'   => $checkOutImage,
                         'checkOutImage' => isModuleActive('SelfieBasedAttendance') ? $checkOutImage : "",
 
-                        'checkoutLocation'      => $this->checkOutLocation($data),
-                        'hours'        => (@$data->check_out) ? $this->timeDifference($data->check_in, $data->check_out) : '',
-                        'overtime'     => $this->overTimeCount($data) ?? '',
-                        'date'       =>  $data->date . '<br> <span class="badge badge-pill badge-success mr-2">' . @$data->shift->name . '</span>',
-                        'status'     => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
-                        'action'      => $button,
+                        'checkoutLocation' => $this->checkOutLocation($data),
+                        'hours' => (@$data->check_out) ? $this->timeDifference($data->check_in, $data->check_out) : '',
+                        'overtime' => $this->overTimeCount($data) ?? '',
+                        'date' => $data->date . '<br> <span class="badge badge-pill badge-success mr-2">' . @$data->shift->name . '</span>',
+                        'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                        'action' => $button,
                     ];
                 }),
                 'pagination' => [
@@ -1902,7 +1903,7 @@ class AttendanceReportRepository
                     'per_page' => $data->perPage(),
                     'current_page' => $data->currentPage(),
                     'total_pages' => $data->lastPage(),
-                    'pagination_html' =>  $data->links('backend.pagination.custom')->toHtml(),
+                    'pagination_html' => $data->links('backend.pagination.custom')->toHtml(),
                 ],
             ];
         } catch (\Throwable $th) {

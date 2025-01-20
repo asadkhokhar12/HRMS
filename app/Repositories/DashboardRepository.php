@@ -890,7 +890,7 @@ class DashboardRepository
     {
         try {
             $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummaryEmployee(auth()->user(), $request);
-            dd($monthlySummary);
+            // dd($monthlySummary);
             // Extracting data and converting to appropriate types
             $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
             $present = (int)str_replace(' days', '', $monthlySummary['present']);
