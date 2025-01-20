@@ -890,7 +890,7 @@ class DashboardRepository
     {
         try {
             $monthlySummary = $this->attendanceReportRepository->singleAttendanceSummaryEmployee(auth()->user(), $request);
-
+            dd($monthlySummary);
             // Extracting data and converting to appropriate types
             $workingDays = (int)str_replace(' days', '', $monthlySummary['working_days']);
             $present = (int)str_replace(' days', '', $monthlySummary['present']);
@@ -941,7 +941,7 @@ class DashboardRepository
             //     'color_class' => 'circle-primary',
             //     // 'number' => "Rs " . number_format($totalSalary, 2),
             // ];
-            dd($data);
+            // dd($data);
 
             return $this->responseWithSuccess("Dashboard Statistics Data", $data, 200);
         } catch (\Throwable $exception) {
