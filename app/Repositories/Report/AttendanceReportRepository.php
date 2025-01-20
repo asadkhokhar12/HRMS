@@ -984,63 +984,69 @@ class AttendanceReportRepository
         $totalHoliday = 0;
         $workDayWithoutWeekend = 0;
         $holidayDates = [];
-
+    
+        // Fetch the month days either from the selected month or current month
         $monthArray = $request->month
             ? $this->getSelectedMonthDays($request->month)
             : $this->getCurrentMonthDays();
-
+    
+        // Fetch weekends and holidays data upfront
+        $weekEnds = Weekend::where(['company_id' => $user->company->id, 'is_weekend' => 'yes'])->pluck('name')->toArray();
+        $holidays = Holiday::where('company_id', $user->company->id)
+            ->whereDate('start_date', '<=', now()->endOfMonth())
+            ->whereDate('end_date', '>=', now()->startOfMonth())
+            ->pluck('start_date')
+            ->toArray();
+    
         foreach ($monthArray as $day) {
             $todayDateName = strtolower($day->format('l'));
             $todayDateInSqlFormat = $day->format('Y-m-d');
-
+    
             // Calculate weekends
-            $weekEnds = Weekend::where(['company_id' => $user->company->id, 'is_weekend' => 'yes'])
-                ->pluck('name')->toArray();
             if (in_array($todayDateName, $weekEnds)) {
                 $totalWeekend += 1;
             } else {
                 $workDayWithoutWeekend += 1;
             }
-
+    
             // Calculate holidays
-            $holiday = Holiday::where('company_id', $user->company->id)
-                ->where('start_date', '<=', $todayDateInSqlFormat)
-                ->where('end_date', '>=', $todayDateInSqlFormat)
-                ->first();
-            if ($holiday) {
+            if (in_array($todayDateInSqlFormat, $holidays)) {
                 $holidayDates[] = $todayDateInSqlFormat;
                 $totalHoliday += 1;
             }
-
+    
             // Calculate attendance
             $attendance = $this->attendance->query()
                 ->where(['company_id' => $user->company->id, 'user_id' => $user->id, 'date' => $todayDateInSqlFormat])
                 ->first();
-
+    
             if ($attendance) {
                 $totalPresent += 1;
-
-                // Calculate work time
+    
+                // Calculate work time if check-out exists
                 if ($attendance->check_out) {
-                    $totalWorkTime += $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
-                }
-                // Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
+                    $workTime = $this->totalTimeDifferenceEmployee($attendance->check_in, $attendance->check_out); // Ensure this returns minutes
+                    $totalWorkTime += $workTime;
+                Log::info("Check-in: {$attendance->check_in}, Check-out: {$attendance->check_out}, Work Hours: {$this->totalTimeDifferenceEmployee($attendance->check_in,$attendance->check_out)}");
 
+                }
             }
         }
-
-        // Calculate total working days and absent days
+    
+        // Calculate total working days excluding weekends and holidays
         $totalDayOfThisMonth = count($monthArray);
         $totalOffday = $totalWeekend + $totalHoliday;
         $totalWorkingDays = $totalDayOfThisMonth - $totalOffday;
-
+    
         $data['working_days'] = "{$totalWorkingDays} days";
         $data['present'] = "{$totalPresent} days";
         $data['work_time'] = "{$totalWorkTime} min"; // Work time in minutes
-
-
+    
         return $data;
     }
+    
+
+
 
     public function monthlyAttendanceSummary($user, $request)
     {

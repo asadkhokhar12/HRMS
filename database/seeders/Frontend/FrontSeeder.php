@@ -258,7 +258,7 @@ class FrontSeeder extends Seeder
             'slogan' => 'One Goal, One Passion',
             'description' => 'Onesttech believes in painting the perfect picture of your idea while maintaining industry standards and following upcoming trends. It is a professional software development company managed by tech-heads, engineers who are highly qualified in creating and solving issues of all kinds.
 
-            This software development company was established in Dhaka, Bangladesh on September 1, 2017 and since then, it has developed a relentless focus on technical achievement both nationally and internationally.
+            This software development company was established in Pakistan, Karachi on September 1, 2020 and since then, it has developed a relentless focus on technical achievement both nationally and internationally.
             
             So, you can certainly bet the farm as our expertise uses every muscle to provide dogmatic solutions, that results in best user experience with us.',
             'image' => null,
