@@ -80,7 +80,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group mb-3">
                                         <label class="form-label">{{ _trans('common.Late reason') }}</label>
-                                        <textarea type="text" name="late_in_reason" class="form-control ot-input mt-0" placeholder="{{ _trans('check.Reason') }}">{{ @$data['show']->lateInReason->reason }}</textarea>
+                                        <textarea type="text" name="late_in_reason" class="form-control ot-input mt-0" placeholder="{{ _trans('Reason') }}">{{ @$data['show']->lateInReason->reason }}</textarea>
                                         @if ($errors->has('late_in_reason'))
                                             <div class="error">{{ $errors->first('late_in_reason') }}</div>
                                         @endif
@@ -116,7 +116,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group mb-3">
                                         <label class="form-label">{{ _trans('attendance.Early leave reason') }}</label>
-                                        <textarea type="text" name="early_leave_reason" class="form-control ot-input mt-0" placeholder="{{ _trans('check.Reson') }}">{{ @$data['show']->earlyOutReason->reason }}</textarea>
+                                        <textarea type="text" name="early_leave_reason" class="form-control ot-input mt-0" placeholder="{{ _trans('Reason') }}">{{ @$data['show']->earlyOutReason->reason }}</textarea>
                                         @if ($errors->has('early_leave_reason'))
                                             <div class="error">{{ $errors->first('early_leave_reason') }}</div>
                                         @endif
