@@ -102,7 +102,6 @@ class AttendanceController extends Controller
     }
 
 
-
     public function show($attendance_id)
     {
         $data = $this->attendance_repo->show($attendance_id);
@@ -111,10 +110,6 @@ class AttendanceController extends Controller
 
     public function store(Request $request)
     {
-
-
-
-
         try {
             $request['remote_mode_in'] = 0;
             if ($request->in_from_web) {
@@ -147,12 +142,11 @@ class AttendanceController extends Controller
 
     public function update(Request $request, Attendance $attendance_id)
     {
-
-
         try {
             $request['remote_mode_out'] = 0;
             $request['user_id'] = $attendance_id->user_id;
             $checkout = $this->attendance_repo->update($request, $attendance_id->id);
+            // dd($checkout); 
             if ($checkout->original['result']) {
                 Toastr::success(_trans('attendance.Attendance has been updated'), 'Success');
                 return redirect()->route('attendance.index');

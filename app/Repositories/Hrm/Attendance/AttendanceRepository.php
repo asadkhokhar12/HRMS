@@ -807,6 +807,7 @@ class AttendanceRepository
 
     public function update($request, $id)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'date' => 'required',
@@ -815,7 +816,8 @@ class AttendanceRepository
         if ($validator->fails()) {
             return $this->responseWithError(__('Validation field required'), $validator->errors(), 422);
         }
-
+        // $request['checkout_ip'] = getUserIpAddr();
+        
         try {
             $user = $this->user->query()->find($request->user_id);
             if ($user) {
@@ -824,18 +826,18 @@ class AttendanceRepository
                 $attendance_status = $this->checkOutStatus($request->user_id, $request->check_out, $shiftId);
                 if (count($attendance_status) > 0) {
 
-                    if(auth()->user()->is_free_location != 1){
-                        if (settings('location_check') && !$this->locationCheck($request)) {
-                            return $this->responseWithError('Your location is not valid', [], 400);
-                        }
-                    }
-                    if (settings('ip_check') && !$this->isIpRestricted()) {
-                        return $this->responseWithError('Your ip address is not valid', [], 400);
-                    }
+                    // if(auth()->user()->is_free_location != 1){
+                    //     if (settings('location_check') && !$this->locationCheck($request)) {
+                    //         return $this->responseWithError('Your location is not valid', [], 400);
+                    //     }
+                    // }
+                    // if (settings('ip_check') && !$this->isIpRestricted()) {
+                    //     return $this->responseWithError('Your ip address is not valid', [], 400);
+                    // }
 
                     $checkInTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' ' . $request->check_in . ':00');
                     $checkOutTime = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d') . ' ' . $request->check_out . ':00');
-                    $check_out = $this->attendance->query()->where('shift_id',$request->shift_id)->first($id);
+                    $check_out = $this->attendance->query()->where('shift_id',$request->shift_id)->first();
                     $check_out->user_id = $request->user_id;
                     $check_out->check_in_location = $request->check_in_location;
                     $check_out->check_in = $checkInTime;
@@ -850,7 +852,7 @@ class AttendanceRepository
                     if ($request->late_in_reason) {
                         LateInOutReason::updateOrCreate([
                             'attendance_id' => $check_out->id,
-                            'company_id' => $check_out->user->company->id,
+                            'company_id' => 1,
                             'type' => 'in',
                         ], [
                             'reason' => $request->late_in_reason
@@ -859,14 +861,14 @@ class AttendanceRepository
                     if ($request->early_leave_reason) {
                         LateInOutReason::updateOrCreate([
                             'attendance_id' => $check_out->id,
-                            'company_id' => $check_out->user->company->id,
+                            'company_id' => 1,
                             'type' => 'out',
                         ], [
                             'reason' => $request->early_leave_reason
                         ]);
                     }
 
-
+                    // dd($check_out);
                     return $this->responseWithSuccess('Check out successfully', $check_out, 200);
                 } else {
                     return $this->responseWithError('No Schedule found', [], 400);

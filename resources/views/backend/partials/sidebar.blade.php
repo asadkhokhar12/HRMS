@@ -559,7 +559,6 @@
                             </ul>
                         </li>
                     @endif
-                    {{--   
                     @if (hasPermission('visit_menu') && hasFeature('visit'))
                         <li class="sidebar-menu-item {{ set_menu([route('visit.index')]) }}">
                             <a href="javascript:void(0)"
@@ -735,11 +734,11 @@
 
                             </ul>
                         </li>
-                    @endif --}}
+                    @endif 
 
-                    {{-- @include('backend.partials.configurations-sidebar')
+                    @include('backend.partials.configurations-sidebar')
 
-                    @include('backend.partials.settings-sidebar') --}}
+                    @include('backend.partials.settings-sidebar')
 
                 @endif
             </ul>
