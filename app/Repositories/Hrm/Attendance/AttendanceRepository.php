@@ -838,6 +838,8 @@ class AttendanceRepository
                     $checkInTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' ' . $request->check_in . ':00');
                     $checkOutTime = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d') . ' ' . $request->check_out . ':00');
                     $check_out = $this->attendance->query()->where('shift_id',$request->shift_id)->first();
+                    dd($check_out);
+
                     $check_out->user_id = $request->user_id;
                     $check_out->check_in_location = $request->check_in_location;
                     $check_out->check_in = $checkInTime;
