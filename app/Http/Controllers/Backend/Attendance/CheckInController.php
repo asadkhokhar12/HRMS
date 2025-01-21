@@ -57,7 +57,7 @@ class CheckInController extends Controller
             $user = auth()->user();
             // dd($user);
             // Check location validation before proceeding
-            if ($user->is_free_location === 0) {
+            if ($user->is_free_location === 1) {
                 $distance = $this->calculateDistance(
                     $request->latitude,
                     $request->longitude,
@@ -125,7 +125,7 @@ class CheckInController extends Controller
                 ->first();
 
             // Check location validation before proceeding
-            if ($last_checkIn->is_free_location === 0) { // Only check location if not in remote mode
+            if ($last_checkIn->is_free_location === 1) { // Only check location if not in remote mode
 
                 $distance = $this->calculateDistance(
                     $request->latitude,
