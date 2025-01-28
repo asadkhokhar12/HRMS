@@ -188,7 +188,7 @@ class UserController extends Controller
                     $data['class'] = 'travel_table_class';
                     break;
                 case 'support':
-                    $data['title'] = _trans('support.Support ticket');
+                    $data['title'] = _trans('support.Support ticketdss');
                     $data['url'] = route('supportTicket.dataTable');
                     break;
 

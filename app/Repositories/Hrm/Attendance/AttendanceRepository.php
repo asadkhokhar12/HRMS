@@ -75,16 +75,16 @@ class AttendanceRepository
             $attendance = $this->attendance->query()->orderByDesc('id')->where($where)->where('date', '>=', date('Y-m-d', strtotime("-1 days")))->first();
             if ($attendance) {
                 //Check if max working hours is crossed or not
-                $check_in_time  =   $attendance->check_in;
-                $current_time   =   date('Y-m-d H:i:s');
-                $current_date   =   now()->toDateString();
-                $time_diff      =   intval($this->timeDifferenceHour($check_in_time, $current_time));
-                $max_work_hours =   intval(settings('max_work_hours') ?? 16);
+                $check_in_time = $attendance->check_in;
+                $current_time = date('Y-m-d H:i:s');
+                $current_date = now()->toDateString();
+                $time_diff = intval($this->timeDifferenceHour($check_in_time, $current_time));
+                $max_work_hours = intval(settings('max_work_hours') ?? 16);
                 // $checkin_status =   $time_diff > $max_work_hours ? false : true;
-                $checkout_status =   $time_diff > $max_work_hours;
-                $in_time        =   $time_diff > $max_work_hours ? null : $this->dateTimeInAmPm(@$attendance->check_in);
-                $out_time       =   $time_diff > $max_work_hours ? null : $this->dateTimeInAmPm(@$attendance->check_out);
-                $stay_time      =   $time_diff > $max_work_hours ? null : $this->timeDifference($attendance->check_in, $attendance->check_out);
+                $checkout_status = $time_diff > $max_work_hours;
+                $in_time = $time_diff > $max_work_hours ? null : $this->dateTimeInAmPm(@$attendance->check_in);
+                $out_time = $time_diff > $max_work_hours ? null : $this->dateTimeInAmPm(@$attendance->check_out);
+                $stay_time = $time_diff > $max_work_hours ? null : $this->timeDifference($attendance->check_in, $attendance->check_out);
 
                 if ($attendance->check_out && $attendance->date == $current_date) {
                     return $this->responseWithSuccess('Already checked out', [
@@ -95,7 +95,7 @@ class AttendanceRepository
                         'checkin' => null,
                         'checkout' => null,
                         'in_time' => $in_time,
-                        'out_time' =>  $out_time,
+                        'out_time' => $out_time,
                         'stay_time' => $stay_time
                     ], 200);
                 } elseif (!$attendance->check_out && !$checkout_status) {
@@ -200,7 +200,7 @@ class AttendanceRepository
          * L = Late
          */
         $user_info = User::find($user_id);
-        if(!$shiftId){
+        if (!$shiftId) {
             $shiftId = $user_info->shift_id;
         }
         $schedule = DutySchedule::where('shift_id', $shiftId)->where('status_id', 1)->first();
@@ -270,16 +270,16 @@ class AttendanceRepository
         foreach (DB::table('location_binds')->where('company_id', $this->companyInformation()->id)->where('status_id', 1)->get() as $location) {
             $lat = $request->latitude;
             $long = $request->longitude;
-            if($request->has('check_in_latitude')){
+            if ($request->has('check_in_latitude')) {
                 $lat = $request->get('check_in_latitude');
             }
-            if($request->has('check_in_longitude')){
+            if ($request->has('check_in_longitude')) {
                 $long = $request->get('check_in_longitude');
             }
-            if($request->has('check_out_latitude')){
+            if ($request->has('check_out_latitude')) {
                 $lat = $request->get('check_out_latitude');
             }
-            if($request->has('check_out_longitude')){
+            if ($request->has('check_out_longitude')) {
                 $long = $request->get('check_out_longitude');
             }
             $distance = distanceCalculate($lat, $long, $location->latitude, $location->longitude);
@@ -347,12 +347,12 @@ class AttendanceRepository
     public function userAttendance($user, $request)
     {
         if ($user) {
-            $attendance = $this->attendance->where(['user_id' => $user->id, 'shift_id' => $request->shift_id,'date' => $request->date])->first();
+            $attendance = $this->attendance->where(['user_id' => $user->id, 'shift_id' => $request->shift_id, 'date' => $request->date])->first();
             if ($attendance && !settings('multi_checkin')) {
                 return $this->responseWithError('Attendance already exists', [], 400);
             }
 
-            if(auth()->user()->is_free_location != 1){
+            if (auth()->user()->is_free_location != 1) {
                 if (settings('location_check') && !$this->locationCheck($request)) {
                     return $this->responseWithError('Your location is not valid', [], 400);
                 }
@@ -405,7 +405,7 @@ class AttendanceRepository
                     } else {
                         $check_in->check_in = $current_date_time;
                     }
-                    
+
                     $check_in->in_status = $attendance_status[0];
                     $check_in->checkin_ip = $request->checkin_ip;
                     $check_in->late_time = $attendance_status[1];
@@ -416,7 +416,7 @@ class AttendanceRepository
                     $check_in->check_in_city = $request->city;
                     $check_in->check_in_country_code = $request->country_code;
                     $check_in->check_in_country = $request->country;
-                    
+
                     $check_in->save();
 
                     if ($request->reason) {
@@ -479,7 +479,7 @@ class AttendanceRepository
             'value' => 1
         ])->first();
 
-       
+
 
 
 
@@ -522,7 +522,7 @@ class AttendanceRepository
 
         $user_info = User::find($user_id);
 
-        if(!$shiftId){
+        if (!$shiftId) {
             $shiftId = $user_info->shift_id;
         }
 
@@ -573,7 +573,7 @@ class AttendanceRepository
                 return $this->responseWithError('Checkout has already been done', [], 200);
             }
 
-            if(auth()->user()->is_free_location != 1){
+            if (auth()->user()->is_free_location != 1) {
                 if (settings('location_check') && !$this->locationCheck($request)) {
                     return $this->responseWithError('Your location is not valid', [], 400);
                 }
@@ -582,7 +582,7 @@ class AttendanceRepository
                 return $this->responseWithError('Your ip address is not valid', [], 400);
             }
 
-            
+
             $user = $this->user->query()->find(Auth::id());
             if ($user) {
                 $isIpRestricted = $this->isIpRestricted();
@@ -635,7 +635,7 @@ class AttendanceRepository
                                 $filePath = $this->uploadImage($uploadedFile, 'uploads/attendance/');
                                 $check_in->check_out_image = $filePath ? $filePath->id : null;
                             }
-                            
+
                             $check_in->save();
                             if ($request->reason) {
                                 LateInOutReason::create([
@@ -646,11 +646,11 @@ class AttendanceRepository
                                     'reason' => $request->reason
                                 ]);
                             }
-                           
+
                             $checkoutInfo = $check_in->makeHidden('user');
                             $checkBreak = EmployeeBreak::where('user_id', Auth::user()->id)->latest()->first();
-                            if($checkBreak){
-                                if(@$checkBreak->back_time == null){
+                            if ($checkBreak) {
+                                if (@$checkBreak->back_time == null) {
                                     $checkBreak->back_time = $check_in->check_out;
                                     $checkBreak->save();
                                 }
@@ -684,10 +684,10 @@ class AttendanceRepository
         if ($validator->fails()) {
             return $this->responseWithError(__('Validation field required'), $validator->errors(), 422);
         }
-     
+
 
         try {
-            if(auth()->user()->is_free_location != 1){
+            if (auth()->user()->is_free_location != 1) {
                 if (settings('location_check') && !$this->locationCheck($request)) {
                     return $this->responseWithError('Your location is not valid', [], 400);
                 }
@@ -696,15 +696,15 @@ class AttendanceRepository
                 return $this->responseWithError('Your ip address is not valid', [], 400);
             }
             $user = $this->user->query()->find($request->user_id);
-           
+
             if ($user) {
                 $isIpRestricted = $this->isIpRestricted();
-               
+
                 if ($isIpRestricted) {
                     $request['checkin_ip'] = getUserIpAddr();
-                    
+
                     $check_in = $this->attendance->query()->find($id);
-                    
+
                     $shiftId = $check_in->shift_id ? intval($check_in->shift_id) : ($user->default_shift ? $user->default_shift->shift_id : $user->shift_id);
                     $attendance_status = $this->checkOutStatus($request->user_id, $request->check_out, $shiftId);
 
@@ -724,7 +724,7 @@ class AttendanceRepository
 
 
                         $checkOutTime = $this->getDateTime($request->check_out);
-                        
+
                         // move top
                         //$check_in = $this->attendance->query()->find($id);
 
@@ -791,22 +791,38 @@ class AttendanceRepository
         }
     }
 
-    function resetCheckOutDate($data, $request)
-    {
-        $check_in = $data->check_in;
-        $check_in_date = date('Y-m-d', strtotime($data->check_in));
-        $check_out = $data->check_out;
-        $checkOutoutDate = intval($this->dateDiff($check_out, $check_in));
+    // function resetCheckOutDate($data, $request)
+    // {
+    //     $check_in = $data->check_in;
+    //     $check_in_date = date('Y-m-d', strtotime($data->check_in));
+    //     $check_out = $data->check_out;
+    //     $checkOutoutDate = intval($this->dateDiff($check_out, $check_in));
 
-        if ($checkOutoutDate >= 0) {
-            $check_out = Carbon::parse($request->date)->addDays($checkOutoutDate)->format('Y-m-d') . ' ' . $request->check_out;
+    //     if ($checkOutoutDate >= 0) {
+    //         $check_out = Carbon::parse($request->date)->addDays($checkOutoutDate)->format('Y-m-d') . ' ' . $request->check_out;
+    //     }
+
+    //     return $check_out;
+    // }
+
+    public function resetCheckOutDate($data, $request)
+    {
+        $check_in = Carbon::parse($data->check_in);
+        $check_out = Carbon::parse($request->date . ' ' . $request->check_out);
+
+        // Ensure that check_out is after check_in
+        if ($check_out->lt($check_in)) {
+            // If check_out time is earlier than check_in, assume it's the next day
+            $check_out->addDay();
         }
 
-        return $check_out;
+        return $check_out->format('Y-m-d H:i:s');
     }
+
 
     public function update($request, $id)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'date' => 'required',
@@ -815,6 +831,7 @@ class AttendanceRepository
         if ($validator->fails()) {
             return $this->responseWithError(__('Validation field required'), $validator->errors(), 422);
         }
+        // $request['checkout_ip'] = getUserIpAddr();
 
         try {
             $user = $this->user->query()->find($request->user_id);
@@ -824,18 +841,21 @@ class AttendanceRepository
                 $attendance_status = $this->checkOutStatus($request->user_id, $request->check_out, $shiftId);
                 if (count($attendance_status) > 0) {
 
-                    if(auth()->user()->is_free_location != 1){
-                        if (settings('location_check') && !$this->locationCheck($request)) {
-                            return $this->responseWithError('Your location is not valid', [], 400);
-                        }
-                    }
-                    if (settings('ip_check') && !$this->isIpRestricted()) {
-                        return $this->responseWithError('Your ip address is not valid', [], 400);
-                    }
+                    // if(auth()->user()->is_free_location != 1){
+                    //     if (settings('location_check') && !$this->locationCheck($request)) {
+                    //         return $this->responseWithError('Your location is not valid', [], 400);
+                    //     }
+                    // }
+                    // if (settings('ip_check') && !$this->isIpRestricted()) {
+                    //     return $this->responseWithError('Your ip address is not valid', [], 400);
+                    // }
 
                     $checkInTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->date . ' ' . $request->check_in . ':00');
                     $checkOutTime = Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d') . ' ' . $request->check_out . ':00');
-                    $check_out = $this->attendance->query()->where('shift_id',$request->shift_id)->first($id);
+                    $check_out = $this->attendance->query()->where('shift_id', $request->shift_id)
+                        ->where('id', $id)->first();
+                    // dd($check_out);
+
                     $check_out->user_id = $request->user_id;
                     $check_out->check_in_location = $request->check_in_location;
                     $check_out->check_in = $checkInTime;
@@ -845,12 +865,13 @@ class AttendanceRepository
                     $check_out->check_out_location = $request->check_out_location;
                     $check_out->out_status = $attendance_status[0];
                     $check_out->late_time = $attendance_status[1];
+                    // dd($check_out);
                     $check_out->save();
 
                     if ($request->late_in_reason) {
                         LateInOutReason::updateOrCreate([
                             'attendance_id' => $check_out->id,
-                            'company_id' => $check_out->user->company->id,
+                            'company_id' => 1,
                             'type' => 'in',
                         ], [
                             'reason' => $request->late_in_reason
@@ -859,14 +880,14 @@ class AttendanceRepository
                     if ($request->early_leave_reason) {
                         LateInOutReason::updateOrCreate([
                             'attendance_id' => $check_out->id,
-                            'company_id' => $check_out->user->company->id,
+                            'company_id' => 1,
                             'type' => 'out',
                         ], [
                             'reason' => $request->early_leave_reason
                         ]);
                     }
 
-
+                    // dd($check_out);
                     return $this->responseWithSuccess('Check out successfully', $check_out, 200);
                 } else {
                     return $this->responseWithError('No Schedule found', [], 400);
@@ -1042,15 +1063,16 @@ class AttendanceRepository
     }
 
 
-    public function storeFaceData($request)  {
+    public function storeFaceData($request)
+    {
 
-        try{
-            if($request->user_id){
+        try {
+            if ($request->user_id) {
                 $user = User::find($request->user_id);
-            }else{
+            } else {
                 $user = Auth::user();
             }
-            
+
             $input = $request->all();
             $user->face_data = $input['face-data'];
             $user->save();
@@ -1059,7 +1081,7 @@ class AttendanceRepository
             Log::error($exception->getMessage());
             return $this->responseWithError('Something wrong from server');
         }
-        
+
     }
 
 

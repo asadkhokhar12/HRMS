@@ -58,12 +58,12 @@ class AttendanceController extends Controller
         if ($request->ajax()) {
             return $this->attendanceReportRepository->table($request);
         }
-        $data['class']  = 'attendance_table';
+        $data['class'] = 'attendance_table';
         $data['fields'] = $this->attendance_repo->fields();
-        $data['table']     = route('attendance.index');
-        $data['url_id']    = 'attendance_table_url';
+        $data['table'] = route('attendance.index');
+        $data['url_id'] = 'attendance_table_url';
         $data['checkbox'] = true;
-        $data['title'] = _trans('attendance.Attendance History ');
+        $data['title'] = _trans('attendance.Attendance History');
         $data['departments'] = $this->departmentRepository->getAll();
 
         return view('backend.attendance.attendance.index', compact('data'));
@@ -74,10 +74,10 @@ class AttendanceController extends Controller
         if ($request->ajax()) {
             return $this->machineAttendanceReportRepository->table($request);
         }
-        $data['class']  = 'attendance_table';
+        $data['class'] = 'attendance_table';
         $data['fields'] = $this->machine_attendance_repo->fields();
-        $data['table']     = route('machine.attendance');
-        $data['url_id']    = 'attendance_table_url';
+        $data['table'] = route('machine.attendance');
+        $data['url_id'] = 'attendance_table_url';
         $data['checkbox'] = true;
         $data['title'] = _trans('attendance.Machine Attendance History');
         $data['departments'] = $this->departmentRepository->getAll();
@@ -102,7 +102,6 @@ class AttendanceController extends Controller
     }
 
 
-
     public function show($attendance_id)
     {
         $data = $this->attendance_repo->show($attendance_id);
@@ -111,10 +110,6 @@ class AttendanceController extends Controller
 
     public function store(Request $request)
     {
-
-
-
-
         try {
             $request['remote_mode_in'] = 0;
             if ($request->in_from_web) {
@@ -147,12 +142,11 @@ class AttendanceController extends Controller
 
     public function update(Request $request, Attendance $attendance_id)
     {
-
-
         try {
             $request['remote_mode_out'] = 0;
             $request['user_id'] = $attendance_id->user_id;
             $checkout = $this->attendance_repo->update($request, $attendance_id->id);
+            // dd($checkout); 
             if ($checkout->original['result']) {
                 Toastr::success(_trans('attendance.Attendance has been updated'), 'Success');
                 return redirect()->route('attendance.index');
@@ -212,7 +206,6 @@ class AttendanceController extends Controller
     }
     public function dashboardAjaxCheckin(Request $request)
     {
-
         try {
             $request['user_id'] = auth()->user()->id;
             $request['check_in'] = date('H:i');
@@ -342,7 +335,7 @@ class AttendanceController extends Controller
     public function showImageInModal($attendance_id, $type)
     {
         try {
-            $data['title'] = $type == 'check_in' ?  _trans('common.Check in Image') :  _trans('common.Check out Image');
+            $data['title'] = $type == 'check_in' ? _trans('common.Check in Image') : _trans('common.Check out Image');
             $attendance = Attendance::find($attendance_id);
             if ($type == 'check_in') {
                 $data['image'] = uploaded_asset(@$attendance->check_in_image);

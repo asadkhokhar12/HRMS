@@ -79,7 +79,7 @@ trait FirebaseNotification
         }
     }
 
-    public function sendCustomFirebaseNotification($user_id, $notification_type, $id = null, $url, $title, $body, $image = null)
+    public function sendCustomFirebaseNotification($user_id, $notification_type, $url, $title, $body, $image = null,$id = null)
     {
         try {
             //if env app is not production then return

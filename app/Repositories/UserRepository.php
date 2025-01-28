@@ -94,11 +94,7 @@ class UserRepository
             if (empty($request->joining_date)) {
                 $request['joining_date'] = date('Y-m-d');
             }
-            if ($request->permissions) {
-                $request['permissions'] = $request->permissions;
-            } else {
-                $request['permissions'] = [];
-            }
+            $request['permissions'] = $request->permissions ?: [];
             // $password = getCode(8);
             $request['company_id'] = $this->companyInformation()->id;
             if ($request->password_type == 'default') {
@@ -132,7 +128,7 @@ class UserRepository
 
             $user = $this->model->query()->create($request->except('shift_id'));
 
-            foreach ($request->shift_id  as $shift) {
+            foreach ($request->shift_id as $shift) {
                 $new_shift = new $this->userShift;
                 $new_shift->user_id = $user->id;
                 $new_shift->shift_id = $shift;
@@ -234,7 +230,7 @@ class UserRepository
             $user->manager_id = $request->manager_id;
             // $user->permissions = $request->permissions;
             $user->is_free_location = $request->is_free_location;
-            $user->time_zone = $request->time_zone ?? 'Asia/Karachi';
+            $user->time_zone = 'Asia/Karachi';
             if ($request->password_type == 'default') {
                 $newPassword = 12345678;
                 $user->password = Hash::make($newPassword);
@@ -400,7 +396,7 @@ class UserRepository
                 $banned = _trans('common.Banned');
                 // $registerFace = _trans('common.Register Face');
                 // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
-
+    
                 if (hasPermission('profile_view')) {
                     $action_button .= actionButton('Profile', route('user.profile', [$data->id, 'official']), 'profile');
                 }
@@ -661,7 +657,7 @@ class UserRepository
                     // $leave_details = @resolve(LeaveService::class)->leaveSummary($request)->original['data'] ?? '';
                     $leave_details = @resolve(LeaveService::class)->leaveCountingSummary($data)->original['data'] ?? '';
 
-                    $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"]  . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
+                    $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"] . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
                     $available_leave = '';
                     foreach ($leave_details['available_leave'] as $availables) {
                         $htm = '<div class="d-flex justify-content-between text-center">
@@ -692,7 +688,7 @@ class UserRepository
                         'leave_summary' => $leave_summary,
                         'available_leave' => $available_leave,
                         'id' => $data->id,
-                        'action'     => $button,
+                        'action' => $button,
                     ];
                 }),
                 'pagination' => [
@@ -732,7 +728,7 @@ class UserRepository
 
             // Fetch leave details using LeaveService
             $leave_details = @resolve(LeaveService::class)->leaveCountingSummary($user)->original['data'] ?? '';
-            $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"]  . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
+            $leave_summary = '<b>Leave Allowed: </b>' . @$leave_details["total_leave"] . '<br><b>Leave Granted: </b>' . @$leave_details["total_used"] . '<br><b>Leave Left: </b>' . @$leave_details["leave_balance"];
 
             $available_leave = '';
             foreach ($leave_details['available_leave'] as $availables) {
@@ -780,9 +776,9 @@ class UserRepository
                 'field' => 'input',
                 'type' => 'number',
                 'required' => true,
-                'id'    => 'days',
+                'id' => 'days',
                 'class' => 'form-control ot-form-control ot-input',
-                'col'   => 'col-md-6 form-group mb-3',
+                'col' => 'col-md-6 form-group mb-3',
                 'value' => $item->days,
                 'label' => _trans('common.Days'),
                 'title' => $item->type->name,
@@ -858,13 +854,16 @@ class UserRepository
                     // $banned = _trans('common.Banned');
                     // $registerFace = _trans('common.Register Face');
                     // $action_button .= actionButton($delete, '__globalDelete(' . $data->id . ',`hrm/department/delete/`)', 'delete');
-
+    
                     if (hasPermission('profile_view')) {
                         $action_button .= actionButton(_trans('common.Profile'), route('user.profile', [$data->id, 'personal']), 'profile');
                     }
                     if (hasPermission('user_edit')) {
-                        $action_button .= actionButton($edit, route('user.edit', $data->id), 
-                        'profile');
+                        $action_button .= actionButton(
+                            $edit,
+                            route('user.edit', $data->id),
+                            'profile'
+                        );
                     }
                     if (hasPermission('user_edit')) {
                         $icon = 'success';
@@ -892,9 +891,9 @@ class UserRepository
                         $icon = 'success';
                         $action_button .= actionButton(_trans('common.Password Reset Mail'), 'GlobalSweetAlert(`' . _trans('common.Password Reset Mail') . '`,`' . _trans('alert.Are you sure?') . '`,`' . $icon . '`,`' . _trans('common.Yes') . '`,`' . route('user.sendResetMail', $data->id) . '`)', 'approve');
                     }
-                    
-                    // if (hasPermission('make_hr')) {
 
+                    // if (hasPermission('make_hr')) {
+    
                     //     if ($data->is_hr == "1") {
                     //         $hr_btn = _trans('leave.Remove HR');
                     //         $icon = 'warning';
@@ -1038,7 +1037,7 @@ class UserRepository
             $password = getCode(8);
             $user->password = Hash::make($password);
             $user->update();
-            if (! Mail::to($user->email)->send(new AutoGeneratePasswordMail($password))) {
+            if (!Mail::to($user->email)->send(new AutoGeneratePasswordMail($password))) {
                 return $this->responseWithError(_trans('message.Mail not send.'), [], 400);
             } else {
                 return $this->responseWithSuccess(_trans('message.Mail send successfully.'), [], 200);
