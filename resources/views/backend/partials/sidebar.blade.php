@@ -325,7 +325,7 @@
                                 </span>
                             </a>
                         </li>
-                    @endif
+                    @endif--}}
                   
                     @if (hasPermission('account_menu') && hasFeature('accounts'))
                         <li
@@ -426,7 +426,7 @@
 
                             </ul>
                         </li>
-                    @endif --}}
+                    @endif 
                     @if (Auth::user()->role)
                         @if (Auth::user()->role->name != 'Staff')
                             @if (hasPermission('payroll_menu') && hasFeature('payroll'))
