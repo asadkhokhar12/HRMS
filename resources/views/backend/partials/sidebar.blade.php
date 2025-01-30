@@ -327,7 +327,7 @@
                         </li>
                     @endif --}}
                     @if (Auth::user()->role)
-                        @if (Auth::user()->role->name == 'finance')
+                        @if (Auth::user()->role->name === 'Finance')
                             @if (hasPermission('account_menu') && hasFeature('accounts'))
                                 <li
                                     class="sidebar-menu-item {{ set_menu([route('hrm.accounts.index', 'hrm.accounts.create')]) }}">
