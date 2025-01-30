@@ -888,7 +888,7 @@ if (!function_exists('isModuleActive')) {
             if (array_key_exists($module_name, $modules ?? [])) {
                 if ($modules[$module_name]) {
                     // check module.json file exists in module directory
-                    $module_json = base_path('Modules/' . $module_name . '/module.json');
+                    $module_json = base_path("Modules/$module_name/module.json");
                     if (file_exists($module_json)) {
                         // $module = json_decode(file_get_contents($module_json), true);
                         return true;

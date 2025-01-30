@@ -8,6 +8,6 @@
     "OfflineBasedAttendance": true,
     "QrBasedAttendance": true,
     "SelfieBasedAttendance": true,
-    "SingleDeviceLogin": true,
+    "SingleDeviceLogin": false,
     "VideoConference": true
 }
