@@ -200,6 +200,11 @@ class ExpenseRepository
             $expense->remarks                        = $request->description;
             $expense->created_by                     = auth()->id();
             $expense->updated_by                     = auth()->id();
+
+            // by default approved as per finance requirement.
+            $expense->status_id                      = 5;
+            $expense->approver_id                    = auth()->user()->id;
+            
             if ($request->hasFile('attachment')) {
                 $expense->attachment                 = $this->uploadImage($request->attachment, 'expense')->id;
             }else{
@@ -352,9 +357,9 @@ class ExpenseRepository
                 if (hasPermission('expense_edit') && @$data->pay == 9) {
                     $action_button .= '<a href="' . route('hrm.expenses.edit', $data->id) . '" class="dropdown-item"> ' . _trans('common.Edit') . '</a>';
                 }
-                if (hasPermission('expense_approve') && @$data->pay == 9) {
-                    $action_button .= actionButton(_trans('common.Approve'), 'mainModalOpen(`' . route('hrm.expenses.approve_modal', $data->id) . '`)', 'modal');
-                }
+                // if (hasPermission('expense_approve') && @$data->pay == 9) {
+                //     $action_button .= actionButton(_trans('common.Approve'), 'mainModalOpen(`' . route('hrm.expenses.approve_modal', $data->id) . '`)', 'modal');
+                // }
 
                 if (hasPermission('expense_pay') && $data->status_id == 5 && @$data->pay == 9) {
                     $action_button .= actionButton(_trans('common.Pay'), 'mainModalOpen(`' . route('hrm.expenses.pay', $data->id) . '`)', 'modal');

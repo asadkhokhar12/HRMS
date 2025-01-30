@@ -7,6 +7,33 @@
         route('admin.dashboard') => _trans('common.Dashboard'),
         '#' => @$data['title'],
     ]) !!}
+    
+
+    <div class="row mb-3">
+        @foreach($data['accounts'] as $account)
+        
+        <div class="col-sm-4 col-xl-2 mb-2 mb-xl-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <div class="p-1">
+                            <label class="fw-bold fs-6">Name:</label>
+                            <span class="fw-bold">{{$account->name}}</span>
+                        </div>
+                        <div class="p-1">
+                            <label class="fw-bold fs-6">Acc name:</label>
+                            <span class="fw-bold">{{$account->ac_name}}</span>
+                        </div>
+                        <div class="p-1">
+                            <label  class="fw-bold fs-6">Balance:</label>
+                            <span class="fw-bold">{{ number_format($account->amount, 2) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
     <div class="table-content table-basic">
         <div class="card">
 
@@ -76,8 +103,8 @@
                                             <select name="transaction_type" id="transaction_type"
                                                 class="form-control select2 " onchange="transactionDatatable()">
                                                 <option value="0">{{ _trans('common.Select Transaction') }}</option>
-                                                <option value="18">{{ _trans('common.Debit') }}</option>
-                                                <option value="19">{{ _trans('common.Credit') }}</option>
+                                                <option value="18">{{ _trans('common.Paid') }}</option>
+                                                <option value="19">{{ _trans('common.Received') }}</option>
                                             </select>
                                         </div>
                                     </div>

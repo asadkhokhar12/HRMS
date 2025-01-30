@@ -22,13 +22,21 @@ class TransactionRepository
     function fields($transaction = null)
     {
         if ($transaction) {
+            // return [
+            //     _trans('account.ID'),
+            //     _trans('account.Account'),
+            //     _trans('account.Amount'),
+            //     _trans('account.Type'),
+            //     _trans('account.Date'),
+            //     _trans('account.Status')
+            // ];
             return [
-                _trans('account.ID'),
+                _trans('account.Date'),
+                _trans('account.Type'),
+                _trans('account.Description'),
                 _trans('account.Account'),
                 _trans('account.Amount'),
-                _trans('account.Type'),
-                _trans('account.Date'),
-                _trans('account.Status')
+                _trans('account.Balance')
             ];
         }
         return [
@@ -190,15 +198,39 @@ class TransactionRepository
             });
         }
         $data = $data->where($params)->paginate($request->limit ?? 2);
+        $accountBalance = [];
+
         return [
-            'data' => $data->map(function ($data) {
+            'data' => $data->map(function ($data) use(&$accountBalance){
+                // return [
+                //     'id' => $data->id,
+                //     'account' => @$data->account->name,
+                //     'type' => '<span class="badge badge-' . @$data->type->class . '">' . @$data->type->name . '</span>',
+                //     'date' => showDate(@$data->created_at),
+                //     'amount' => showAmount(@$data->amount),
+                //     'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                // ];
+                
+                if(@$data->account->id){
+
+                    if( !isset($accountBalance[$data->account->id]) ){
+                        $accountBalance[$data->account->id] = 0;
+                    }
+                    
+                    if(@$data->type->id === 19){
+                        $accountBalance[$data->account->id] += $data->amount;
+                    }
+                    else{
+                        $accountBalance[$data->account->id] -= $data->amount;
+                    }
+                }
                 return [
-                    'id' => $data->id,
-                    'account' => @$data->account->name,
-                    'type' => '<span class="badge badge-' . @$data->type->class . '">' . @$data->type->name . '</span>',
                     'date' => showDate(@$data->created_at),
-                    'amount' => showAmount(@$data->amount),
-                    'status' => '<small class="badge badge-' . @$data->status->class . '">' . @$data->status->name . '</small>',
+                    'type' => '<span class="badge badge-' . @$data->type->class . '">' . (@$data->type->id === 19?'Received':'Paid') . '</span>',
+                    'description' => $data->description,
+                    'account' => @$data->account->name,
+                    'amount' => (@$data->amount),
+                    'balance' => @$accountBalance[@$data->account->id]
                 ];
             }),
             'pagination' => [

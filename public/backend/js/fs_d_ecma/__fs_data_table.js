@@ -746,7 +746,8 @@ function transactionDatatable(...values) {
     transaction_type: $("#transaction_type").val(),
     _token: _token,
   };
-  data["column"] = ["id", "account", "amount", "type", "date", "status"];
+  // data["column"] = ["id", "account", "amount", "type", "date", "status"];
+  data["column"] = ["date", "type", "description", "account", "amount", "balance"];
 
   data["table_id"] = "transaction_datatable";
   table(data);
