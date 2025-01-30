@@ -325,108 +325,113 @@
                                 </span>
                             </a>
                         </li>
-                    @endif--}}
-                  
-                    @if (hasPermission('account_menu') && hasFeature('accounts'))
-                        <li
-                            class="sidebar-menu-item {{ set_menu([route('hrm.accounts.index', 'hrm.accounts.create')]) }}">
-                            <a href="javascript:void(0)"
-                                class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.accounts.index', 'hrm.deposits.index', 'hrm.expenses.index', 'hrm.transactions.index', 'hrm.accounts.create', 'hrm.accounts.edit', 'hrm.deposits.create', 'hrm.deposits.edit', 'hrm.expenses.create', 'hrm.expenses.edit', 'hrm.expenses.show', 'hrm.deposit_category.deposit', 'hrm.deposit_category.expense', 'hrm.payment_method.index']) }}">
-                                <i class="las la-file-invoice-dollar"></i>
-                                <span class="on-half-expanded">
-                                    {{ _trans('payroll.Accounts') }}
+                    @endif --}}
+                    @if (Auth::user()->role)
+                        @if (Auth::user()->role->name == 'finance')
+                            @if (hasPermission('account_menu') && hasFeature('accounts'))
+                                <li
+                                    class="sidebar-menu-item {{ set_menu([route('hrm.accounts.index', 'hrm.accounts.create')]) }}">
+                                    <a href="javascript:void(0)"
+                                        class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.accounts.index', 'hrm.deposits.index', 'hrm.expenses.index', 'hrm.transactions.index', 'hrm.accounts.create', 'hrm.accounts.edit', 'hrm.deposits.create', 'hrm.deposits.edit', 'hrm.expenses.create', 'hrm.expenses.edit', 'hrm.expenses.show', 'hrm.deposit_category.deposit', 'hrm.deposit_category.expense', 'hrm.payment_method.index']) }}">
+                                        <i class="las la-file-invoice-dollar"></i>
+                                        <span class="on-half-expanded">
+                                            {{ _trans('payroll.Accounts') }}
 
-                                </span>
-                            </a>
-                            <ul
-                                class="child-menu-list {{ set_active(['hrm/accounts*', 'hrm/transactions*', 'hrm/deposit*', 'hrm/expenses*', 'hrm/account-settings*', 'hrm/payment-method*']) }}">
-
-
-                                @if (hasPermission('account_menu'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.accounts.index', 'hrm.accounts.create', 'hrm.accounts.edit']) }}">
-                                        <a href="{{ route('hrm.accounts.index') }}" class="">
-                                            <span> {{ _trans('payroll.Account List') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('deposit_menu'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.deposits.index', 'hrm.deposits.create', 'hrm.deposits.edit']) }}">
-                                        <a href="{{ route('hrm.deposits.index') }}" class="">
-                                            <span> {{ _trans('payroll.Deposit') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('expense_menu'))
-                                    <li
-                                        class="nav-item {{ menu_active_by_route(['hrm.expenses.index', 'hrm.expenses.create', 'hrm.expenses.edit', 'hrm.expenses.show']) }}">
-                                        <a href="{{ route('hrm.expenses.index') }}" class="">
-                                            <span> {{ _trans('payroll.Expense') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-
-                                @if (hasPermission('transaction_menu'))
-                                    <li class="nav-item {{ menu_active_by_route(['hrm.transactions.index']) }}">
-                                        <a href="{{ route('hrm.transactions.index') }}" class="">
-                                            <span> {{ _trans('payroll.Transaction History') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if (hasPermission('deposit_category_menu'))
-                                    <li
-                                        class="sidebar-menu-item {{ set_menu([route('hrm.deposit_category.expense')]) }}">
-                                        <a href="javascript:void(0)"
-                                            class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.deposit_category.deposit', 'hrm.deposit_category.expense', 'hrm.payment_method.index']) }}">
-                                            <span class="-text font-purple">
-                                                {{ _trans('payroll.Accounts Settings') }}
-
-                                            </span>
-                                        </a>
-                                        <ul
-                                            class="child-menu-list {{ set_active(['hrm/account-settings*', 'hrm/payment-method*']) }} pl-2">
+                                        </span>
+                                    </a>
+                                    <ul
+                                        class="child-menu-list {{ set_active(['hrm/accounts*', 'hrm/transactions*', 'hrm/deposit*', 'hrm/expenses*', 'hrm/account-settings*', 'hrm/payment-method*']) }}">
 
 
-                                            @if (hasPermission('deposit_category_menu'))
-                                                <li
-                                                    class="nav-item {{ menu_active_by_route(['hrm.deposit_category.deposit']) }}">
-                                                    <a href="{{ route('hrm.deposit_category.deposit') }}"
-                                                        class="">
-                                                        <span> {{ _trans('payroll.Deposit Category') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endif
+                                        @if (hasPermission('account_menu'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.accounts.index', 'hrm.accounts.create', 'hrm.accounts.edit']) }}">
+                                                <a href="{{ route('hrm.accounts.index') }}" class="">
+                                                    <span> {{ _trans('payroll.Account List') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
-                                            @if (hasPermission('deposit_category_menu'))
-                                                <li
-                                                    class="nav-item {{ menu_active_by_route(['hrm.deposit_category.expense']) }}">
-                                                    <a href="{{ route('hrm.deposit_category.expense') }}"
-                                                        class="">
-                                                        <span> {{ _trans('expense.Expense Category') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endif
+                                        @if (hasPermission('deposit_menu'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.deposits.index', 'hrm.deposits.create', 'hrm.deposits.edit']) }}">
+                                                <a href="{{ route('hrm.deposits.index') }}" class="">
+                                                    <span> {{ _trans('payroll.Deposit') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
-                                            @if (hasPermission('payment_method_menu'))
-                                                <li
-                                                    class="nav-item {{ menu_active_by_route(['hrm.payment_method.index']) }}">
-                                                    <a href="{{ route('hrm.payment_method.index') }}"
-                                                        class="">
-                                                        <span> {{ _trans('payment_method.Payment Method') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endif
+                                        @if (hasPermission('expense_menu'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.expenses.index', 'hrm.expenses.create', 'hrm.expenses.edit', 'hrm.expenses.show']) }}">
+                                                <a href="{{ route('hrm.expenses.index') }}" class="">
+                                                    <span> {{ _trans('payroll.Expense') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
-                                        </ul>
-                                    </li>
-                                @endif
+                                        @if (hasPermission('transaction_menu'))
+                                            <li
+                                                class="nav-item {{ menu_active_by_route(['hrm.transactions.index']) }}">
+                                                <a href="{{ route('hrm.transactions.index') }}" class="">
+                                                    <span> {{ _trans('payroll.Transaction History') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if (hasPermission('deposit_category_menu'))
+                                            <li
+                                                class="sidebar-menu-item {{ set_menu([route('hrm.deposit_category.expense')]) }}">
+                                                <a href="javascript:void(0)"
+                                                    class="parent-item-content has-arrow {{ menu_active_by_route(['hrm.deposit_category.deposit', 'hrm.deposit_category.expense', 'hrm.payment_method.index']) }}">
+                                                    <span class="-text font-purple">
+                                                        {{ _trans('payroll.Accounts Settings') }}
 
-                            </ul>
-                        </li>
-                    @endif 
+                                                    </span>
+                                                </a>
+                                                <ul
+                                                    class="child-menu-list {{ set_active(['hrm/account-settings*', 'hrm/payment-method*']) }} pl-2">
+
+
+                                                    @if (hasPermission('deposit_category_menu'))
+                                                        <li
+                                                            class="nav-item {{ menu_active_by_route(['hrm.deposit_category.deposit']) }}">
+                                                            <a href="{{ route('hrm.deposit_category.deposit') }}"
+                                                                class="">
+                                                                <span> {{ _trans('payroll.Deposit Category') }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if (hasPermission('deposit_category_menu'))
+                                                        <li
+                                                            class="nav-item {{ menu_active_by_route(['hrm.deposit_category.expense']) }}">
+                                                            <a href="{{ route('hrm.deposit_category.expense') }}"
+                                                                class="">
+                                                                <span> {{ _trans('expense.Expense Category') }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if (hasPermission('payment_method_menu'))
+                                                        <li
+                                                            class="nav-item {{ menu_active_by_route(['hrm.payment_method.index']) }}">
+                                                            <a href="{{ route('hrm.payment_method.index') }}"
+                                                                class="">
+                                                                <span>
+                                                                    {{ _trans('payment_method.Payment Method') }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+
+                                                </ul>
+                                            </li>
+                                        @endif
+
+                                    </ul>
+                                </li>
+                            @endif
+                        @endif
+                    @endif
                     @if (Auth::user()->role)
                         @if (Auth::user()->role->name != 'Staff')
                             @if (hasPermission('payroll_menu') && hasFeature('payroll'))
@@ -734,7 +739,7 @@
                             </ul>
                         </li>
                     @endif --}}
-{{-- 
+                    {{-- 
                     @include('backend.partials.configurations-sidebar')
 
                     @include('backend.partials.settings-sidebar')  --}}
