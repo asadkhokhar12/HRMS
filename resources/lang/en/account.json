@@ -33,5 +33,6 @@
     "Add Expense Category": "Add Expense Category",
     "Details Expense": "Details Expense",
     "Edit Expense": "Edit Expense",
-    "Type": "Type"
+    "Type": "Type",
+    "Description": "Description"
 }
